@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
-import {Button, Form, InputGroup} from "react-bootstrap";
+import {Form, InputGroup} from "react-bootstrap";
+import UsernameModal from "../components/views/UsernameModal";
+import React from "react";
 
 export const FormField = props => {
     FormField.propTypes = {
@@ -22,9 +24,8 @@ export const FormField = props => {
                 onChange={e => props.onChange(e)}
             />
             {props.action &&
-            <Button variant="outline-secondary" onClick={() => props.action()}>
-                Join Game
-            </Button>}
+                <UsernameModal title={"Join Game"} submit={props.action} />
+            }
         </InputGroup>
     );
 };

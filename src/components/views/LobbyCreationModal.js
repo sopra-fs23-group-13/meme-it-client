@@ -8,7 +8,7 @@ import {Button} from "react-bootstrap";
 
 const LobbyCreationModal = props => {
     const [show, setShow] = useState(false);
-    const [lobbyValues, setLobbyValues] = useState({ lobby_name: "", player_limit: "", number_of_rounds: "", meme_change_limit: "", creation_time_limit: "", super_like_limit: "", voting_phase_time: "", lobby_code: ""});
+    const [lobbyValues, setLobbyValues] = useState({ username: props.username, lobby_name: "", player_limit: "", number_of_rounds: "", meme_change_limit: "", creation_time_limit: "", super_like_limit: "", voting_phase_time: "", lobby_code: ""});
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 

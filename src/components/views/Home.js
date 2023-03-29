@@ -4,7 +4,7 @@ import "styles/views/Home.scss";
 import LobbyList from "./LobbyList";
 import {Col, Container, Row, Button, InputGroup, Stack} from "react-bootstrap";
 import {FormField} from "../../helpers/formField";
-import LobbyCreationModal from "./LobbyCreationModal";
+import UsernameModal from "./UsernameModal";
 
 const Home = () => {
     //const history = useHistory();
@@ -25,24 +25,15 @@ const Home = () => {
         history.push("/" + hash);
     }*/
 
-    const joinGame = () => {
-        if(!gameValues.username){
-            //Popup: You need to set a name
-            return;
-        }
-        //do SetHash with the Hash of the Public Lobby
-        //Do joinHash()
-    }
     const lobbyList  = () => {
         return(
             <Container>
                 <Row>
                     <Col>
-                        <LobbyList />
+                        <LobbyList action={joinExistingGame} />
                     </Col>
                 </Row>
             </Container>
-
         )
     }
 
@@ -56,6 +47,16 @@ const Home = () => {
 
     const createNewGame = (lobbyValues) => {
         console.log(lobbyValues);
+    }
+
+    const joinExistingGame = (userValues) => {
+        console.log(userValues);
+        if(!gameValues.username){
+            //Popup: You need to set a name
+            //return;
+        }
+        //do SetHash with the Hash of the Public Lobby
+        //Do joinHash()
     }
 
     return (
@@ -94,14 +95,14 @@ const Home = () => {
                                         value={gameValues.hash}
                                         name="hash"
                                         label="Game Hash"
-                                        action={joinGame}
+                                        action={joinExistingGame}
                                         onChange={handleChange}
                                     />
                                 </Col>
                             </Row>
                             <Row>
                                 <Col>
-                                    <LobbyCreationModal submit={createNewGame} />
+                                    <UsernameModal title={"Create Lobby"} submit={createNewGame} />
                                 </Col>
                             </Row>
                             <Row>

@@ -5,8 +5,9 @@ import { TfiReload } from 'react-icons/tfi';
 
 
 import MockData from '../../mockData/menuScreenDataMock.json'
+import UsernameModal from "./UsernameModal";
 
-const LobbyList = () => {
+const LobbyList = props => {
 
     return (
         <div>
@@ -45,9 +46,7 @@ const LobbyList = () => {
                                     {lobby.current_players} / {lobby.size}
                                 </Badge>
                             </div>
-                            <Button>
-                                Join
-                            </Button>
+                            <UsernameModal title={"Join Game"} submit={props.action} />
                         </ListGroup.Item>
                     )
                 })}
