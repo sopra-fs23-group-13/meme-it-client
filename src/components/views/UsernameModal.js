@@ -61,7 +61,7 @@ const UsernameModal = props => {
                         Close
                     </Button>
                     {props.title === LOBBY_CREATION &&
-                        <LobbyCreationModal username={usernameValues.username} submit={submit} />
+                        <LobbyCreationModal username={usernameValues.username} submit={submit} close={handleClose} />
                     }
                     {props.title === LOBBY_JOIN &&
                         <Button variant="primary" onClick={submit}>
