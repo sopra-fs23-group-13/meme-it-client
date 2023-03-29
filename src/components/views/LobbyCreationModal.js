@@ -27,7 +27,7 @@ const LobbyCreationModal = props => {
 
     return (
         <>
-            <Button className={"home buttons"} onClick={handleShow}>Create Lobby</Button>
+            <Button onClick={handleShow}>Create Lobby</Button>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>

@@ -102,7 +102,7 @@ const Home = () => {
                             </Row>
                             <Row>
                                 <Col>
-                                    <UsernameModal title={"Create Lobby"} submit={createNewGame} />
+                                    <UsernameModal c_names={"home buttons"} title={"Create Lobby"} submit={createNewGame} />
                                 </Col>
                             </Row>
                             <Row>
