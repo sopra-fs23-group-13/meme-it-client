@@ -1,5 +1,8 @@
 import {api, handleError} from 'helpers/api';
-import {useEffect, useState} from 'react';
+import Modal from 'react-modal';
+import { CgEnter } from 'react-icons/cg';
+
+import React, {useEffect, useState} from 'react';
 import {Button} from 'components/ui/Button';
 import BaseContainer from "../ui/BaseContainer";
 import "styles/views/Home.scss";
@@ -38,7 +41,33 @@ const Home = () => {
     const history = useHistory();
     const [hash, setHash] = useState(null);
     const [username, setUsername] = useState(null);
-    const [show, setShow] = useState(false);
+    const [showLobbyList, setShowLobbyList] = useState(false);
+
+
+    const usernamePopupStyle = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '50%',
+            paddingRight: '50px',
+            paddingLeft: '50px',
+            paddingBottom:'20px',
+            paddingTop:'10px',
+            transform: 'translate(-50%, -50%)',
+            textAlign:'center',
+            background: "rgba(255, 255, 255, 0.85)"
+        },
+    };
+
+    const [userPopupIsOpen, setIsOpen] = React.useState(false);
+    function openModal() {
+        setIsOpen(true);
+    }
+    function closeUserPopup() {
+        setIsOpen(false);
+    }
 
     // Idea: Regardless of whether user joins using a Public Lobby Join button or a specific hash, if they press the
     // join button it always joins using the join hash method but in case of public lobby it just gets the lobby's hash
@@ -53,13 +82,15 @@ const Home = () => {
         history.push("/" + hash);
     }
 
+
+
     const joinGame = () => {
         if(!username){
             //Popup: You need to set a name
-            return;
+            return (openModal())
         }
         //do SetHash with the Hash of the Public Lobby
-        //Do joinHash()
+        joinHash() //Then Join that Hash using joinHash
     }
     const lobbyList  = () => {
         return(
@@ -67,7 +98,7 @@ const Home = () => {
                 <div className="home lobby-list">
                     <p className="home lobby-list column-name">Name</p>
                     <p className="home lobby-list column-name">Players</p>
-                    <Button className="home refresh-btn">Refresh</Button>
+                    <Button className="home refresh-btn"> Refresh </Button>
                 </div>
                 <div className="home lobby-list lobbies">
                     <ul>
@@ -78,27 +109,41 @@ const Home = () => {
         )
     }
     const lobbyListText = () => {
-        if(show){
+        if(showLobbyList){
             return "Close List"
         }
         return "View Games"
     }
-
     return (
         <div>
-            <div className="home title">
-                Meme-It
+
+            <Modal
+                isOpen={userPopupIsOpen}
+                onRequestClose={closeUserPopup}
+                style={usernamePopupStyle}
+                contentLabel="Set Username"
+            >
+                <h2 className="home popup-title"> Pick a Username first! </h2>
+                <form>
+                    <FormField className="home input username popup" placeholder="Enter Username" value={username} onChange={n => setUsername(n)}></FormField>
+                </form>
+                <Button className="home close-popup-btn" onClick={closeUserPopup}> Close </Button>
+            </Modal>
+
+            <div>
+                <h1 className="home title">Meme-It</h1>
+                <p className="home subtitle"> The Meme Creation Game</p>
             </div>
             <BaseContainer className="home container">
                 <FormField className="home input username" placeholder="Enter Username" value={username} onChange={n => setUsername(n)}></FormField>
-                <div className="home container join">
+                <div className="home container join-hash">
                     <FormField className="home input hash" placeholder="Game Hash" value={hash} onChange={h => setHash(h)}></FormField>
-                    <Button className ="home join-btn" onClick={() => joinGame()}>Join Game</Button>
+                    <Button className ="home join-btn" onClick={() => joinGame()}> <CgEnter/> </Button>
                 </div>
                 <Button> Create Lobby</Button>
-                <Button onClick={() => setShow(!show)} >{lobbyListText()}</Button>
+                <Button onClick={() => setShowLobbyList(!showLobbyList)} >{lobbyListText()}</Button>
             </BaseContainer>
-            {show && lobbyList()}
+            {showLobbyList && lobbyList()}
             <BaseContainer className = "home container tutorial">
                 <p className = "home tutorial-title">How To Play</p>
                 <div className ="home tutorial-text">

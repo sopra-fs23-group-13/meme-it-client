@@ -1,6 +1,23 @@
 @import 'styles/theme';
 
 .home {
+  &.subtitle {
+    text-align:center;
+    margin-top:-2em;
+    padding-bottom:5em;
+    color: $buttonColor;
+  }
+  &.title {
+    &:hover {
+      color: $buttonColor ;
+    }
+    padding-top:2em;
+    color: $themeColor;
+    font-weight: 750;
+    font-size: 50px;
+    text-align:center;
+    transition: all 0.5s ease;
+  }
   &.container {
     background: transparent;
     padding: 1.5em;
@@ -8,12 +25,14 @@
     display: flex;
     width: 15em;
     flex-direction: column;
+    //Tutorial Section
     &.tutorial {
       width: auto;
       background: rgba(245, 245, 245, 0.47);
       border-style:solid;
       border-color: #adadad;
     }
+    //What you see when you click "View Games"
     &.lobby {
       padding:0em;
       margin: -1em auto 1em;
@@ -23,12 +42,81 @@
       alignment:center;
       flex-direction:column;
     }
-    &.join {
+    //For the join hash section, main purpose is to have input field and button on same level
+    &.join-hash {
       width:10em;
       display: inline-flex;
       padding: 0em;
       margin-right:-5em;
       flex-direction: row;
+    }
+  }
+  &.popup-title {
+    text-align:center;
+    font-size:20px;
+    color: $buttonColor;
+  }
+  &.close-popup-btn{
+    font-size:14px;
+    height:30px;
+    border-radius:1em;
+    margin:auto;
+    text-align:left;
+  }
+  //Input Fields
+  &.input {
+    height: 30px;
+    font-size:15px;
+    padding-left: 15px;
+    margin-top:6px;
+    border: solid #424242;
+    border-radius:0.2em;
+    background: white;
+    &.hash {
+      width:10.5em;
+    }
+    &.username {
+      height:40px;
+      margin-bottom: 5px;
+      font-size:20px;
+      width:9.5em;
+      border: dashed black;
+      &.popup{
+        height:30px;
+        border: solid #424242;
+        font-size:16px;
+        margin-bottom:10px;
+      }
+    }
+  }
+  &.join-btn {
+    margin-left:2.5px;
+    padding-right:8px;
+    font-size:16px;
+    margin-top:6px;
+    padding-top:7px;
+  }
+  &.refresh-btn{
+    &:hover {
+      background-color: darkorange;
+    }
+    font-size:14px;
+    border-radius:1em;
+    background-color: orange;
+  }
+
+  //The Contents of what you see when you click "View Games"
+  &.lobby-list {
+    display:flex;
+    margin-left:0.5em;
+    margin-right:6em;
+    flex-direction: row;
+    justify-content: flex-start;
+    &.lobbies {
+      list-style: none;
+    }
+    &.column-name {
+      font-weight:600;
     }
   }
   &.tutorial-title {
@@ -40,65 +128,5 @@
   }
   &.tutorial-text {
     color: #494949;
-  }
-  &.title {
-    &:hover {
-      color: $buttonColor ;
-    }
-    padding-top:3em;
-    padding-bottom:2em;
-    color: $themeColor;
-    font-weight: 750;
-    font-size: 50px;
-    text-align:center;
-    transition: all 0.5s ease;
-  }
-  &.input {
-    height: 30px;
-    font-size:15px;
-    padding-left: 15px;
-    margin-top:6px;
-    border: solid #424242;
-    border-radius:0.2em;
-    background: white;
-    &.hash {
-      width:10em;
-    }
-    &.username {
-      height:40px;
-      margin-bottom: 5px;
-      font-size:20px;
-      width:9.5em;
-      border: dashed black;
-
-    }
-  }
-  &.join-btn {
-    margin-left:2.5px;
-    font-size:10px;
-    margin-top:0.6em;
-    padding-bottom:20px;
-  }
-  &.refresh-btn{
-    &:hover {
-      background-color: #ce5601;
-    }
-    height:25px;
-    margin:auto;
-    background-color: orange;
-  }
-  &.lobby-list {
-    display:flex;
-    margin-left:1em;
-    margin-right:5em;
-    flex-direction: row;
-    justify-content: flex-start;
-    &.lobbies {
-      list-style: none;
-      padding-left: 0;
-    }
-    &.column-name {
-      font-weight:600;
-    }
   }
 }
