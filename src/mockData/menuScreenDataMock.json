@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Amazon Prime member's game",
+    "size": 8,
+    "current_players": 4,
+    "hash": "lemon-grass",
+    "admin": "amazon prime member"
+  },
+  {
+    "name": "PerryThePlatypus' game",
+    "size": 6,
+    "current_players": 1,
+    "hash": "crystal-clear",
+    "admin": "perrytheplat"
+  },
+  {
+    "name": "Cursing allowed's game",
+    "size": 16,
+    "current_players": 4,
+    "hash": "ice-berg",
+    "admin": "snickers69"
+  },
+  {
+    "name": "Bro join here",
+    "size": 6,
+    "current_players": 4,
+    "hash": "sausage-party",
+    "admin": "mememaker64"
+  },
+  {
+    "name": "SomeRandomName",
+    "size": 8,
+    "current_players": 4,
+    "hash": "quasi-modo",
+    "admin": "qwer53_s"
+  },
+  {
+    "name": "MyLobbyIsFull",
+    "size": 8,
+    "current_players": 8,
+    "hash": "swissloop-tunnelling",
+    "admin": "daniel"
+  }
+]

@@ -2,33 +2,11 @@
 
 .home {
   &.container {
-    background: transparent;
-    padding: 1.5em;
-    border:black;
-    display: flex;
-    width: 15em;
-    flex-direction: column;
     &.tutorial {
       width: auto;
       background: rgba(245, 245, 245, 0.47);
-      border-style:solid;
+      border-style: solid;
       border-color: #adadad;
-    }
-    &.lobby {
-      padding:0em;
-      margin: -1em auto 1em;
-      border: solid #606060;
-      width:25em;
-      display:flex;
-      alignment:center;
-      flex-direction:column;
-    }
-    &.join {
-      width:10em;
-      display: inline-flex;
-      padding: 0em;
-      margin-right:-5em;
-      flex-direction: row;
     }
   }
   &.tutorial-title {
@@ -41,64 +19,10 @@
   &.tutorial-text {
     color: #494949;
   }
-  &.title {
-    &:hover {
-      color: $buttonColor ;
-    }
-    padding-top:3em;
-    padding-bottom:2em;
-    color: $themeColor;
-    font-weight: 750;
-    font-size: 50px;
-    text-align:center;
-    transition: all 0.5s ease;
+  &.buttons {
+    width: 100%;
   }
-  &.input {
-    height: 30px;
-    font-size:15px;
-    padding-left: 15px;
-    margin-top:6px;
-    border: solid #424242;
-    border-radius:0.2em;
-    background: white;
-    &.hash {
-      width:10em;
-    }
-    &.username {
-      height:40px;
-      margin-bottom: 5px;
-      font-size:20px;
-      width:9.5em;
-      border: dashed black;
-
-    }
-  }
-  &.join-btn {
-    margin-left:2.5px;
-    font-size:10px;
-    margin-top:0.6em;
-    padding-bottom:20px;
-  }
-  &.refresh-btn{
-    &:hover {
-      background-color: #ce5601;
-    }
-    height:25px;
-    margin:auto;
-    background-color: orange;
-  }
-  &.lobby-list {
-    display:flex;
-    margin-left:1em;
-    margin-right:5em;
-    flex-direction: row;
-    justify-content: flex-start;
-    &.lobbies {
-      list-style: none;
-      padding-left: 0;
-    }
-    &.column-name {
-      font-weight:600;
-    }
+  &.playerSize {
+    margin-right: 20px;
   }
 }
