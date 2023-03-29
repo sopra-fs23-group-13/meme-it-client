@@ -1,13 +1,15 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import "styles/views/Home.scss";
 //import {useHistory} from "react-router-dom";
 import LobbyList from "./LobbyList";
-import {Col, Container, Row, Button, InputGroup, Form, Stack} from "react-bootstrap";
+import {Col, Container, Row, Button, InputGroup, Stack} from "react-bootstrap";
+import {FormField} from "../../helpers/formField";
+import LobbyCreationModal from "./LobbyCreationModal";
 
 const Home = () => {
     //const history = useHistory();
-    const [hash, setHash] = useState(null);
-    const [username, setUsername] = useState(null);
+    const [gameValues, setGameValues] = useState({ hash: "", username: ""});
+
     const [show, setShow] = useState(false);
 
     // Idea: Regardless of whether user joins using a Public Lobby Join button or a specific hash, if they press the
@@ -23,14 +25,14 @@ const Home = () => {
         history.push("/" + hash);
     }*/
 
-    /*const joinGame = () => {
-        if(!username){
+    const joinGame = () => {
+        if(!gameValues.username){
             //Popup: You need to set a name
             return;
         }
         //do SetHash with the Hash of the Public Lobby
         //Do joinHash()
-    }*/
+    }
     const lobbyList  = () => {
         return(
             <Container>
@@ -43,11 +45,17 @@ const Home = () => {
 
         )
     }
-    const lobbyListText = () => {
-        if(show){
-            return "Close List"
-        }
-        return "View Games"
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setGameValues((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    const createNewGame = (lobbyValues) => {
+        console.log(lobbyValues);
     }
 
     return (
@@ -55,7 +63,6 @@ const Home = () => {
         <Container>
             <Stack gap={3}>
             <Row>
-
                 <Container>
                     <Row>
                         <Col sm>{/*placeholder*/}</Col>
@@ -69,40 +76,37 @@ const Home = () => {
                             <Row>
                                 <Col>
                                     <InputGroup className="mb-3">
-                                        <Form.Control
-                                            aria-label="Username"
-                                            aria-describedby="basic-addon2"
-                                            placeholder="Enter Username"
-                                            value={username}
-                                            onChange={n => setUsername(n.target.value)}
+
+                                        <FormField
+                                            placeholder="Username"
+                                            value={gameValues.username}
+                                            name="username"
+                                            label="Username"
+                                            onChange={handleChange}
                                         />
                                     </InputGroup>
                                 </Col>
                             </Row>
                             <Row>
                                 <Col>
-                                    <InputGroup className="mb-3">
-                                        <Form.Control
-                                            placeholder="Game Hash"
-                                            aria-label="Recipient's username"
-                                            aria-describedby="basic-addon2"
-                                            value={hash}
-                                            onChange={n => setHash(n.target.value)}
-                                        />
-                                        <Button variant="outline-secondary" onClick={() => joinGame()}>
-                                            Join Game
-                                        </Button>
-                                    </InputGroup>
+                                    <FormField
+                                        placeholder="Game Hash"
+                                        value={gameValues.hash}
+                                        name="hash"
+                                        label="Game Hash"
+                                        action={joinGame}
+                                        onChange={handleChange}
+                                    />
                                 </Col>
                             </Row>
                             <Row>
                                 <Col>
-                                    <Button className={"home buttons"}> Create Lobby</Button>
+                                    <LobbyCreationModal submit={createNewGame} />
                                 </Col>
                             </Row>
                             <Row>
                                 <Col>
-                                    <Button className={"home buttons"} onClick={() => setShow(!show)} >{lobbyListText()}</Button>
+                                    <Button className={"home buttons"} onClick={() => setShow(!show)} >{show ? "Close List" : "Show Games"}</Button>
                                 </Col>
                             </Row>
                             </Stack>
