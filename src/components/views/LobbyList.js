@@ -46,7 +46,7 @@ const LobbyList = props => {
                                     {lobby.current_players} / {lobby.size}
                                 </Badge>
                             </div>
-                            <UsernameModal title={"Join Game"} submit={props.action} />
+                            <UsernameModal joiningAllowed={lobby.current_players === lobby.size} title={"Join Game"} submit={props.action} />
                         </ListGroup.Item>
                     )
                 })}

@@ -38,7 +38,7 @@ const UsernameModal = props => {
 
     return (
         <>
-            <Button className={props.c_names} onClick={handleShow}>{props.title}</Button>
+            <Button disabled={props.joiningAllowed} className={props.c_names} onClick={handleShow}>{props.title}</Button>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
