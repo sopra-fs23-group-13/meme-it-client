@@ -1,6 +1,9 @@
 @import 'styles/theme';
 
 .home {
+  &.content {
+    margin-top: 10rem;
+  }
   &.container {
     &.tutorial {
       width: auto;

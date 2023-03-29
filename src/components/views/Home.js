@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import "styles/views/Home.scss";
 //import {useHistory} from "react-router-dom";
 import LobbyList from "./LobbyList";
-import {Col, Container, Row, Button, InputGroup, Stack} from "react-bootstrap";
+import {Col, Container, Row, Button, Stack} from "react-bootstrap";
 import {FormField} from "../../helpers/formField";
 import UsernameModal from "./UsernameModal";
 
@@ -61,7 +61,7 @@ const Home = () => {
 
     return (
 
-        <Container>
+        <Container className={"home content"}>
             <Stack gap={3}>
             <Row>
                 <Container>
@@ -72,20 +72,6 @@ const Home = () => {
                             <Row>
                                 <Col>
                                     <h1>Meme-It</h1>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <InputGroup className="mb-3">
-
-                                        <FormField
-                                            placeholder="Username"
-                                            value={gameValues.username}
-                                            name="username"
-                                            label="Username"
-                                            onChange={handleChange}
-                                        />
-                                    </InputGroup>
                                 </Col>
                             </Row>
                             <Row>
