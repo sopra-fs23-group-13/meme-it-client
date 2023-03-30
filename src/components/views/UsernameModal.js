@@ -65,7 +65,7 @@ const UsernameModal = props => {
                     }
                     {props.title === LOBBY_JOIN &&
                         <Button variant="primary" onClick={submit}>
-                            Set username
+                            Set Username
                         </Button>
                     }
                 </Modal.Footer>

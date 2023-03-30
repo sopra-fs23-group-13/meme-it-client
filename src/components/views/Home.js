@@ -52,7 +52,6 @@ const Home = () => {
     const joinExistingGame = (userValues) => {
         console.log(userValues);
         if(!gameValues.username){
-            //Popup: You need to set a name
             //return;
         }
         //do SetHash with the Hash of the Public Lobby
@@ -71,7 +70,8 @@ const Home = () => {
                             <Stack gap={3}>
                             <Row>
                                 <Col>
-                                    <h1>Meme-It</h1>
+                                    <h1 className="home title">Meme-It</h1>
+                                    <p className="home subtitle"> The Meme Creation Game</p>
                                 </Col>
                             </Row>
                             <Row>
@@ -83,6 +83,7 @@ const Home = () => {
                                         label="Game Hash"
                                         action={joinExistingGame}
                                         onChange={handleChange}
+                                        c_names="home join-hash-btn"
                                     />
                                 </Col>
                             </Row>

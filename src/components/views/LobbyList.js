@@ -17,7 +17,7 @@ const LobbyList = props => {
                 className="d-flex justify-content-between align-items-start"
             >
                 <div className="ms-2 me-auto">
-                    <div className="fw-bold">Game name</div>
+                    <div className="fw-bold">Lobby Name</div>
 
                 </div>
                 <div>

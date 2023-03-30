@@ -4,6 +4,23 @@
   &.content {
     margin-top: 10rem;
   }
+  &.title {
+    &:hover {
+      color: $buttonColor ;
+    }
+    color: $themeColor;
+    font-weight: 750;
+    font-size: 50px;
+    text-align:center;
+    transition: all 0.5s ease;
+  }
+  &.subtitle {
+    text-align:center;
+    margin-top:-10px;
+    padding-bottom:5em;
+    font-size:18px;
+    color: $buttonColor;
+  }
   &.container {
     &.tutorial {
       width: auto;
@@ -23,6 +40,21 @@
     color: #494949;
   }
   &.buttons {
+    &:hover {
+      background-color:$buttonColorHover;
+    }
     width: 100%;
+    background:$buttonColor;
+    transition: all 0.3s ease;
   }
+  &.join-hash-btn{
+    &:hover {
+      background-color:$buttonColorHover;
+    }
+    background:$buttonColor;
+    font-size:16px;
+    transition: all 0.3s ease;
+
+  }
+
 }

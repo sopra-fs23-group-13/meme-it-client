@@ -4,6 +4,7 @@ import GameRouter from "components/routing/routers/GameRouter";
 import {LoginGuard} from "components/routing/routeProtectors/LoginGuard";
 import Login from "components/views/Login";
 import Home from "../../views/Home";
+import Lobby from "../../views/Lobby";
 
 /**
  * Main router of your application.
@@ -17,7 +18,12 @@ import Home from "../../views/Home";
 const AppRouter = () => {
   return (
     <BrowserRouter>
-      <Home></Home>
+        <Switch>
+            <Route path="/lobby">
+                <Lobby></Lobby>
+            </Route>
+            <Home></Home>
+        </Switch>
     </BrowserRouter>
   );
 };

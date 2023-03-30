@@ -5,6 +5,9 @@
   &.playerSize {
     margin-right: 2rem;
   }
+  &.text-bg{
+    background-color:$buttonColor;
+  }
 
   &.headerElement {
     --bs-list-group-item-padding-x: 1rem;

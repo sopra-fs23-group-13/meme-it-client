@@ -8,7 +8,8 @@ export const FormField = props => {
         label: PropTypes.string,
         value: PropTypes.string,
         onChange: PropTypes.func,
-        action: PropTypes.func
+        action: PropTypes.func,
+        c_names: PropTypes.string
     };
 
     return (
@@ -22,9 +23,10 @@ export const FormField = props => {
                 value={props.value}
                 name={props.name}
                 onChange={e => props.onChange(e)}
+                c_names = {props.c_names}
             />
             {props.action &&
-                <UsernameModal title={"Join Game"} submit={props.action} />
+                <UsernameModal c_names={props.c_names} title={"Join Game"} submit={props.action} />
             }
         </InputGroup>
     );
