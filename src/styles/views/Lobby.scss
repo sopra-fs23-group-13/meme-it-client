@@ -1,0 +1,32 @@
+@import 'styles/theme';
+
+.lobby {
+  &.container{
+    background-color: rgba(161, 168, 196, 0.39);
+    border: solid slategray;
+    color: $themeColor;
+  }
+  &.title {
+    padding-top:3em;
+    color: $themeColor;
+    font-weight: 750;
+    font-size:40px;
+    text-align:center;
+  }
+  &.player-title{
+    text-align:center;
+    color: $themeColor;
+    padding-top:10px;
+  }
+  &.settings-title{
+    text-align:center;
+    color: $themeColor;
+    font-size:20px;
+    padding-top:10px;
+  }
+  &.settings-container{
+    border: none;
+    background-color:white;
+  }
+
+}

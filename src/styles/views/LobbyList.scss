@@ -1,0 +1,16 @@
+@import 'styles/theme';
+
+.lobbyList {
+
+  &.playerSize {
+    margin-right: 2rem;
+  }
+  &.text-bg{
+    background-color:$buttonColor;
+  }
+
+  &.headerElement {
+    --bs-list-group-item-padding-x: 1rem;
+    --bs-list-group-item-padding-y: 0.5rem;
+  }
+}
