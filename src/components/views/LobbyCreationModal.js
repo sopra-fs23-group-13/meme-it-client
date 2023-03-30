@@ -28,7 +28,7 @@ const LobbyCreationModal = props => {
     return (
         <>
 
-            <Button disabled={false} onClick={handleShow}>Create Lobby</Button>
+            <Button className="home join-btn" disabled={false} onClick={handleShow}>Create Lobby</Button>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -71,8 +71,8 @@ const LobbyCreationModal = props => {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={submit}>
-                        Create New Lobby
+                    <Button className="home join-btn" onClick={submit}>
+                        Create Lobby
                     </Button>
                 </Modal.Footer>
             </Modal>
