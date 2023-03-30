@@ -64,7 +64,7 @@ const UsernameModal = props => {
                         <LobbyCreationModal username={usernameValues.username} submit={submit} close={handleClose} />
                     }
                     {props.title === LOBBY_JOIN &&
-                        <Button variant="primary" onClick={submit}>
+                        <Button disabled={usernameValues.username===''} variant="primary" onClick={submit}>
                             Set Username
                         </Button>
                     }
