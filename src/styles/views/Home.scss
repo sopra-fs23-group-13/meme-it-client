@@ -46,15 +46,18 @@
     width: 100%;
     background:$buttonColor;
     transition: all 0.3s ease;
+    margin-top:-1em;
+    margin-bottom:1em;
+    border: none;
   }
-  &.join-hash-btn{
+  &.join-btn{
     &:hover {
       background-color:$buttonColorHover;
     }
     background:$buttonColor;
     font-size:16px;
     transition: all 0.3s ease;
-
+    border: solid $buttonColorHover;
   }
 
 }

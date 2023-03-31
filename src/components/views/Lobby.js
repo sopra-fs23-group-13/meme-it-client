@@ -81,6 +81,23 @@ const Lobby = () => {
                         </Col>
                     </Row>
                 </BaseContainer>
+                <Row>
+                    <Col xs={4}>
+                    </Col>
+                    <Col>
+                        <Button
+                            onClick={() => history.push(`/`)}
+                            className="lobby btn start">
+                            Start Game
+                        </Button>
+                        <Button
+                            width="20%"
+                            onClick={() => history.push(`/`)}
+                            className="lobby btn leave">
+                            Leave Lobby
+                        </Button>
+                    </Col>
+                </Row>
             </Stack>
         </Container>
     )

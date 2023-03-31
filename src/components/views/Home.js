@@ -5,6 +5,7 @@ import LobbyList from "./LobbyList";
 import {Col, Container, Row, Button, Stack} from "react-bootstrap";
 import {FormField} from "../../helpers/formField";
 import UsernameModal from "./UsernameModal";
+import BaseContainer from "../ui/BaseContainer";
 
 const Home = () => {
     //const history = useHistory();
@@ -83,7 +84,7 @@ const Home = () => {
                                         label="Game Hash"
                                         action={joinExistingGame}
                                         onChange={handleChange}
-                                        c_names="home join-hash-btn"
+                                        c_names="home join-btn"
                                     />
                                 </Col>
                             </Row>

@@ -11,22 +11,21 @@ const LobbyList = props => {
 
     return (
         <div>
-            <ListGroup as="ol">
+            <ListGroup as="ol" >
             <ListGroup.Item
                 as="li"
-                className="d-flex justify-content-between align-items-start"
+                className="d-flex justify-content-between align-items-start lobbyList header-item"
+
             >
                 <div className="ms-2 me-auto">
                     <div className="fw-bold">Lobby Name</div>
 
                 </div>
                 <div>
-                    <Badge className={"align-self-center lobbyList playerSize"} pill>
-                        Joined / Players
-                    </Badge>
+                    <div className="lobbyList playerCount">Players</div>
                 </div>
-                <Button variant={"warning"}>
-                    <TfiReload />
+                <Button className="home lobbyList refresh-btn">
+                    <TfiReload/>
                 </Button>
             </ListGroup.Item>
             </ListGroup>
@@ -46,7 +45,7 @@ const LobbyList = props => {
                                     {lobby.current_players} / {lobby.size}
                                 </Badge>
                             </div>
-                            <UsernameModal joiningAllowed={lobby.current_players === lobby.size} title={"Join Game"} submit={props.action} />
+                            <UsernameModal c_names="home join-btn" joiningAllowed={lobby.current_players === lobby.size} title={"Join Game"} submit={props.action} />
                         </ListGroup.Item>
                     )
                 })}
