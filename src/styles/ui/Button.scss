@@ -20,7 +20,12 @@
 }
 
 .leave-lobby-button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  &:hover {
+    background-color: #af0000;
+  }
+  width:20%;
+  background-color: #da0000;
+  border:solid #af0000;
+  margin-left:10px;
+
 }

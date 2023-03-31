@@ -5,6 +5,7 @@
     background-color: rgba(161, 168, 196, 0.39);
     border: solid slategray;
     color: $themeColor;
+    padding-bottom:1em;
   }
   &.title {
     padding-top:3em;
@@ -25,8 +26,24 @@
     padding-top:10px;
   }
   &.settings-container{
+    padding-left:2em;
+    padding-bottom:1em;
     border: none;
     background-color:white;
   }
-
+  &.btn {
+    &:hover {
+      background-color:$buttonColorHover;
+    }
+    background-color: $buttonColor;
+    border: solid $buttonColorHover;
+    transition: all 0.3s ease;
+    width:50%;
+  }
+  &.copy{
+    margin-top:5px;
+  }
+  &.start {
+    width:20%
+  }
 }
