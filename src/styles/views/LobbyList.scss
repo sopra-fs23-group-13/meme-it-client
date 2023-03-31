@@ -10,7 +10,20 @@
   }
 
   &.headerElement {
-    --bs-list-group-item-padding-x: 1rem;
+    --bs-list-group-item-padding-x: 5rem;
     --bs-list-group-item-padding-y: 0.5rem;
+  }
+  &.playerCount{
+    font-weight:750;
+    margin-right:70px;
+  }
+  &.refresh-btn{
+    margin-right:20px;
+    background-color:orange;
+    border:solid orange;
+  }
+
+  &.header-item{
+    padding-top:15px;
   }
 }
