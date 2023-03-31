@@ -39,11 +39,20 @@
     border: solid $buttonColorHover;
     transition: all 0.3s ease;
     width:50%;
-  }
-  &.copy{
-    margin-top:5px;
-  }
-  &.start {
-    width:20%
+    &.copy{
+      margin-top:5px;
+    }
+    &.start {
+      width:20%
+    }
+    &.leave {
+      &:hover {
+        background-color: #af0000;
+      }
+      width: 20%;
+      background-color: #da0000;
+      border: solid #af0000;
+      margin-left: 10px;
+    }
   }
 }

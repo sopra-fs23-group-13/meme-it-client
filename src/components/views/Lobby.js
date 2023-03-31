@@ -76,7 +76,7 @@ const Lobby = () => {
                         <Button
                             width="20%"
                             onClick={() => history.push(`/`)}
-                            className="leave-lobby-button">
+                            className="lobby btn leave">
                             Leave Lobby
                         </Button>
                     </Col>

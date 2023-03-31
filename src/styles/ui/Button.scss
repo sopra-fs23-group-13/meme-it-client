@@ -18,14 +18,3 @@
   background-color:$buttonColor;
   transition: all 0.3s ease;
 }
-
-.leave-lobby-button {
-  &:hover {
-    background-color: #af0000;
-  }
-  width:20%;
-  background-color: #da0000;
-  border:solid #af0000;
-  margin-left:10px;
-
-}
