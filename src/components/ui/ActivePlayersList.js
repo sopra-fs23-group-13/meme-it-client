@@ -47,7 +47,7 @@ const ActivePlayersList = ({ players }) => {
       {players.map((player) => (
         <div key={player.id} style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid gray', padding: '10px' }}>
           <div style={{ marginRight: '10px' }}>
-          <PlayerAvatar name={player.name} color={player.color} isAdmin={player.isAdmin} /> />
+          <PlayerAvatar name={player.name} color={player.color} isAdmin={player.isAdmin} />
           </div>
           <div style={{ flexGrow: 1 }}>
             <div>{player.name}</div>

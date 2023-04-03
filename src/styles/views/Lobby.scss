@@ -39,10 +39,9 @@
     padding-top:10px;
   }
   &.settings-container{
-    padding-left:2em;
-    padding-bottom:1em;
-    border: none;
-    background-color:white;
+    padding:2em;
+    border: 1px solid black;
+    background-color: rgba(175, 175, 175, 0.27);
   }
   &.btn {
     &:hover {
@@ -56,16 +55,8 @@
       margin-top:5px;
     }
     &.start {
-      width:20%
-    }
-    &.leave {
-      &:hover {
-        background-color: #af0000;
-      }
-      width: 20%;
-      background-color: #da0000;
-      border: solid #af0000;
-      margin-left: 10px;
+      width:auto;
+      margin-bottom:1em;
     }
   }
 }
