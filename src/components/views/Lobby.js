@@ -1,23 +1,18 @@
 import { Col, Container, Row, Stack } from "react-bootstrap";
 import "styles/views/Lobby.scss";
-import "styles/ui/LobbyCode.scss";
+import "styles/ui/LobbyCode.scss"; //Copyfield of LobbyCode
 import "styles/ui/Button.scss";
 import BaseContainer from "../ui/BaseContainer";
-import { Button, OverlayTrigger, Tooltip, Accordion, Card } from "react-bootstrap";
+import {Button, OverlayTrigger, Tooltip, Accordion, Card} from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import ActivePlayersList from "../ui/ActivePlayersList";
 import LobbySettings from "../ui/LobbySettings";
-import { FaCopy } from "react-icons/fa"; //symbol für kopieren einbinden
+import { FaCopy } from "react-icons/fa"; 
+
+import MockData from '../../mockData/lobbyScreenDataMock.json'
 
 const Lobby = () => {
-  const activePlayers = [
-    { id: 1, name: "Alice", color: "red" },
-    { id: 2, name: "Bob", color: "green" },
-    { id: 3, name: "Charlie", color: "blue" },
-    { id: 4, name: "Daniel", color: "red" },
-    { id: 5, name: "Pablo", color: "green" },
-    { id: 6, name: "Linda", color: "pink" },
-  ];
+  const activePlayers = MockData
   const history = useHistory();
   const lobbyCode = "lobbytestcode";
 
@@ -29,13 +24,10 @@ const Lobby = () => {
     <Container>
       <Stack gap={3}>
         <Container>
-          <div className="text text-1">m</div>
-          <div className="text text-2">e</div>
-          <div className="text text-3">m</div>
-          <div className="text text-4">e</div>
-          <div className="text text-2">.</div>
-          <div className="text text-1">i</div>
-          <div className="text text-3">t</div>
+          <Col>
+            <h1 className="lobby title">Meme-It</h1>
+            <p className="lobby subtitle"> The Meme Creation Game</p>
+          </Col>
         </Container>
         <BaseContainer className="lobby container">
           <Row>
@@ -58,7 +50,9 @@ const Lobby = () => {
                   <span className="lobby-code-text">{lobbyCode}</span>
                   <OverlayTrigger
                     placement="left"
-                    overlay={<Tooltip id="button-tooltip">Copy to clipboard</Tooltip>}
+                    overlay={
+                      <Tooltip id="button-tooltip">Copy to clipboard</Tooltip>
+                    }
                   >
                     <span
                       className="copy-icon"

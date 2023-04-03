@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Alice",
+    "color": "#2f4f4f",
+    "isAdmin": true
+  },
+  {
+    "id": 2,
+    "name": "Bob",
+    "color": "#1e90ff",
+    "isAdmin": false
+  },
+  {
+    "id": 3,
+    "name": "Charlie",
+    "color": "blue",
+    "isAdmin": false
+  },
+  {
+    "id": 4,
+    "name": "Daniel",
+    "color": "#778899",
+    "isAdmin": false
+  },
+  {
+    "id": 5,
+    "name": "Pablo",
+    "color": "#191970",
+    "isAdmin": false
+  },
+  {
+    "id": 6,
+    "name": "Linda",
+    "color": "#add8e6",
+    "isAdmin": false
+  }
+]

@@ -8,11 +8,24 @@
     padding-bottom:1em;
   }
   &.title {
-    padding-top:3em;
+    &:hover {
+      color: $buttonColor ;
+    }
+    margin-top: 80px;
     color: $themeColor;
     font-weight: 750;
-    font-size:40px;
+    font-size: 50px;
     text-align:center;
+    transition: all 0.5s ease;
+    margin-bottom: -90px;
+  }
+  &.subtitle {
+    text-align:center;
+    margin-top: 90px;
+    padding-bottom:5em;
+    font-size:18px;
+    color: $buttonColor;
+    margin-bottom: -70px;
   }
   &.player-title{
     text-align:center;
