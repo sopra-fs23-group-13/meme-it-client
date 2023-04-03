@@ -77,31 +77,21 @@ const Lobby = () => {
             <Col>
               <Button
                 width="200px"
-                onClick={() => history.push(`/login`)}
+                onClick={() => history.push(`/`)}
                 className="back-to-login-button"
               >
-                Back to Login-Screen
+                Leave Lobby
               </Button>
             </Col>
           </Row>
         </BaseContainer>
-        <Row>
-          <Col xs={4}></Col>
-          <Col>
-            <Button
+        <Row className={"d-flex align-items-center justify-content-center"}>
+          <Button
               onClick={() => history.push(`/`)}
               className="lobby btn start"
-            >
-              Start Game
-            </Button>
-            <Button
-              width="20%"
-              onClick={() => history.push(`/`)}
-              className="lobby btn leave"
-            >
-              Leave Lobby
-            </Button>
-          </Col>
+          >
+            Start Game
+          </Button>
         </Row>
       </Stack>
     </Container>

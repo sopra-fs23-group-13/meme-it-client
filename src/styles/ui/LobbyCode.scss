@@ -1,7 +1,7 @@
 @import 'styles/theme';
 
 .lobby-code-container {
-    background-color: #bcbcbc;
+    background-color: rgba(172, 172, 176, 0.67);
     padding: 10px;
     border: 1px solid #383838;
     border-radius: 5px;
@@ -10,7 +10,7 @@
 
 .lobby-code-heading {
     font-size: 24px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .lobby-code {
@@ -19,8 +19,7 @@
 }
 
 .lobby-code-text {
-    font-weight: bold;
-    font-size: 18px;
+    font-size: 20px;
     margin-right: 10px;
 }
 
