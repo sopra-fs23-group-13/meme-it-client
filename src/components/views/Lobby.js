@@ -5,6 +5,7 @@ import "styles/ui/Button.scss";
 import BaseContainer from "../ui/BaseContainer";
 import {Button, OverlayTrigger, Tooltip, Accordion, Card} from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+import React, { useState } from "react";
 import ActivePlayersList from "../ui/ActivePlayersList";
 import LobbySettings from "../ui/LobbySettings";
 import { FaCopy } from "react-icons/fa"; 
@@ -15,6 +16,11 @@ const Lobby = () => {
   const activePlayers = MockData
   const history = useHistory();
   const lobbyCode = "lobbytestcode";
+  const [showChat, setShowChat] = useState(false);
+
+  const toggleChat = () => {
+    setShowChat(!showChat);
+  };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(lobbyCode);
@@ -35,6 +41,7 @@ const Lobby = () => {
               <h2 className="lobby player-title">Players</h2>
               <ActivePlayersList players={activePlayers} />
             </Col>
+            
             <Col
               xs={1}
               className="d-flex align-items-center justify-content-center"
