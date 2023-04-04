@@ -58,7 +58,8 @@ const Home = () => {
         }
 
         // Temporary Lobby Join (Through Entering Hash)
-        history.push("/lobby/" + gameValues.hash);
+        localStorage.setItem("hash", gameValues.hash);
+        history.push("/lobby");
     }
 
     return (

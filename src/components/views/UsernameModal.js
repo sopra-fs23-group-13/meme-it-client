@@ -37,10 +37,11 @@ const UsernameModal = props => {
                 username: usernameValues.username
             }
         localStorage.setItem("username", usernameValues.username)
+        localStorage.setItem("hash", props.hash);
         props.submit(values);
 
         // Temporary Lobby Join (Through List)
-        history.push("/lobby/" + props.hash);
+        history.push("/lobby");
 
         handleClose();
     }

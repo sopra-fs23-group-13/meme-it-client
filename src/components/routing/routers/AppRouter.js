@@ -1,6 +1,8 @@
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Home from "../../views/Home";
 import Lobby from "../../views/Lobby";
+import {LobbyGuard} from "../routeProtectors/LobbyGuard";
+import {GameGuard} from "../routeProtectors/GameGuard";
 
 /**
  * Main router of your application.
@@ -16,9 +18,13 @@ const AppRouter = () => {
     <BrowserRouter>
         <Switch>
             <Route path="/lobby">
-                <Lobby></Lobby>
+                <LobbyGuard>
+                    <Lobby/>
+                </LobbyGuard>
             </Route>
-            <Home></Home>
+            <GameGuard>
+                <Home/>
+            </GameGuard>
         </Switch>
     </BrowserRouter>
   );

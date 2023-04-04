@@ -11,20 +11,46 @@ import LobbySettings from "../ui/LobbySettings";
 import { FaCopy } from "react-icons/fa"; 
 
 import MockData from '../../mockData/lobbyScreenDataMock.json'
+import {api} from "../../helpers/api";
 
 const Lobby = () => {
   const activePlayers = MockData
   const history = useHistory();
   const lobbyCode = "lobbytestcode";
   const [showChat, setShowChat] = useState(false);
-
+  const [currentLobby, setCurrentLobby] = useState({});
   const toggleChat = () => {
     setShowChat(!showChat);
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(lobbyCode);
+    navigator.clipboard.writeText(currentLobby.code);
   };
+  const leaveLobby = () => {
+    localStorage.clear();
+    history.push("/");
+  }
+  const getLobbyData = async () => {
+    let validCode = false;
+    try {
+      const response = await api.get('/lobby');
+      for(let i = 0; i < response.data.length; i++){
+        if(response.data[i].code === localStorage.getItem("hash")){
+          setCurrentLobby(response.data[i]);
+          validCode = true;
+        }
+      }
+      if(!validCode){
+        leaveLobby();
+        alert("Invalid Lobby Code");
+      }
+    }
+    catch {
+      console.log("Error");
+    }
+  }
+  getLobbyData();
+
 
   return (
     <Container>
@@ -41,7 +67,7 @@ const Lobby = () => {
               <h2 className="lobby player-title">Players</h2>
               <ActivePlayersList players={activePlayers} />
             </Col>
-            
+
             <Col
               xs={1}
               className="d-flex align-items-center justify-content-center"
@@ -50,11 +76,11 @@ const Lobby = () => {
             </Col>
             <Col>
               <h2 className="lobby player-title">Settings</h2>
-              <LobbySettings />
+              <LobbySettings Lobby={currentLobby}/>
               <div className="lobby-code-container">
                 <h2 className="lobby-code-heading">Lobby Code:</h2>
                 <div className="lobby-code">
-                  <span className="lobby-code-text">{lobbyCode}</span>
+                  <span className="lobby-code-text">{currentLobby.code}</span>
                   <OverlayTrigger
                     placement="left"
                     overlay={
@@ -77,7 +103,7 @@ const Lobby = () => {
             <Col>
               <Button
                 width="200px"
-                onClick={() => history.push(`/`)}
+                onClick={leaveLobby}
                 className="back-to-login-button"
               >
                 Leave Lobby

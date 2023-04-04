@@ -3,10 +3,10 @@ import Form from 'react-bootstrap/Form';
 import {FormField} from "../../helpers/formField";
 import "styles/views/Home.scss";
 import {Container} from "react-bootstrap";
+import PropTypes from "prop-types";
 
 
-
-const LobbySettings = () => {
+const LobbySettings = ({Lobby}) => {
 
     const [lobbyValues, setLobbyValues] = useState({
         lobby_name: "",
@@ -37,7 +37,7 @@ const LobbySettings = () => {
                 <FormField
                     label="Lobby Name"
                     type="text"
-                    placeholder={"Lobby Name"}
+                    placeholder={Lobby.name}
                     name="lobby_name"
                     value={lobbyValues.lobby_name}
                     onChange={handleChange}
@@ -65,6 +65,9 @@ const LobbySettings = () => {
             </Form>
         </Container>
     );
+}
+LobbySettings.propTypes = {
+    Lobby: PropTypes.object,
 }
 
 export default LobbySettings;

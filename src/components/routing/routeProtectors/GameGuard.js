@@ -11,10 +11,11 @@ import PropTypes from "prop-types";
  * @param props
  */
 export const GameGuard = props => {
-  if (localStorage.getItem("token")) {
+  //If user has hash in local storage + if lobby with such hash exists atm (backend needs to be fixed first i think)
+  if (!localStorage.getItem("hash")){
     return props.children;
   }
-  return <Redirect to="/login"/>;
+  return <Redirect to="/lobby"/>;
 };
 
 GameGuard.propTypes = {
