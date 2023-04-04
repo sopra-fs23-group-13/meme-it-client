@@ -1,44 +1,440 @@
 [
   {
+    "id": 1,
     "name": "Amazon Prime member's game",
     "size": 8,
     "current_players": 4,
     "hash": "lemon-grass",
-    "admin": "amazon prime member"
+    "admin": "amazon prime member",
+    "rounds": [
+      {
+        "id": 1,
+        "timeout": 35000,
+        "memes": [
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "timeout": 30000,
+        "memes": [
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "timeout": 20000,
+        "memes": [
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          }
+        ]
+      }
+    ]
   },
   {
+    "id": 2,
     "name": "PerryThePlatypus' game",
     "size": 6,
     "current_players": 1,
     "hash": "crystal-clear",
-    "admin": "perrytheplat"
+    "admin": "perrytheplat",
+    "rounds": [
+      {
+        "id": 1,
+        "timeout": 30000,
+        "memes": [
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          },
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "timeout": 30000,
+        "memes": [
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "timeout": 20000,
+        "memes": [
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          },
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          }
+        ]
+      }
+    ]
   },
   {
+    "id": 3,
     "name": "Cursing allowed's game",
     "size": 16,
     "current_players": 4,
     "hash": "ice-berg",
-    "admin": "snickers69"
+    "admin": "snickers69",
+    "rounds": [
+      {
+        "id": 1,
+        "timeout": 35000,
+        "memes": [
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          },
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "timeout": 30000,
+        "memes": [
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "timeout": 20000,
+        "memes": [
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          }
+        ]
+      }
+    ]
   },
   {
+    "id": 4,
     "name": "Bro join here",
     "size": 6,
     "current_players": 4,
     "hash": "sausage-party",
-    "admin": "mememaker64"
+    "admin": "mememaker64",
+    "rounds": [
+      {
+        "id": 1,
+        "timeout": 35000,
+        "memes": [
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          },
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "timeout": 30000,
+        "memes": [
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "timeout": 20000,
+        "memes": [
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          }
+        ]
+      }
+    ]
   },
   {
+    "id": 5,
     "name": "SomeRandomName",
     "size": 8,
     "current_players": 4,
     "hash": "quasi-modo",
-    "admin": "qwer53_s"
+    "admin": "qwer53_s",
+    "rounds": [
+      {
+        "id": 1,
+        "timeout": 35000,
+        "memes": [
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "timeout": 30000,
+        "memes": [
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "timeout": 20000,
+        "memes": [
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          }
+        ]
+      }
+    ]
   },
   {
+    "id": 6,
     "name": "MyLobbyIsFull",
     "size": 8,
     "current_players": 8,
     "hash": "swissloop-tunnelling",
-    "admin": "daniel"
+    "admin": "daniel",
+    "rounds": [
+      {
+        "id": 1,
+        "timeout": 35000,
+        "memes": [
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "timeout": 30000,
+        "memes": [
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "timeout": 20000,
+        "memes": [
+          {
+            "id": 1,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/img_20200922_133732.jpg",
+            "number_of_text_nodes": 1
+          },
+          {
+            "id": 2,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/03/memechat-temp-3fd81455e2b9a7e0.png",
+            "number_of_text_nodes": 3
+          },
+          {
+            "id": 3,
+            "image": "https://allmemetemplates.files.wordpress.com/2020/07/img_20200526_214427.jpg",
+            "number_of_text_nodes": 2
+          }
+        ]
+      }
+    ]
   }
 ]

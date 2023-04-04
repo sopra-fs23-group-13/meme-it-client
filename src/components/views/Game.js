@@ -1,106 +1,184 @@
-import {useEffect, useState} from 'react';
-import {api, handleError} from 'helpers/api';
-import {Spinner} from 'components/ui/Spinner';
-import {Button} from 'components/ui/Button';
-import {useHistory} from 'react-router-dom';
-import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
+import { useContext, useEffect, useMemo, useState } from "react";
+import Draggable from "react-draggable";
+import { Stack, Button } from "react-bootstrap";
+import { v4 as uuid } from "uuid";
+import { useParams, useHistory } from "react-router-dom";
+import { Spinner } from "components/ui/Spinner";
 import "styles/views/Game.scss";
-
-const Player = ({user}) => (
-  <div className="player container">
-    <div className="player username">{user.username}</div>
-    <div className="player name">{user.name}</div>
-    <div className="player id">id: {user.id}</div>
-  </div>
-);
-
-Player.propTypes = {
-  user: PropTypes.object
-};
+import MockData from "../../mockData/menuScreenDataMock.json";
+import BaseContainer from "../ui/BaseContainer";
+import { findGame } from "helpers/functions";
+import { AppContext } from "context";
+import TimerProgressBar from "components/ui/TimerProgressBar";
 
 const Game = () => {
-  // use react-router-dom's hook to access the history
+  const delay = 1000;
   const history = useHistory();
+  const { id } = useParams();
+  const { setFinalGameData } = useContext(AppContext);
+  const game = findGame(MockData, id);
+  const gameRounds = useMemo(() => game?.rounds, [game]);
 
-  // define a state variable (using the state hook).
-  // if this variable changes, the component will re-render, but the variable will
-  // keep its value throughout render cycles.
-  // a component can have as many state variables as you like.
-  // more information can be found under https://reactjs.org/docs/hooks-state.html
-  const [users, setUsers] = useState(null);
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    history.push('/login');
-  }
-
-  // the effect hook can be used to react to change in your component.
-  // in this case, the effect hook is only run once, the first time the component is mounted
-  // this can be achieved by leaving the second argument an empty array.
-  // for more information on the effect hook, please see https://reactjs.org/docs/hooks-effect.html
+  const [currentRound, setCurrentRound] = useState(null);
+  const [currentMeme, setCurrentMeme] = useState(null);
+  const [now, setNow] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTextNodePositions, setCurrentTextNodePositions] = useState([
+    {
+      xRate: 150,
+      yRate: 150,
+    },
+  ]);
+  const [currentTextNodeValues, setCurrentTextNodeValues] = useState([]);
   useEffect(() => {
-    // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
-    async function fetchData() {
-      try {
-        const response = await api.get('/users');
+    setFinalGameData([]);
+    setCurrentRound(gameRounds[0]);
+    setCurrentMeme(gameRounds?.[0]?.memes?.[0]);
+    setNow(0);
+    setIsPlaying(true);
+  }, [gameRounds]);
 
-        // delays continuous execution of an async operation for 1 second.
-        // This is just a fake async call, so that the spinner can be displayed
-        // feel free to remove it :)
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // Get the returned users and update the state.
-        setUsers(response.data);
-
-        // This is just some data for you to see what is available.
-        // Feel free to remove it.
-        console.log('request to:', response.request.responseURL);
-        console.log('status code:', response.status);
-        console.log('status text:', response.statusText);
-        console.log('requested data:', response.data);
-
-        // See here to get more data.
-        console.log(response);
-      } catch (error) {
-        console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
-        console.error("Details:", error);
-        alert("Something went wrong while fetching the users! See the console for details.");
+  const memeTextNodes = useMemo(() => {
+    return [...Array(currentMeme?.number_of_text_nodes).keys()].map(
+      (item, i) => {
+        return {
+          xRate: 0,
+          yRate: (i + 1) * 50,
+        };
       }
+    );
+  }, [currentMeme]);
+
+  const memeTextNodesDefaultValues = useMemo(() => {
+    return memeTextNodes.map((item) => "");
+  }, [memeTextNodes]);
+
+  const currentMemes = useMemo(() => currentRound?.memes, [currentRound]);
+  useEffect(() => {
+    setCurrentMeme(currentRound?.memes?.[0]);
+  }, [currentRound]);
+
+  useEffect(() => {
+    setCurrentTextNodePositions(memeTextNodes);
+    setCurrentTextNodeValues(memeTextNodesDefaultValues);
+  }, [currentMeme]);
+
+  const currentRoundIndex = useMemo(
+    () => gameRounds?.findIndex(({ id }) => id === currentRound?.id),
+    [currentRound]
+  );
+
+  const handleNextRound = () => {
+    if (now < currentRound?.timeout) {
+      setNow(now + 1000);
+    } else {
+      setNow(null);
+      setCurrentRound(gameRounds[currentRoundIndex + 1]);
+      currentMeme &&
+        setFinalGameData((prev) => [
+          ...prev,
+          {
+            id: uuid(),
+            currentTextNodeValues,
+            currentTextNodePositions,
+            currentMeme,
+          },
+        ]);
     }
 
-    fetchData();
-  }, []);
+    if (currentRoundIndex < 0 && isPlaying) {
+      setNow(null);
+      setCurrentRound(null);
+      setIsPlaying(false);
+      history.push("/game-rating/" + id);
+    }
+  };
+  const onTextNodeDrag = (e, data, i) => {
+    let prevPositions = [...currentTextNodePositions];
+    prevPositions[i] = { xRate: data.lastX, yRate: data.lastY };
+    setCurrentTextNodePositions(prevPositions);
+  };
 
-  let content = <Spinner/>;
+  const onTextNodeChange = (e, i) => {
+    let prevValues = [...currentTextNodeValues];
+    prevValues[i] = e.target.value;
+    setCurrentTextNodeValues(prevValues);
+  };
 
-  if (users) {
-    content = (
-      <div className="game">
-        <ul className="game user-list">
-          {users.map(user => (
-            <Player user={user} key={user.id}/>
-          ))}
-        </ul>
-        <Button
-          width="100%"
-          onClick={() => logout()}
-        >
-          Logout
-        </Button>
-      </div>
+  const memeChangesLeft = useMemo(
+    () => currentTextNodeValues?.filter((item) => !item).length,
+    [currentTextNodeValues]
+  );
+
+  const currentMemeIndex = useMemo(
+    () => currentMemes?.findIndex(({ id }) => id === currentMeme?.id),
+    [currentMeme]
+  );
+
+  const handleGetDifferentTemplate = () => {
+    const newMemeIndex = currentMemeIndex + 1;
+    setCurrentMeme(
+      currentMemes[newMemeIndex === currentMemes?.length ? 0 : newMemeIndex]
     );
-  }
+  };
 
   return (
-    <BaseContainer className="game container">
-      <h2>Happy Coding!</h2>
-      <p className="game paragraph">
-        Get all users from secure endpoint:
-      </p>
-      {content}
+    <BaseContainer className="game">
+      <Stack gap={3} className="pt-5 container ">
+        <Stack gap={3} className={`pt-5  `}>
+          {currentRoundIndex + 1 && (
+            <h1 className="fw-bolder fs-3 text-start text-black">
+              {`Round ${currentRoundIndex + 1}/${gameRounds?.length} `}
+            </h1>
+          )}
+          <p className="fs-6 text-start text-black">
+            Drag the text nodes over the image
+          </p>
+          <TimerProgressBar
+            delay={delay}
+            now={now}
+            max={currentRound?.timeout}
+            callbackFunc={() => handleNextRound()}
+            isPlaying={isPlaying}
+          />
+        </Stack>
+        {currentMeme?.image ? (
+          <>
+            <div className="meme-content">
+              <img src={currentMeme?.image} />
+
+              {memeTextNodes?.map((item, i) => (
+                <Draggable
+                  key={i}
+                  bounds="parent"
+                  position={{
+                    x: currentTextNodePositions?.[i]?.xRate,
+                    y: currentTextNodePositions?.[i]?.yRate,
+                  }}
+                  onDrag={(e, data) => onTextNodeDrag(e, data, i)}
+                >
+                  <textarea
+                    placeholder="TEXT HERE"
+                    value={currentTextNodeValues[i]}
+                    onChange={(e) => onTextNodeChange(e, i)}
+                  />
+                </Draggable>
+              ))}
+            </div>
+            <Button
+              className="home join-btn"
+              onClick={handleGetDifferentTemplate}
+            >
+              Get different template
+            </Button>
+            <p>{memeChangesLeft} Meme Changes Left</p>
+          </>
+        ) : (
+          <Spinner />
+        )}
+      </Stack>
     </BaseContainer>
   );
-}
+};
 
 export default Game;
