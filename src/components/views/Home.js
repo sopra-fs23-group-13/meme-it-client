@@ -6,9 +6,10 @@ import {Col, Container, Row, Button, Stack} from "react-bootstrap";
 import {FormField} from "../../helpers/formField";
 import UsernameModal from "./UsernameModal";
 import BaseContainer from "../ui/BaseContainer";
+import {useHistory} from "react-router-dom";
 
 const Home = () => {
-    //const history = useHistory();
+    const history = useHistory();
     const [gameValues, setGameValues] = useState({ hash: "", username: ""});
 
     const [show, setShow] = useState(false);
@@ -55,8 +56,9 @@ const Home = () => {
         if(!gameValues.username){
             //return;
         }
-        //do SetHash with the Hash of the Public Lobby
-        //Do joinHash()
+
+        // Temporary Lobby Join (Through Entering Hash)
+        history.push("/lobby/" + gameValues.hash);
     }
 
     return (

@@ -10,15 +10,6 @@ import {api, handleError} from "../../helpers/api";
 
 const LobbyList = props => {
     const [lobbies, setLobbies] = useState(null);
-    const fetchLobbies = async () => {
-        try {
-            const response = await api.get('/lobby');
-            setLobbies(response.data);
-        } catch {
-            alert("Couldn't fetch lobbies")
-        }
-    }
-
     useEffect(() => {
         // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
         async function fetchData() {
@@ -60,7 +51,7 @@ const LobbyList = props => {
                                     {lobby.players.users.length} / {lobby.lobbySetting.maxPlayers}
                                 </Badge>
                             </div>
-                            <UsernameModal c_names="home join-btn" joiningAllowed={lobby.players.users.length === lobby.lobbySetting.maxPlayers} title={"Join Game"} submit={props.action} />
+                            <UsernameModal c_names="home join-btn" joiningAllowed={lobby.players.users.length === lobby.lobbySetting.maxPlayers} title={"Join Game"} submit={props.action} hash={lobby.code} />
                         </ListGroup.Item>
                     )
                 })}

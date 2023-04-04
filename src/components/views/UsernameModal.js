@@ -28,7 +28,7 @@ const UsernameModal = props => {
 
     const submit = (childValues) => {
         let values = {
-            username: usernameValues.username
+            username: usernameValues.username,
         }
         // check if the key exists, then return the complete lobby to home else just the username
         if("lobby_name" in childValues)
@@ -38,6 +38,10 @@ const UsernameModal = props => {
             }
         localStorage.setItem("username", usernameValues.username)
         props.submit(values);
+
+        // Temporary Lobby Join (Through List)
+        history.push("/lobby/" + props.hash);
+
         handleClose();
     }
 
