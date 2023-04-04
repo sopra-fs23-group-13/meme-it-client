@@ -37,13 +37,11 @@ const UsernameModal = props => {
                 username: usernameValues.username
             }
         localStorage.setItem("username", usernameValues.username)
-        localStorage.setItem("hash", props.hash);
         props.submit(values);
-
         // Temporary Lobby Join (Through List)
         history.push("/lobby");
-
         handleClose();
+        localStorage.setItem("hash", props.hash);
     }
 
     const createLobby = async (childValues) => {
@@ -52,7 +50,7 @@ const UsernameModal = props => {
             let {name, owner, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit} = {name: "Lobby of " + localStorage.getItem("username") , owner: localStorage.getItem("username"), isPublic:true, maxPlayers:4,maxRounds:3, memeChangeLimit:0, superLikeLimit:1, superDislikeLimit:1, timeRoundLimit:60,timeVoteLimit:30  }
             const requestBody = JSON.stringify({name, owner, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit});
             const response = await api.post('/lobby', requestBody);
-
+            localStorage.setItem("hash", response.data.code)
             /*
             Get Lobby Code from Response, then add player to lobby (doesn't work atm)
             let data = JSON.stringify(response.data);

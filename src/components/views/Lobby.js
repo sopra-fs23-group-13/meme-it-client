@@ -42,7 +42,6 @@ const Lobby = () => {
       }
       if(!validCode){
         leaveLobby();
-        alert("Invalid Lobby Code");
       }
     }
     catch {
