@@ -5,10 +5,14 @@ import {FormField} from "../../helpers/formField";
 import "styles/views/Home.scss";
 import {Button} from "react-bootstrap";
 import LobbyCreationModal from "./LobbyCreationModal";
+import {useHistory} from "react-router-dom";
+import {api} from "../../helpers/api";
+import User from "../../models/User";
 const LOBBY_CREATION = "Create Lobby";
 const LOBBY_JOIN = "Join Game";
 
 const UsernameModal = props => {
+    const history = useHistory();
     const [show, setShow] = useState(false);
     const [usernameValues, setUsernameValues] = useState({ username: ""});
     const handleClose = () => setShow(false);
@@ -32,8 +36,29 @@ const UsernameModal = props => {
                 ...childValues,
                 username: usernameValues.username
             }
+        localStorage.setItem("username", usernameValues.username)
         props.submit(values);
         handleClose();
+    }
+
+    const createLobby = async (childValues) => {
+        submit(childValues);
+        try {
+            let {name, owner, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit} = {name: "Lobby of " + localStorage.getItem("username") , owner: localStorage.getItem("username"), isPublic:true, maxPlayers:4,maxRounds:3, memeChangeLimit:0, superLikeLimit:1, superDislikeLimit:1, timeRoundLimit:60,timeVoteLimit:30  }
+            const requestBody = JSON.stringify({name, owner, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit});
+            const response = await api.post('/lobby', requestBody);
+
+            /*
+            Get Lobby Code from Response, then add player to lobby (doesn't work atm)
+            let data = JSON.stringify(response.data);
+            let lobbyCode = JSON.parse(data).code;
+            console.log(JSON.parse(data).code)
+            const response2 = await api.post('/' + lobbyCode + '/players', JSON.stringify({name: localStorage.getItem("username")}));
+             */
+        } catch {
+            alert("Couldn't create lobby")
+        }
+        history.push("/lobby");
     }
 
     return (
@@ -61,8 +86,9 @@ const UsernameModal = props => {
                         Close
                     </Button>
                     {props.title === LOBBY_CREATION &&
-                        <LobbyCreationModal username={usernameValues.username} submit={submit} close={handleClose} />
-                    }
+                        <Button disabled={usernameValues.username===''} className="home join-btn"  onClick={createLobby}>
+                            Set Username
+                        </Button>                    }
                     {props.title === LOBBY_JOIN &&
                         <Button disabled={usernameValues.username===''} className="home join-btn"  onClick={submit}>
                             Set Username

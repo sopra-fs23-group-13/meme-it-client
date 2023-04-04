@@ -4,6 +4,8 @@ import Modal from 'react-bootstrap/Modal';
 import {FormField} from "../../helpers/formField";
 import "styles/views/Home.scss";
 import {Button} from "react-bootstrap";
+import {api} from "../../helpers/api";
+import lobby from "./Lobby";
 
 
 const LobbyCreationModal = props => {
@@ -20,7 +22,13 @@ const LobbyCreationModal = props => {
         }));
     };
 
-    const submit = () => {
+    const submit = async () => {
+        const requestBody = JSON.stringify(({name: lobbyValues.lobby_name}, {maxRounds: lobbyValues.number_of_rounds}, {isPublic: true}, {owner: lobbyValues.username}, {memeChangeLimit: lobbyValues.meme_change_limit}, {superLikeLimit: lobbyValues.super_like_limit}, {superDislikeLimit: lobbyValues.super_like_limit}, {timeRoundLimit: lobbyValues.creation_time_limit},{timeVoteLimit: lobbyValues.voting_phase_time}));
+        try {
+            const response = await api.post('/lobby', requestBody);
+        } catch {
+            alert("Couldn't create lobby")
+        }
         props.submit(lobbyValues);
         handleClose();
     }
