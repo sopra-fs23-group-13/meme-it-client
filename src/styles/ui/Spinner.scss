@@ -1,4 +1,4 @@
-@import 'styles/theme';
+@import "styles/theme";
 
 .loading-spinner {
     display: inline-block;
@@ -33,6 +33,10 @@
         }
     }
 }
+
+.timer-progressbar {
+    height: 42px;
+}
 @keyframes loading-spinner1 {
     0% {
         transform: scale(0);
@@ -57,4 +61,3 @@
         transform: scale(0);
     }
 }
-
