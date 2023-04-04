@@ -81,7 +81,8 @@ const Game = () => {
             <Container>
                 <Row>
                     <Col className={"game gameScreen"}>
-                        <img src={meme.url} style={{width: "inherit", height: meme.height >= 500 ? 500 : "inherit"}} className={"game meme"} alt="Current meme to display"/>
+
+                        <img src={meme.url} style={{height: meme.height >= 500 ? 500 : "inherit"}} className={"game meme"} alt="Current meme to display"/>
                         {textBoxes.map((textBox, index) => (
                             <div
                                 key={index}
@@ -124,7 +125,7 @@ const Game = () => {
     }
 
     return (
-        <Container className={"home content"}>
+        <Container className={"game content"}>
             <Stack gap={3}>
                 <Row>
                     <Container>

@@ -8,6 +8,9 @@
  */
 
 .game {
+  &.content {
+    margin-top: 5rem;
+  }
   &.image {
     background: $background;
     padding: 1.5em;
