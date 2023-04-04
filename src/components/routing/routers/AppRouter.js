@@ -1,6 +1,8 @@
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Home from "../../views/Home";
 import Lobby from "../../views/Lobby";
+import Game from "components/views/Game";
+import GameRating from "components/views/GameRating";
 
 /**
  * Main router of your application.
@@ -14,17 +16,23 @@ import Lobby from "../../views/Lobby";
 const AppRouter = () => {
   return (
     <BrowserRouter>
-        <Switch>
-            <Route path="/lobby">
-                <Lobby></Lobby>
-            </Route>
-            <Home></Home>
-        </Switch>
+      <Switch>
+        <Route path="/lobby">
+          <Lobby />
+        </Route>
+        <Route path="/game/:id">
+          <Game />
+        </Route>
+        <Route path="/game-rating/:id">
+          <GameRating />
+        </Route>
+        <Home></Home>
+      </Switch>
     </BrowserRouter>
   );
 };
 
 /*
-* Don't forget to export your component!
+ * Don't forget to export your component!
  */
 export default AppRouter;
