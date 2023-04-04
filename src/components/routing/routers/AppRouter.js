@@ -1,6 +1,7 @@
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Home from "../../views/Home";
 import Lobby from "../../views/Lobby";
+import Game from "../../views/Game";
 
 /**
  * Main router of your application.
@@ -17,6 +18,9 @@ const AppRouter = () => {
         <Switch>
             <Route path="/lobby">
                 <Lobby></Lobby>
+            </Route>
+            <Route path="/game">
+                <Game></Game>
             </Route>
             <Home></Home>
         </Switch>

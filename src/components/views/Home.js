@@ -5,7 +5,6 @@ import LobbyList from "./LobbyList";
 import {Col, Container, Row, Button, Stack} from "react-bootstrap";
 import {FormField} from "../../helpers/formField";
 import UsernameModal from "./UsernameModal";
-import BaseContainer from "../ui/BaseContainer";
 
 const Home = () => {
     //const history = useHistory();
