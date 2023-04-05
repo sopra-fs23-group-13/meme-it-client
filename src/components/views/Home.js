@@ -53,12 +53,13 @@ const Home = () => {
 
     const joinExistingGame = (userValues) => {
         console.log(userValues);
+        if(gameValues.hash != null){
+            localStorage.setItem("hash", gameValues.hash);
+        }
         if(!gameValues.username){
             //return;
         }
-
         // Temporary Lobby Join (Through Entering Hash)
-        localStorage.setItem("hash", gameValues.hash);
         history.push("/lobby");
     }
 
@@ -73,7 +74,6 @@ const Home = () => {
                         <Col sm>
                             <Stack gap={3}>
                             <Row>
-                                {localStorage.getItem("hash")}
                                 <Col>
                                     <h1 className="home title">Meme-It</h1>
                                     <p className="home subtitle"> The Meme Creation Game</p>

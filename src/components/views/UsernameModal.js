@@ -41,7 +41,9 @@ const UsernameModal = props => {
         // Temporary Lobby Join (Through List)
         history.push("/lobby");
         handleClose();
-        localStorage.setItem("hash", props.hash);
+        if(props.hash != null){
+            localStorage.setItem("hash", props.hash);
+        }
     }
 
     const createLobby = async (childValues) => {
