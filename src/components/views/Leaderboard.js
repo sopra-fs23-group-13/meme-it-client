@@ -14,8 +14,7 @@ const Leaderboard = ({ leaderboardData }) => {
 
   return (
     <ListGroup>
-      {leaderboard &&
-        leaderboard.map((player, index) => (
+      {leaderboardData.map((player, index) => (
           <ListGroup.Item
             as="li"
             key={index}
