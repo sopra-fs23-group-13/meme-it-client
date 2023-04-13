@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import Draggable from "react-draggable";
 import { Stack, Button } from "react-bootstrap";
 import { v4 as uuid } from "uuid";
@@ -122,8 +122,20 @@ const Game = () => {
     );
   };
 
+  const leaveGame = async () => {
+    //const leaveResponse = await api.delete('/' + localStorage.getItem("hash") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
+    localStorage.clear();
+    history.push("/");
+  }
   return (
       <BaseContainer className="game">
+        <Button
+            width="200px"
+            onClick={leaveGame}
+            className="back-to-login-button"
+        >
+          Leave Game
+        </Button>
         <Stack gap={3} className="pt-5 container ">
           <Stack gap={3} className={`pt-5  `}>
             {currentRoundIndex + 1 && (

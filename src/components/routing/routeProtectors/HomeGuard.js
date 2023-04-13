@@ -10,17 +10,17 @@ import PropTypes from "prop-types";
  * @Guard
  * @param props
  */
-export const GameGuard = props => {
-  //If user has hash in local storage + if lobby with such hash exists atm (backend needs to be fixed first i think)
-  if (localStorage.getItem("hash") && localStorage.getItem("started")){
-    return props.children;
-  }
-  if (localStorage.getItem("hash")){
-    return <Redirect to="/lobby"/>;
-  }
-  return <Redirect to="/"/>;
+export const HomeGuard = props => {
+    //If user has hash in local storage + if lobby with such hash exists atm (backend needs to be fixed first i think)
+    if (!localStorage.getItem("hash")){
+        return props.children;
+    }
+    if(!localStorage.getItem("started")){
+        return <Redirect to="/lobby"/>;
+    }
+    return <Redirect to="/game/1"/>;
 };
 
-GameGuard.propTypes = {
-  children: PropTypes.node
+HomeGuard.propTypes = {
+    children: PropTypes.node
 };

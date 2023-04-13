@@ -113,7 +113,11 @@ const Lobby = () => {
         </BaseContainer>
         <Row className={"d-flex align-items-center justify-content-center"}>
           <Button
-              onClick={() => history.push(`/`)}
+              onClick={() =>{
+                localStorage.setItem("started", "true")
+                history.push("/game/1")
+              }
+          }
               className="lobby btn start"
           >
             Start Game

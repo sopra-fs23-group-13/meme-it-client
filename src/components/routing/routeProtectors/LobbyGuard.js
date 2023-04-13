@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
  * Another way to export directly your functional component.
  */
 export const LobbyGuard = props => {
-    if (localStorage.getItem("hash")) {
+    if (localStorage.getItem("hash") && !localStorage.getItem("started")) {
         return props.children;
     }
     // if user is not in lobby, redirects to home
