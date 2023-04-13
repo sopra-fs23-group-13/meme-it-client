@@ -1,5 +1,26 @@
 @import 'styles/theme';
 
+.leaderboard-container {
+  width: 600px; /* set the width of the container element */
+  margin: 0 auto; /* center the container element */
+  margin-top: 200px;
+
+  .leaderboard-header {
+    display: flex;
+    justify-content: space-between;
+    background-color: $themeColor;
+    color: #80b9ee;
+    font-weight: bold;
+    padding: 0.5rem;
+    border-radius: 10px 10px 0 0;
+
+    .leaderboard-header-column {
+      width: 33.33%;
+      text-align: center;
+    }
+  }
+}
+
 .leaderboard {
   &.item {
     background-color: $buttonColorHover;
@@ -13,10 +34,10 @@
     justify-content: space-between;
   }
   &-gold {
-    color: #ffd700;
+    color: #d7b912;
   }
   &-silver {
-    color: #c0c0c0;
+    color: #a1a1a1;
   }
   &-bronze {
     color: #cd7f32;

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ListGroup, Badge } from "react-bootstrap";
 import "styles/views/Leaderboard.scss";
+import { FaMedal } from 'react-icons/fa';
 import MockData from '../../mockData/leaderboardScreenDataMock.json'
 
-
 const Leaderboard = ({ leaderboardData }) => {
-
   const [leaderboard, setLeaderboard] = useState(null);
 
   useEffect(() => {
@@ -13,22 +12,32 @@ const Leaderboard = ({ leaderboardData }) => {
   }, [leaderboardData]);
 
   return (
-    <ListGroup>
-      {leaderboardData.map((player, index) => (
+    <div className="leaderboard-container">
+      <ListGroup>
+        {/* Neue Zeile für Überschriften hinzufügen */}
+        <ListGroup.Item as="li" className="leaderboard-header">
+          <div className="leaderboard-rank">Rank</div>
+          <div className="leaderboard-name">Playername</div>
+          <div className="leaderboard-score">Points</div>
+          <div className="leaderboard-meme">Meme</div>
+        </ListGroup.Item>
+
+        {/* Spielerliste */}
+        {leaderboardData.map((player, index) => (
           <ListGroup.Item
             as="li"
             key={index}
-            className="d-flex justify-content-between align-items-center leaderboard-item"
+            className={`d-flex justify-content-between align-items-center leaderboard-item ${index === 0 ? 'leaderboard-gold' : index === 1 ? 'leaderboard-silver' : index === 2 ? 'leaderboard-bronze' : ''}`}
           >
             <div className="leaderboard-rank">
               {index === 0 && (
-                <span className="leaderboard-gold">#1</span>
+                <FaMedal size={32} color="#d7b912" />
               )}
               {index === 1 && (
-                <span className="leaderboard-silver">#2</span>
+                <FaMedal size={32} color="#a1a1a1" />
               )}
               {index === 2 && (
-                <span className="leaderboard-bronze">#3</span>
+                <FaMedal size={32} color="#cd7f32" />
               )}
               {index > 2 && <span className="leaderboard-rank-number">{index + 1}</span>}
             </div>
@@ -38,11 +47,12 @@ const Leaderboard = ({ leaderboardData }) => {
                 {player.score}
               </Badge>
             </div>
+            <div className="leaderboard-meme">{player.meme}</div>
           </ListGroup.Item>
         ))}
-    </ListGroup>
+      </ListGroup>
+    </div>
   );
 };
-
 
 export default Leaderboard;
