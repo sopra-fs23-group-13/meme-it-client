@@ -26,7 +26,8 @@ const Lobby = () => {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(currentLobby.code);
   };
-  const leaveLobby = () => {
+  const leaveLobby = async () => {
+    //const leaveResponse = await api.delete('/' + localStorage.getItem("hash") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
     localStorage.clear();
     history.push("/");
   }
@@ -44,8 +45,8 @@ const Lobby = () => {
         leaveLobby();
       }
     }
-    catch {
-      console.log("Error");
+    catch (error){
+      console.log(error);
     }
   }
   getLobbyData();

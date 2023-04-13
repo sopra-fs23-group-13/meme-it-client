@@ -26,12 +26,12 @@ const UsernameModal = props => {
         }));
     };
 
-    const submit = (childValues) => {
+    const submit = async (childValues) => {
         let values = {
             username: usernameValues.username,
         }
         // check if the key exists, then return the complete lobby to home else just the username
-        if("lobby_name" in childValues)
+        if ("lobby_name" in childValues)
             values = {
                 ...childValues,
                 username: usernameValues.username
@@ -41,8 +41,9 @@ const UsernameModal = props => {
         // Temporary Lobby Join (Through List)
         history.push("/lobby");
         handleClose();
-        if(props.hash != null){
+        if (props.hash != null) {
             localStorage.setItem("hash", props.hash);
+            //const joinResponse = await api.post('/' + props.hash + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
         }
     }
 
@@ -53,13 +54,9 @@ const UsernameModal = props => {
             const requestBody = JSON.stringify({name, owner, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit});
             const response = await api.post('/lobby', requestBody);
             localStorage.setItem("hash", response.data.code)
-            /*
-            Get Lobby Code from Response, then add player to lobby (doesn't work atm)
-            let data = JSON.stringify(response.data);
-            let lobbyCode = JSON.parse(data).code;
-            console.log(JSON.parse(data).code)
-            const response2 = await api.post('/' + lobbyCode + '/players', JSON.stringify({name: localStorage.getItem("username")}));
-             */
+
+            //Get Lobby Code from Response, then add player to lobby (doesn't work atm)
+            //const joinResponse = await api.post('/' + response.data.code + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
         } catch {
             alert("Couldn't create lobby")
         }

@@ -7,6 +7,7 @@ import {FormField} from "../../helpers/formField";
 import UsernameModal from "./UsernameModal";
 import BaseContainer from "../ui/BaseContainer";
 import {useHistory} from "react-router-dom";
+import {api} from "../../helpers/api";
 
 const Home = () => {
     const history = useHistory();
@@ -51,15 +52,12 @@ const Home = () => {
         console.log(lobbyValues);
     }
 
-    const joinExistingGame = (userValues) => {
+    const joinExistingGame = async (userValues) => {
         console.log(userValues);
-        if(gameValues.hash != null){
+        if (gameValues.hash != null) {
             localStorage.setItem("hash", gameValues.hash);
+            //const joinResponse = await api.post('/' + gameValues.hash + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
         }
-        if(!gameValues.username){
-            //return;
-        }
-        // Temporary Lobby Join (Through Entering Hash)
         history.push("/lobby");
     }
 
