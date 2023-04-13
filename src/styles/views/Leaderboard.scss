@@ -1,0 +1,33 @@
+@import 'styles/theme';
+
+.leaderboard {
+  &.item {
+    background-color: $buttonColorHover;
+    color: $textColor;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  &-gold {
+    color: #ffd700;
+  }
+  &-silver {
+    color: #c0c0c0;
+  }
+  &-bronze {
+    color: #cd7f32;
+  }
+  &-rank-number {
+    color: $themeColor;
+  }
+  &-score-badge {
+    background-color: $themeColor;
+    color: $buttonColorHover;
+    border-radius: 10px;
+    font-size: 1.2rem;
+  }
+}

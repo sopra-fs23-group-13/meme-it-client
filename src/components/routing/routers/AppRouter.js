@@ -6,6 +6,7 @@ import {GameGuard} from "../routeProtectors/GameGuard";
 import Game from "components/views/Game";
 import GameRating from "components/views/GameRating";
 import {HomeGuard} from "../routeProtectors/HomeGuard";
+import Leaderboard from "components/views/Leaderboard";
 
 /**
  * Main router of your application.
@@ -17,34 +18,38 @@ import {HomeGuard} from "../routeProtectors/HomeGuard";
  * Documentation about routing in React: https://reacttraining.com/react-router/web/guides/quick-start
  */
 const AppRouter = () => {
-  return (
-    <BrowserRouter>
+    return (
+      <BrowserRouter>
         <Switch>
-            <Route path="/lobby">
-                <LobbyGuard>
-                    <Lobby/>
-                </LobbyGuard>
-            </Route>
-            <Route path="/game/:id">
-                <GameGuard>
-                    <Game/>
-                </GameGuard>
-            </Route>
-            <Route path="/game-rating/:id">
-                <GameGuard>
-                    <GameRating/>
-                </GameGuard>
-            </Route>
-            <Route path="/game">
-                <Redirect to="/"/>
-            </Route>
-            <HomeGuard>
-                <Home/>
-            </HomeGuard>
+          <Route path="/leaderboard">
+            <Leaderboard />
+          </Route>
+          <Route path="/lobby">
+            <LobbyGuard>
+              <Lobby/>
+            </LobbyGuard>
+          </Route>
+          <Route path="/game/:id">
+            <GameGuard>
+              <Game/>
+            </GameGuard>
+          </Route>
+          <Route path="/game-rating/:id">
+            <GameGuard>
+              <GameRating/>
+            </GameGuard>
+          </Route>
+          <Route path="/game">
+            <Redirect to="/"/>
+          </Route>
+          <HomeGuard>
+            <Home/>
+          </HomeGuard>
         </Switch>
-    </BrowserRouter>
-  );
-};
+      </BrowserRouter>
+    );
+  };
+  
 
 /*
  * Don't forget to export your component!
