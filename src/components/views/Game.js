@@ -15,11 +15,12 @@ const Game = () => {
   const delay = 1000;
   const history = useHistory();
   const { id } = useParams();
-  const { setFinalGameData } = useContext(AppContext);
+  const { setGameData, gameData } = useContext(AppContext);
   const game = findGame(MockData, id);
   const gameRounds = useMemo(() => game?.rounds, [game]);
 
   const [currentRound, setCurrentRound] = useState(null);
+  const [maxRound, setMaxRound] = useState(null);
   const [currentMeme, setCurrentMeme] = useState(null);
   const [now, setNow] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -31,9 +32,10 @@ const Game = () => {
   ]);
   const [currentTextNodeValues, setCurrentTextNodeValues] = useState([]);
   useEffect(() => {
-    setFinalGameData([]);
-    setCurrentRound(gameRounds[0]);
+    setGameData([]);
+    setCurrentRound(gameRounds[gameData?.currentRound?.id ?? 0]);
     setCurrentMeme(gameRounds?.[0]?.memes?.[0]);
+    setMaxRound(3);
     setNow(0);
     setIsPlaying(true);
   }, [gameRounds]);
@@ -50,7 +52,7 @@ const Game = () => {
   }, [currentMeme]);
 
   const memeTextNodesDefaultValues = useMemo(() => {
-    return memeTextNodes.map((item) => "");
+    return memeTextNodes.map(() => "");
   }, [memeTextNodes]);
 
   const currentMemes = useMemo(() => currentRound?.memes, [currentRound]);
@@ -74,16 +76,17 @@ const Game = () => {
     } else {
       setNow(null);
       setCurrentRound(gameRounds[currentRoundIndex + 1]);
-      currentMeme &&
-        setFinalGameData((prev) => [
-          ...prev,
-          {
-            id: uuid(),
-            currentTextNodeValues,
-            currentTextNodePositions,
-            currentMeme,
-          },
-        ]);
+      currentMeme && setGameData(
+        {
+          id: uuid(),
+          currentTextNodeValues,
+          currentTextNodePositions,
+          currentMeme,
+          currentRound,
+          maxRound
+        }
+      );
+      history.push("/game-rating/" + id);
     }
 
     if (currentRoundIndex < 0 && isPlaying) {
