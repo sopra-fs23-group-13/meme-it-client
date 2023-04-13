@@ -1,4 +1,4 @@
-@import 'styles/theme';
+@import "styles/theme";
 
 /* The '&' is a shorthand for the containing element,
   so for example a '&.user-list' inside .game will compile to
@@ -8,52 +8,65 @@
  */
 
 .game {
-  &.container {
-    background: $background;
-    padding: 1.5em;
-    border-radius: $borderRadius;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: $dropShadow;
-  }
-  &.user-list {
-    list-style: none;
-    padding-left: 0;
-  }
-  &.user-item {
-    display: flex;
-    flex-direction: column;
+  .container {
     align-items: center;
     justify-content: center;
-  }
-  & p,h2 {
-    margin: 0.5em 0;
-  }
-}
+    .meme-content {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      position: relative;
+      width: 400px;
+      img {
+        width: 400px;
+        height: 400px;
+      }
+      textarea {
+        font-weight: 750;
+        position: absolute;
+        font-size: 16px;
+        color: #fff;
+        background: none;
+        width: 100px;
+        min-height: 40px;
+        border: none;
+        &::placeholder {
+          color: #fff;
+        }
+      }
+    }
 
-.player {
-  &.container {
-    margin: 0.5em 0;
-    width: 20em;
-    padding: 10px;
-    border-radius: $borderRadius;
-    display: flex;
-    align-items: center;
-    background: lighten($background, 5);
-  }
-  &.name {
-    font-weight: 300;
-    margin-left: 5px;
-  }
-  &.username {
-    font-weight: 500;
-    color: $accent;
-  }
-  &.id {
-    margin-left: auto;
-    margin-right: 10px;
-    font-family: $fontMono;
-    font-weight: 300;
+    .join-btn {
+      width: fit-content;
+    }
+
+    .reactions-container {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      svg {
+        transition: opacity 0.3s ease;
+        color: #4a5d6c;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+      .selected svg {
+        color: rgb(255, 48, 64);
+      }
+    }
+    .icon-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      p {
+        font-size: 10px;
+      }
+    }
   }
 }

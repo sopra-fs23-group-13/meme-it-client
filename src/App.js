@@ -1,5 +1,5 @@
 import AppRouter from "components/routing/routers/AppRouter";
-
+import AppContextProvider from "./context";
 /**
  * Happy coding!
  * React Template by Lucas Pelloni
@@ -7,9 +7,12 @@ import AppRouter from "components/routing/routers/AppRouter";
  */
 const App = () => {
   return (
-    <div>
-      <AppRouter/>
-    </div>
+    <AppContextProvider>
+      <div>
+        <Header height="100" />
+        <AppRouter />
+      </div>
+    </AppContextProvider>
   );
 };
 
