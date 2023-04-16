@@ -1,7 +1,7 @@
 @import 'styles/theme';
 
 .leaderboard-container {
-  width: 600px; /* set the width of the container element */
+  width: 700px; /* set the width of the container element */
   margin: 0 auto; /* center the container element */
   margin-top: 200px;
 
@@ -44,10 +44,12 @@
   }
   &-rank-number {
     color: $themeColor;
+    font-size: 1.2rem;
+    font-weight: bold;
   }
   &-score-badge {
     background-color: $themeColor;
-    color: $buttonColorHover;
+    color: #ffffff;
     border-radius: 10px;
     font-size: 1.2rem;
   }
