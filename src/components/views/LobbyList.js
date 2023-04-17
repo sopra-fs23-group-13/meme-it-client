@@ -37,6 +37,7 @@ const LobbyList = props => {
         lobbyItems = (
             <div>
             {lobbies.map(lobby => {
+                if(lobby.lobbySetting.isPublic){
                     return(
                         <ListGroup.Item
                             as="li"
@@ -54,6 +55,8 @@ const LobbyList = props => {
                             <UsernameModal c_names="home join-btn" joiningAllowed={lobby.players.users.length === lobby.lobbySetting.maxPlayers} title={"Join Game"} submit={props.action} hash={lobby.code} />
                         </ListGroup.Item>
                     )
+                }
+
                 })}
             </div>
         )

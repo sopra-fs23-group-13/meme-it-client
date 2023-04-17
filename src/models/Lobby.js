@@ -1,16 +1,18 @@
 class Lobby {
     constructor(data = {}) {
         this.owner = null;
-        this.code = null;
         this.name = null;
-        this.isPublic = null;
-        this.maxPlayers = null;
-        this.maxRounds = null;
-        this.memeChangeLimit = null;
-        this.superLikeLimit = null;
-        this.superDislikeLimit = null;
-        this.timeRoundLimit = null;
-        this.timeVoteLimit = null;
+        this.code = null;
+        this.lobbySetting = {
+            isPublic: null,
+            maxPlayers: null,
+            maxRounds: null,
+            memeChangeLimit: null,
+            superLikeLimit: null,
+            superDislikeLimit: null,
+            timeRoundLimit: null,
+            timeVoteLimit: null,
+        }
         Object.assign(this, data);
     }
 }
