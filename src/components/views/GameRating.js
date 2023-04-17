@@ -112,7 +112,7 @@ const GameRating = () => {
         {currentGameData?.currentMeme?.image ? (
           <>
             <div className="meme-content">
-              <img src={currentGameData?.currentMeme?.image} />
+              <img src={currentGameData?.currentMeme?.image} alt={"Meme"} />
 
               {currentGameData?.currentTextNodePositions?.map((item, i) => (
                 <Draggable
