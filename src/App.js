@@ -1,4 +1,3 @@
-import Header from "components/views/Header";
 import AppRouter from "components/routing/routers/AppRouter";
 import AppContextProvider from "./context";
 /**
@@ -8,12 +7,9 @@ import AppContextProvider from "./context";
  */
 const App = () => {
   return (
-    <AppContextProvider>
       <div>
-        <Header height="100" />
         <AppRouter />
       </div>
-    </AppContextProvider>
   );
 };
 

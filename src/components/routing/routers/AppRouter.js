@@ -1,8 +1,11 @@
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import Home from "../../views/Home";
 import Lobby from "../../views/Lobby";
+import {LobbyGuard} from "../routeProtectors/LobbyGuard";
+import {GameGuard} from "../routeProtectors/GameGuard";
 import Game from "components/views/Game";
 import GameRating from "components/views/GameRating";
+import {HomeGuard} from "../routeProtectors/HomeGuard";
 
 /**
  * Main router of your application.
@@ -16,18 +19,29 @@ import GameRating from "components/views/GameRating";
 const AppRouter = () => {
   return (
     <BrowserRouter>
-      <Switch>
-        <Route path="/lobby">
-          <Lobby />
-        </Route>
-        <Route path="/game/:id">
-          <Game />
-        </Route>
-        <Route path="/game-rating/:id">
-          <GameRating />
-        </Route>
-        <Home></Home>
-      </Switch>
+        <Switch>
+            <Route path="/lobby">
+                <LobbyGuard>
+                    <Lobby/>
+                </LobbyGuard>
+            </Route>
+            <Route path="/game/:id">
+                <GameGuard>
+                    <Game/>
+                </GameGuard>
+            </Route>
+            <Route path="/game-rating/:id">
+                <GameGuard>
+                    <GameRating/>
+                </GameGuard>
+            </Route>
+            <Route path="/game">
+                <Redirect to="/"/>
+            </Route>
+            <HomeGuard>
+                <Home/>
+            </HomeGuard>
+        </Switch>
     </BrowserRouter>
   );
 };

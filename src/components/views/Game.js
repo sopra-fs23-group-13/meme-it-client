@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import Draggable from "react-draggable";
 import { Stack, Button } from "react-bootstrap";
 import { v4 as uuid } from "uuid";
@@ -42,12 +42,12 @@ const Game = () => {
 
   const memeTextNodes = useMemo(() => {
     return [...Array(currentMeme?.number_of_text_nodes).keys()].map(
-      (item, i) => {
-        return {
-          xRate: 0,
-          yRate: (i + 1) * 50,
-        };
-      }
+        (item, i) => {
+          return {
+            xRate: 0,
+            yRate: (i + 1) * 50,
+          };
+        }
     );
   }, [currentMeme]);
 
@@ -66,8 +66,8 @@ const Game = () => {
   }, [currentMeme]);
 
   const currentRoundIndex = useMemo(
-    () => gameRounds?.findIndex(({ id }) => id === currentRound?.id),
-    [currentRound]
+      () => gameRounds?.findIndex(({ id }) => id === currentRound?.id),
+      [currentRound]
   );
 
   const handleNextRound = () => {
@@ -76,17 +76,16 @@ const Game = () => {
     } else {
       setNow(null);
       setCurrentRound(gameRounds[currentRoundIndex + 1]);
-      currentMeme && setGameData(
+      currentMeme &&
+      setFinalGameData((prev) => [
+        ...prev,
         {
           id: uuid(),
           currentTextNodeValues,
           currentTextNodePositions,
           currentMeme,
-          currentRound,
-          maxRound
-        }
-      );
-      history.push("/game-rating/" + id);
+        },
+      ]);
     }
 
     if (currentRoundIndex < 0 && isPlaying) {
@@ -109,78 +108,90 @@ const Game = () => {
   };
 
   const memeChangesLeft = useMemo(
-    () => currentTextNodeValues?.filter((item) => !item).length,
-    [currentTextNodeValues]
+      () => currentTextNodeValues?.filter((item) => !item).length,
+      [currentTextNodeValues]
   );
 
   const currentMemeIndex = useMemo(
-    () => currentMemes?.findIndex(({ id }) => id === currentMeme?.id),
-    [currentMeme]
+      () => currentMemes?.findIndex(({ id }) => id === currentMeme?.id),
+      [currentMeme]
   );
 
   const handleGetDifferentTemplate = () => {
     const newMemeIndex = currentMemeIndex + 1;
     setCurrentMeme(
-      currentMemes[newMemeIndex === currentMemes?.length ? 0 : newMemeIndex]
+        currentMemes[newMemeIndex === currentMemes?.length ? 0 : newMemeIndex]
     );
   };
 
+  const leaveGame = async () => {
+    //const leaveResponse = await api.delete('/' + localStorage.getItem("hash") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
+    localStorage.clear();
+    history.push("/");
+  }
   return (
-    <BaseContainer className="game">
-      <Stack gap={3} className="pt-5 container ">
-        <Stack gap={3} className={`pt-5  `}>
-          {currentRoundIndex + 1 && (
-            <h1 className="fw-bolder fs-3 text-start text-black">
-              {`Round ${currentRoundIndex + 1}/${gameRounds?.length} `}
-            </h1>
-          )}
-          <p className="fs-6 text-start text-black">
-            Drag the text nodes over the image
-          </p>
-          <TimerProgressBar
-            delay={delay}
-            now={now}
-            max={currentRound?.timeout}
-            callbackFunc={() => handleNextRound()}
-            isPlaying={isPlaying}
-          />
-        </Stack>
-        {currentMeme?.image ? (
-          <>
-            <div className="meme-content">
-              <img src={currentMeme?.image} />
+      <BaseContainer className="game">
+        <Button
+            width="200px"
+            onClick={leaveGame}
+            className="back-to-login-button"
+        >
+          Leave Game
+        </Button>
+        <Stack gap={3} className="pt-5 container ">
+          <Stack gap={3} className={`pt-5  `}>
+            {currentRoundIndex + 1 && (
+                <h1 className="fw-bolder fs-3 text-start text-black">
+                  {`Round ${currentRoundIndex + 1}/${gameRounds?.length} `}
+                </h1>
+            )}
+            <p className="fs-6 text-start text-black">
+              Drag the text nodes over the image
+            </p>
+            <TimerProgressBar
+                delay={delay}
+                now={now}
+                max={currentRound?.timeout}
+                callbackFunc={() => handleNextRound()}
+                isPlaying={isPlaying}
+            />
+          </Stack>
+          {currentMeme?.image ? (
+              <>
+                <div className="meme-content">
+                  <img src={currentMeme?.image} />
 
-              {memeTextNodes?.map((item, i) => (
-                <Draggable
-                  key={i}
-                  bounds="parent"
-                  position={{
-                    x: currentTextNodePositions?.[i]?.xRate,
-                    y: currentTextNodePositions?.[i]?.yRate,
-                  }}
-                  onDrag={(e, data) => onTextNodeDrag(e, data, i)}
-                >
+                  {memeTextNodes?.map((item, i) => (
+                      <Draggable
+                          key={i}
+                          bounds="parent"
+                          position={{
+                            x: currentTextNodePositions?.[i]?.xRate,
+                            y: currentTextNodePositions?.[i]?.yRate,
+                          }}
+                          onDrag={(e, data) => onTextNodeDrag(e, data, i)}
+                      >
                   <textarea
-                    placeholder="TEXT HERE"
-                    value={currentTextNodeValues[i]}
-                    onChange={(e) => onTextNodeChange(e, i)}
+                      placeholder="TEXT HERE"
+                      value={currentTextNodeValues[i]}
+                      onChange={(e) => onTextNodeChange(e, i)}
                   />
-                </Draggable>
-              ))}
-            </div>
-            <Button
-              className="home join-btn"
-              onClick={handleGetDifferentTemplate}
-            >
-              Get different template
-            </Button>
-            <p>{memeChangesLeft} Meme Changes Left</p>
-          </>
-        ) : (
-          <Spinner />
-        )}
-      </Stack>
-    </BaseContainer>
+                      </Draggable>
+                  ))}
+                </div>
+                <Button
+                    className="home join-btn"
+                    onClick={handleGetDifferentTemplate}
+                >
+                  Get different template
+                </Button>
+                <p>{memeChangesLeft} Meme Changes Left</p>
+              </>
+          ) : (
+              <Spinner />
+          )}
+        </Stack>
+      </BaseContainer>
   );
 };
 
