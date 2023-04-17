@@ -112,7 +112,7 @@ const GameRating = () => {
         {currentGameData?.currentMeme?.image ? (
           <>
             <div className="meme-content">
-              <img src={currentGameData?.currentMeme?.image} />
+              <img src={currentGameData?.currentMeme?.image} alt={"Meme"} />
 
               {currentGameData?.currentTextNodePositions?.map((item, i) => (
                 <Draggable
@@ -128,6 +128,7 @@ const GameRating = () => {
                     placeholder="TEXT HERE"
                     value={currentGameData?.currentTextNodeValues[i]}
                     disabled
+                    style={{ fontSize: `${currentGameData?.fontSize}px`, color: currentGameData?.color }}
                   />
                 </Draggable>
               ))}

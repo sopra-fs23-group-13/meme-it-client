@@ -19,6 +19,8 @@ const Game = () => {
   const game = findGame(MockData, id);
   const gameRounds = useMemo(() => game?.rounds, [game]);
 
+  const [fontSize, setFontSize] = useState(14);
+  const [color, setColor] = useState("#ffffff");
   const [currentRound, setCurrentRound] = useState(null);
   const [maxRound, setMaxRound] = useState(null);
   const [currentMeme, setCurrentMeme] = useState(null);
@@ -42,12 +44,12 @@ const Game = () => {
 
   const memeTextNodes = useMemo(() => {
     return [...Array(currentMeme?.number_of_text_nodes).keys()].map(
-        (item, i) => {
-          return {
-            xRate: 0,
-            yRate: (i + 1) * 50,
-          };
-        }
+      (item, i) => {
+        return {
+          xRate: 0,
+          yRate: (i + 1) * 50,
+        };
+      }
     );
   }, [currentMeme]);
 
@@ -65,9 +67,25 @@ const Game = () => {
     setCurrentTextNodeValues(memeTextNodesDefaultValues);
   }, [currentMeme]);
 
+
+  const addMemeTextNode = () => {
+    const newNode = {xRate: 0, yRate: 100}
+    const currentNodePositions = [...currentTextNodePositions];
+    memeTextNodes.push(newNode);
+    currentNodePositions.push(newNode);
+    setCurrentTextNodePositions(currentNodePositions);
+  }
+
+  const removeMemeTextNode = () => {
+    memeTextNodes.pop();
+    const currentNodePositions = [...currentTextNodePositions];
+    currentNodePositions.pop();
+    setCurrentTextNodePositions(currentNodePositions);
+  }
+
   const currentRoundIndex = useMemo(
-      () => gameRounds?.findIndex(({ id }) => id === currentRound?.id),
-      [currentRound]
+    () => gameRounds?.findIndex(({ id }) => id === currentRound?.id),
+    [currentRound]
   );
 
   const handleNextRound = () => {
@@ -76,16 +94,19 @@ const Game = () => {
     } else {
       setNow(null);
       setCurrentRound(gameRounds[currentRoundIndex + 1]);
-      currentMeme &&
-      setFinalGameData((prev) => [
-        ...prev,
+      currentMeme && setGameData(
         {
           id: uuid(),
           currentTextNodeValues,
           currentTextNodePositions,
           currentMeme,
-        },
-      ]);
+          currentRound,
+          color,
+          fontSize,
+          maxRound
+        }
+      );
+      history.push("/game-rating/" + id);
     }
 
     if (currentRoundIndex < 0 && isPlaying) {
@@ -107,20 +128,15 @@ const Game = () => {
     setCurrentTextNodeValues(prevValues);
   };
 
-  const memeChangesLeft = useMemo(
-      () => currentTextNodeValues?.filter((item) => !item).length,
-      [currentTextNodeValues]
-  );
-
   const currentMemeIndex = useMemo(
-      () => currentMemes?.findIndex(({ id }) => id === currentMeme?.id),
-      [currentMeme]
+    () => currentMemes?.findIndex(({ id }) => id === currentMeme?.id),
+    [currentMeme]
   );
 
   const handleGetDifferentTemplate = () => {
     const newMemeIndex = currentMemeIndex + 1;
     setCurrentMeme(
-        currentMemes[newMemeIndex === currentMemes?.length ? 0 : newMemeIndex]
+      currentMemes[newMemeIndex === currentMemes?.length ? 0 : newMemeIndex]
     );
   };
 
@@ -129,6 +145,14 @@ const Game = () => {
     localStorage.clear();
     history.push("/");
   }
+  const handleFontSizeChange = (event) => {
+    setFontSize(event.target.value);
+  };
+
+  const handleColorChange = (event) => {
+    setColor(event.target.value);
+  };
+
   return (
       <BaseContainer className="game">
         <Button
@@ -161,37 +185,63 @@ const Game = () => {
                 <div className="meme-content">
                   <img src={currentMeme?.image} />
 
-                  {memeTextNodes?.map((item, i) => (
-                      <Draggable
-                          key={i}
-                          bounds="parent"
-                          position={{
-                            x: currentTextNodePositions?.[i]?.xRate,
-                            y: currentTextNodePositions?.[i]?.yRate,
-                          }}
-                          onDrag={(e, data) => onTextNodeDrag(e, data, i)}
-                      >
-                  <textarea
-                      placeholder="TEXT HERE"
-                      value={currentTextNodeValues[i]}
-                      onChange={(e) => onTextNodeChange(e, i)}
-                  />
-                      </Draggable>
-                  ))}
-                </div>
-                <Button
-                    className="home join-btn"
-                    onClick={handleGetDifferentTemplate}
+              {memeTextNodes?.map((item, i) => (
+                <Draggable
+                  key={i}
+                  bounds="parent"
+                  position={{
+                    x: currentTextNodePositions?.[i]?.xRate,
+                    y: currentTextNodePositions?.[i]?.yRate,
+                  }}
+                  onDrag={(e, data) => onTextNodeDrag(e, data, i)}
                 >
-                  Get different template
-                </Button>
-                <p>{memeChangesLeft} Meme Changes Left</p>
-              </>
-          ) : (
-              <Spinner />
-          )}
-        </Stack>
-      </BaseContainer>
+                  <textarea
+                    placeholder="TEXT HERE"
+                    value={currentTextNodeValues[i]}
+                    onChange={(e) => onTextNodeChange(e, i)}
+                    style={{ fontSize: `${fontSize}px`, color: color }}
+                  />
+                </Draggable>
+              ))}
+            </div>
+            <div>
+              <label htmlFor="fontSize">Font size: </label>
+              <input
+                  type="number"
+                  value={fontSize}
+                  min="10"
+                  max="48"
+                  step="1"
+                  onChange={handleFontSizeChange}
+                  style={{ marginRight: "10px" }}
+              />
+              <label htmlFor="color">Color: </label>
+              <input
+                  type="color"
+                  value={color}
+                  onChange={handleColorChange}
+                  style={{ marginRight: "10px" }}
+              />
+            </div>
+            <Button
+              className="home join-btn"
+              onClick={handleGetDifferentTemplate}
+            >
+              Get different template
+            </Button>
+
+            <Button onClick={addMemeTextNode}>
+              Add new Text Node
+            </Button>
+            <Button onClick={removeMemeTextNode}>
+              Remove the most recent Text Node
+            </Button>
+          </>
+        ) : (
+          <Spinner />
+        )}
+      </Stack>
+    </BaseContainer>
   );
 };
 
