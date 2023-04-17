@@ -128,6 +128,7 @@ const GameRating = () => {
                     placeholder="TEXT HERE"
                     value={currentGameData?.currentTextNodeValues[i]}
                     disabled
+                    style={{ fontSize: `${currentGameData?.fontSize}px`, color: currentGameData?.color }}
                   />
                 </Draggable>
               ))}

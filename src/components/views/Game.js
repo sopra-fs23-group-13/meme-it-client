@@ -19,6 +19,8 @@ const Game = () => {
   const game = findGame(MockData, id);
   const gameRounds = useMemo(() => game?.rounds, [game]);
 
+  const [fontSize, setFontSize] = useState(14);
+  const [color, setColor] = useState("#ffffff");
   const [currentRound, setCurrentRound] = useState(null);
   const [maxRound, setMaxRound] = useState(null);
   const [currentMeme, setCurrentMeme] = useState(null);
@@ -99,6 +101,8 @@ const Game = () => {
           currentTextNodePositions,
           currentMeme,
           currentRound,
+          color,
+          fontSize,
           maxRound
         }
       );
@@ -124,11 +128,6 @@ const Game = () => {
     setCurrentTextNodeValues(prevValues);
   };
 
-  const memeChangesLeft = useMemo(
-    () => currentTextNodeValues?.filter((item) => !item).length,
-    [currentTextNodeValues]
-  );
-
   const currentMemeIndex = useMemo(
     () => currentMemes?.findIndex(({ id }) => id === currentMeme?.id),
     [currentMeme]
@@ -139,6 +138,14 @@ const Game = () => {
     setCurrentMeme(
       currentMemes[newMemeIndex === currentMemes?.length ? 0 : newMemeIndex]
     );
+  };
+
+  const handleFontSizeChange = (event) => {
+    setFontSize(event.target.value);
+  };
+
+  const handleColorChange = (event) => {
+    setColor(event.target.value);
   };
 
   return (
@@ -180,9 +187,29 @@ const Game = () => {
                     placeholder="TEXT HERE"
                     value={currentTextNodeValues[i]}
                     onChange={(e) => onTextNodeChange(e, i)}
+                    style={{ fontSize: `${fontSize}px`, color: color }}
                   />
                 </Draggable>
               ))}
+            </div>
+            <div>
+              <label htmlFor="fontSize">Font size: </label>
+              <input
+                  type="number"
+                  value={fontSize}
+                  min="10"
+                  max="48"
+                  step="1"
+                  onChange={handleFontSizeChange}
+                  style={{ marginRight: "10px" }}
+              />
+              <label htmlFor="color">Color: </label>
+              <input
+                  type="color"
+                  value={color}
+                  onChange={handleColorChange}
+                  style={{ marginRight: "10px" }}
+              />
             </div>
             <Button
               className="home join-btn"
