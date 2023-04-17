@@ -1,22 +1,22 @@
-import { ReactNode } from "react";
 import { useState, createContext } from "react";
 
 const contextDefaultValues = {
-  finalGameData: [],
-  setFinalGameData: () => {},
+  gameData: [],
+  setGameData: () => {}
 };
 
 export const AppContext = createContext(contextDefaultValues);
 const AppContextProvider = ({ children }) => {
-  const [finalGameData, setFinalGameData] = useState(
-    contextDefaultValues.finalGameData
-  );
+
+  const [gameData, setGameData] = useState(
+      contextDefaultValues.gameData
+  )
 
   return (
     <AppContext.Provider
       value={{
-        finalGameData,
-        setFinalGameData,
+        gameData,
+        setGameData
       }}
     >
       {children}

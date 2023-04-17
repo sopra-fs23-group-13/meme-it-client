@@ -6,7 +6,7 @@ import { TbHeartFilled } from "react-icons/tb";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import { Spinner } from "components/ui/Spinner";
 
-import { useHistory } from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import "styles/views/Game.scss";
 import BaseContainer from "../ui/BaseContainer";
 import { AppContext } from "context";
@@ -16,8 +16,9 @@ import TimerProgressBar from "components/ui/TimerProgressBar";
 const GameRating = () => {
   const delay = 1000;
   const ratingTimeout = 10000;
+  const { id }  = useParams();
   const history = useHistory();
-  const { finalGameData } = useContext(AppContext);
+  const {  gameData } = useContext(AppContext);
 
   const [reaction, setReaction] = useState("");
   const [currentGameData, setCurrentGameData] = useState(null);
@@ -26,33 +27,45 @@ const GameRating = () => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    if (finalGameData) {
-      setCurrentGameData(finalGameData[0]);
+    if (gameData) {
+      setCurrentGameData(gameData);
       setNow(0);
       setIsPlaying(true);
     } else {
       history.push("/");
     }
-  }, [finalGameData]);
+  }, [gameData]);
 
   const currentGameIndex = useMemo(
-    () => finalGameData?.findIndex(({ id }) => id === currentGameData?.id),
+    () => gameData?.currentRound?.id,
     [currentGameData]
   );
+
+  useEffect(() => {
+    if (gameData) {
+      setCurrentGameData(gameData);
+      setNow(0);
+      setIsPlaying(true);
+    } else {
+      history.push(`/`);
+    }
+  }, [gameData]);
+
+
 
   const handleNextRound = () => {
     if (now < ratingTimeout) {
       setNow(now + 1000);
     } else {
       setNow(null);
-      setCurrentGameData(finalGameData[currentGameIndex + 1]);
-    }
-
-    if (currentGameIndex < 0 && isPlaying) {
-      setNow(null);
-      setCurrentGameData(null);
-      setIsPlaying(false);
-      history.push("/");
+      if (gameData.currentRound.id < gameData.maxRound && isPlaying){
+        history.push(`/game/${id}`);
+      } else {
+        setNow(null);
+        setCurrentGameData(null);
+        setIsPlaying(false);
+        history.push("/"); //push to final leaderboard
+      }
     }
   };
 
@@ -84,7 +97,7 @@ const GameRating = () => {
         <Stack gap={3} className={`pt-5  `}>
           {currentGameIndex + 1 && (
             <h1 className="fw-bolder fs-3 text-start text-black">
-              {`Round ${currentGameIndex + 1}/${finalGameData?.length} `}
+              {`Round ${currentGameIndex}/${gameData?.maxRound} `}
             </h1>
           )}
           <p className="fs-6 text-start text-black">Vote for memes</p>
