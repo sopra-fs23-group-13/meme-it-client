@@ -1,4 +1,4 @@
-@import "styles/theme";
+@import 'styles/theme';
 
 .home {
   &.content {
@@ -6,19 +6,19 @@
   }
   &.title {
     &:hover {
-      color: $buttonColor;
+      color: $buttonColor ;
     }
     color: $themeColor;
     font-weight: 750;
     font-size: 50px;
-    text-align: center;
+    text-align:center;
     transition: all 0.5s ease;
   }
   &.subtitle {
-    text-align: center;
-    margin-top: -10px;
-    padding-bottom: 5em;
-    font-size: 18px;
+    text-align:center;
+    margin-top:-10px;
+    padding-bottom:5em;
+    font-size:18px;
     color: $buttonColor;
   }
   &.container {
@@ -30,33 +30,35 @@
     }
   }
   &.tutorial-title {
-    margin-top: auto;
+    margin-top:auto;
     color: #565656;
-    text-align: left;
-    font-size: 20px;
-    font-weight: 600;
+    text-align:left;
+    font-size:20px;
+    font-weight:600;
   }
   &.tutorial-text {
     color: #494949;
   }
   &.buttons {
     &:hover {
-      background-color: $buttonColorHover;
+      background-color:$buttonColorHover;
     }
     width: 100%;
-    background: $buttonColor;
+    background:$buttonColor;
     transition: all 0.3s ease;
-    margin-top: -1em;
-    margin-bottom: 1em;
+    margin-top:-1em;
+    margin-bottom:1em;
     border: none;
   }
-  &.join-btn {
+  &.join-btn{
     &:hover {
-      background-color: $buttonColorHover;
+      background-color:$buttonColorHover;
     }
-    background: $buttonColor;
-    font-size: 16px;
+    background:$buttonColor;
+    font-size:16px;
+    width:auto;
     transition: all 0.3s ease;
     border: solid $buttonColorHover;
   }
+
 }

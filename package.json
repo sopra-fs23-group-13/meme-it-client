@@ -26,9 +26,6 @@
     "eject": "react-scripts eject",
     "test": "react-scripts test --env=jsdom"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": [
     ">0.2%",
     "not dead",

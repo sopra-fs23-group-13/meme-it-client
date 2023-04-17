@@ -18,3 +18,15 @@
   background-color:$buttonColor;
   transition: all 0.3s ease;
 }
+
+.back-to-login-button {
+  &:hover {
+    background-color: #af0000;
+    border: solid #af0000;
+  }
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #da0000;
+  border: solid #af0000;
+}

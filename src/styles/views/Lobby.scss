@@ -5,13 +5,27 @@
     background-color: rgba(161, 168, 196, 0.39);
     border: solid slategray;
     color: $themeColor;
+    padding-bottom:1em;
   }
   &.title {
-    padding-top:3em;
+    &:hover {
+      color: $buttonColor ;
+    }
+    margin-top: 80px;
     color: $themeColor;
     font-weight: 750;
-    font-size:40px;
+    font-size: 50px;
     text-align:center;
+    transition: all 0.5s ease;
+    margin-bottom: -90px;
+  }
+  &.subtitle {
+    text-align:center;
+    margin-top: 90px;
+    padding-bottom:5em;
+    font-size:18px;
+    color: $buttonColor;
+    margin-bottom: -70px;
   }
   &.player-title{
     text-align:center;
@@ -25,8 +39,24 @@
     padding-top:10px;
   }
   &.settings-container{
-    border: none;
-    background-color:white;
+    padding:2em;
+    border: 1px solid black;
+    background-color: rgba(175, 175, 175, 0.27);
   }
-
+  &.btn {
+    &:hover {
+      background-color:$buttonColorHover;
+    }
+    background-color: $buttonColor;
+    border: solid $buttonColorHover;
+    transition: all 0.3s ease;
+    width:50%;
+    &.copy{
+      margin-top:5px;
+    }
+    &.start {
+      width:auto;
+      margin-bottom:1em;
+    }
+  }
 }

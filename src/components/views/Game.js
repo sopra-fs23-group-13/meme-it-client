@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import Draggable from "react-draggable";
 import { Stack, Button } from "react-bootstrap";
 import { v4 as uuid } from "uuid";
@@ -140,6 +140,11 @@ const Game = () => {
     );
   };
 
+  const leaveGame = async () => {
+    //const leaveResponse = await api.delete('/' + localStorage.getItem("hash") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
+    localStorage.clear();
+    history.push("/");
+  }
   const handleFontSizeChange = (event) => {
     setFontSize(event.target.value);
   };
@@ -149,29 +154,36 @@ const Game = () => {
   };
 
   return (
-    <BaseContainer className="game">
-      <Stack gap={3} className="pt-5 container ">
-        <Stack gap={3} className={`pt-5  `}>
-          {currentRoundIndex + 1 && (
-            <h1 className="fw-bolder fs-3 text-start text-black">
-              {`Round ${currentRoundIndex + 1}/${gameRounds?.length} `}
-            </h1>
-          )}
-          <p className="fs-6 text-start text-black">
-            Drag the text nodes over the image
-          </p>
-          <TimerProgressBar
-            delay={delay}
-            now={now}
-            max={currentRound?.timeout}
-            callbackFunc={() => handleNextRound()}
-            isPlaying={isPlaying}
-          />
-        </Stack>
-        {currentMeme?.image ? (
-          <>
-            <div className="meme-content">
-              <img src={currentMeme?.image} alt={"Meme"} />
+      <BaseContainer className="game">
+        <Button
+            width="200px"
+            onClick={leaveGame}
+            className="back-to-login-button"
+        >
+          Leave Game
+        </Button>
+        <Stack gap={3} className="pt-5 container ">
+          <Stack gap={3} className={`pt-5  `}>
+            {currentRoundIndex + 1 && (
+                <h1 className="fw-bolder fs-3 text-start text-black">
+                  {`Round ${currentRoundIndex + 1}/${gameRounds?.length} `}
+                </h1>
+            )}
+            <p className="fs-6 text-start text-black">
+              Drag the text nodes over the image
+            </p>
+            <TimerProgressBar
+                delay={delay}
+                now={now}
+                max={currentRound?.timeout}
+                callbackFunc={() => handleNextRound()}
+                isPlaying={isPlaying}
+            />
+          </Stack>
+          {currentMeme?.image ? (
+              <>
+                <div className="meme-content">
+                  <img src={currentMeme?.image} />
 
               {memeTextNodes?.map((item, i) => (
                 <Draggable
