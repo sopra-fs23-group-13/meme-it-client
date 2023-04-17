@@ -65,6 +65,22 @@ const Game = () => {
     setCurrentTextNodeValues(memeTextNodesDefaultValues);
   }, [currentMeme]);
 
+
+  const addMemeTextNode = () => {
+    const newNode = {xRate: 0, yRate: 100}
+    const currentNodePositions = [...currentTextNodePositions];
+    memeTextNodes.push(newNode);
+    currentNodePositions.push(newNode);
+    setCurrentTextNodePositions(currentNodePositions);
+  }
+
+  const removeMemeTextNode = () => {
+    memeTextNodes.pop();
+    const currentNodePositions = [...currentTextNodePositions];
+    currentNodePositions.pop();
+    setCurrentTextNodePositions(currentNodePositions);
+  }
+
   const currentRoundIndex = useMemo(
     () => gameRounds?.findIndex(({ id }) => id === currentRound?.id),
     [currentRound]
@@ -174,7 +190,13 @@ const Game = () => {
             >
               Get different template
             </Button>
-            <p>{memeChangesLeft} Meme Changes Left</p>
+
+            <Button onClick={addMemeTextNode}>
+              Add new Text Node
+            </Button>
+            <Button onClick={removeMemeTextNode}>
+              Remove the most recent Text Node
+            </Button>
           </>
         ) : (
           <Spinner />
