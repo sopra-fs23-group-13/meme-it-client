@@ -7,7 +7,9 @@ import Game from "components/views/Game";
 import GameRating from "components/views/GameRating";
 import {HomeGuard} from "../routeProtectors/HomeGuard";
 import Leaderboard from "components/views/Leaderboard";
+import FinalLeaderboard from "components/views/FinalLeaderboard";
 import MockData from "mockData/leaderboardScreenDataMock.json"
+
 
 
 /**
@@ -23,6 +25,9 @@ const AppRouter = () => {
     return (
       <BrowserRouter>
         <Switch>
+          <Route path="/final-leaderboard">
+            <FinalLeaderboard leaderboardData={MockData}/>
+          </Route>
           <Route path="/leaderboard">
             <Leaderboard leaderboardData={MockData}/>
           </Route>
