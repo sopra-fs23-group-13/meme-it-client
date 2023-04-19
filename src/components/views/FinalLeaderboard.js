@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { ListGroup, Badge } from "react-bootstrap";
 import "styles/views/FinalLeaderboard.scss";
-import { FaMedal } from 'react-icons/fa';
 import MockData from '../../mockData/leaderboardScreenDataMock.json'
+import { FaMedal } from 'react-icons/fa';
 
 
 
@@ -10,6 +11,12 @@ const FinalLeaderboard = ({ leaderboardData }) => {
   const firstPlace = leaderboardData[0];
   const secondPlace = leaderboardData[1];
   const thirdPlace = leaderboardData[2];
+
+  const history = useHistory();
+  const backToMainScreen = () => {
+    history.push('/');
+  };
+
 
   return (
     <div className="final-leaderboard-container">
@@ -20,6 +27,7 @@ const FinalLeaderboard = ({ leaderboardData }) => {
           <span className="score">{secondPlace.score} points</span>
         </div>
         <div className="first-place">
+        <FaMedal size={32} color="black" />
           <span className="rank">1st</span>
           <span className="username">{firstPlace.username}</span>
           <span className="score">{firstPlace.score} points</span>
@@ -37,7 +45,7 @@ const FinalLeaderboard = ({ leaderboardData }) => {
         <div className="highest-voted-memes__item">{leaderboardData[1].score} Votes by {leaderboardData[1].username}</div>
         <div className="highest-voted-memes__item">{leaderboardData[2].score} Votes by {leaderboardData[2].username}</div>
       </div>
-      <button className="back-to-main-screen">Back to main screen</button>
+      <button className="back-to-main-screen" onClick={backToMainScreen}>Back to main screen</button>
     </div>
   );
 };
