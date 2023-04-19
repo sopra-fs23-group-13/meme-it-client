@@ -3,6 +3,7 @@ import { FaCrown } from 'react-icons/fa';
 import PropTypes from "prop-types";
 import Cookies from "universal-cookie";
 import {Button} from "react-bootstrap";
+import {api} from "../../helpers/api";
 
 const PlayerAvatar = ({ name, color, isAdmin }) => {
   const initials = name.charAt(0).toUpperCase();
@@ -48,34 +49,45 @@ const ActivePlayersList = ({lobby, players}) => {
   const cookies = new Cookies();
   let playerItems;
 
+  //Temporary Kick Solution
+  const kickPlayer = async (uuid) => {
+    try {
+      await api.delete('/lobbies/' + lobby.code + '/players', {headers: {'Authorization': 'Bearer ' + uuid}});
+    }
+    catch (error) {
+      console.log(error)
+    }
+  }
+  //If player is the owner of the lobby (show kick button)
   if(players && lobby.owner.uuid=== cookies.get("token")){
     playerItems = (
         <div>
           {players.map(player => (
-              <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid gray', padding: '10px' }}>
+              <div key={player.uuid} style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid gray', padding: '10px' }}>
                 <div style={{ marginRight: '10px' }}>
-                  <PlayerAvatar name={player.name} color={"pink"} isAdmin={player.uuid === lobby.owner.uuid} />
+                  <PlayerAvatar name={player.name} color={"#7260e3"} isAdmin={player.uuid === lobby.owner.uuid} />
                 </div>
                 <div style={{ flexGrow: 1 }}>
                   <div>{player.name}</div>
                 </div>
                 <div>
-                  <Button className="lobby kick-btn">
+                  {player.uuid != lobby.owner.uuid && <Button className="lobby kick-btn" onClick={() => kickPlayer(player.uuid)}>
                     Kick
-                  </Button>
+                  </Button>}
                 </div>
               </div>
           ))}
         </div>
     );
   }
+  //If player is not the owner of the lobby (no kick button)
   else if(players){
     playerItems = (
         <div>
           {players.map(player => (
-              <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid gray', padding: '10px' }}>
+              <div key={player.uuid} style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid gray', padding: '10px' }}>
                 <div style={{ marginRight: '10px' }}>
-                  <PlayerAvatar name={player.name} color={"pink"} isAdmin={player.uuid === lobby.owner.uuid} />
+                  <PlayerAvatar name={player.name} color={"#7260e3"} isAdmin={player.uuid === lobby.owner.uuid} />
                 </div>
                 <div style={{ flexGrow: 1 }}>
                   <div>{player.name}</div>

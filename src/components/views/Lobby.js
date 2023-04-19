@@ -8,7 +8,7 @@ import { useHistory } from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import ActivePlayersList from "../ui/ActivePlayersList";
 import LobbySettings from "../ui/LobbySettings";
-import { FaCopy } from "react-icons/fa"; 
+import { FaCopy } from "react-icons/fa";
 
 import MockData from '../../mockData/lobbyScreenDataMock.json'
 import {api} from "../../helpers/api";
@@ -32,16 +32,26 @@ const Lobby = () => {
 
   useEffect( () => {
     const getLobbyData = async () => {
+      let playerIsInLobby = false;
       try {
         const response = await api.get('/lobbies/' + localStorage.getItem("code"), {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         setCurrentLobby(response.data);
+        //Check if player is the owner
         if(response.data.owner.uuid === cookies.get("token")){
           setIsAdmin(true);
         }
+        //Check if player is in the lobby's player list
+        response.data.players.forEach(player => {
+          if(player.uuid === cookies.get("token")){
+            playerIsInLobby = true;
+          }
+        })
+        if(!playerIsInLobby){
+          await leaveLobby("Kicked from Lobby");
+        }
         }
       catch (error){
-        alert("Invalid Code!")
-        sendToHome()
+        await leaveLobby("Lobby Not Found")
         console.log(error);
       }
     }
@@ -51,16 +61,19 @@ const Lobby = () => {
     return () => clearInterval(interval);
   })
 
-  const leaveLobby = async () => {
-    const leaveResponse = await api.delete('/lobbies/' + currentLobby.code + '/players', {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-    sendToHome();
-  }
-
-
-  const sendToHome = () => {
-    localStorage.clear();
-    cookies.remove("token");
-    history.push("/");
+  const leaveLobby = async (reason) => {
+    try {
+      await api.delete('/lobbies/' + currentLobby.code + '/players', {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+    }
+    catch {
+      //Do nothing, alert is handled in Home using sessionStorage alert.
+    }
+    finally {
+      localStorage.clear()
+      sessionStorage.setItem("alert", reason)
+      cookies.remove("token")
+      history.push("/")
+    }
   }
 
 
@@ -116,7 +129,7 @@ const Lobby = () => {
                 <Col>
                   <Button
                       width="200px"
-                      onClick={leaveLobby}
+                      onClick={() => leaveLobby("Disconnected")}
                       className="back-to-login-button"
                   >
                     Leave Lobby
@@ -192,7 +205,7 @@ const Lobby = () => {
                     <Col>
                       <Button
                           width="200px"
-                          onClick={leaveLobby}
+                          onClick={() => leaveLobby("Disconnected")}
                           className="back-to-login-button"
                       >
                         Leave Lobby

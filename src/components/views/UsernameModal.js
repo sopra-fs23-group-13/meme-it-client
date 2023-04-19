@@ -14,7 +14,6 @@ const LOBBY_JOIN = "Join Game";
 
 const UsernameModal = props => {
     const cookies = new Cookies();
-
     const history = useHistory();
     const [show, setShow] = useState(false);
     const [username, setUsername] = useState("");
@@ -31,11 +30,17 @@ const UsernameModal = props => {
         localStorage.setItem("username", username)
         cookies.set("token", response.data.uuid)
         localStorage.setItem("code", props.code);
-        //const joinResponse = await api.post('/' + props.code + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
         console.log(localStorage.getItem("code"))
-
-        const joinResponse = await api.post('/lobbies/' + props.code + '/players', {name: response.data.name}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-
+        try {
+            const joinResponse = await api.post('/lobbies/' + props.code + '/players', {name: response.data.name}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+        }
+        catch{
+            sessionStorage.setItem("alert", "Lobby Not Found")
+            localStorage.clear();
+            history.push("/lobby");
+            handleClose();
+            return;
+        }
         history.push("/lobby");
         handleClose();
     }
@@ -49,7 +54,6 @@ const UsernameModal = props => {
             const requestBody = JSON.stringify({name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit});
             const response = await api.post('/lobbies', requestBody, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
             localStorage.setItem("code", response.data.code)
-            //Get Lobby Code from Response, then add player to lobby (doesn't work atm)
             const joinResponse = await api.post('/lobbies/' + response.data.code + '/players', {name: username}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         } catch {
             alert("Couldn't create lobby")

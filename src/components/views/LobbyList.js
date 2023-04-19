@@ -47,21 +47,23 @@ const LobbyList = props => {
             {lobbies.map(lobby => {
                 if(lobby.lobbySetting.isPublic){
                     return(
-                        <ListGroup.Item
-                            as="li"
-                            className="d-flex justify-content-between align-items-start"
-                        >
-                            <div className="ms-2 me-auto">
-                                <div className="fw-bold">{lobby.name}</div>
-                                Admin: {lobby.owner.name}
-                            </div>
-                            <div>
-                                <Badge className={"align-self-center lobbyList playerSize"} bg={lobby.lobbySetting.maxPlayers === lobby.players.length ? "danger" : "primary"} pill>
-                                    {lobby.players.length} / {lobby.lobbySetting.maxPlayers}
-                                </Badge>
-                            </div>
-                            <UsernameModal c_names="home join-btn" joiningAllowed={lobby.players.length === lobby.lobbySetting.maxPlayers} title={"Join Game"} submit={props.action} code={lobby.code} />
-                        </ListGroup.Item>
+                        <div key={lobby.code}>
+                            <ListGroup.Item
+                                as="li"
+                                className="d-flex justify-content-between align-items-start"
+                            >
+                                <div className="ms-2 me-auto">
+                                    <div className="fw-bold">{lobby.name}</div>
+                                    Admin: {lobby.owner.name}
+                                </div>
+                                <div>
+                                    <Badge className={"align-self-center lobbyList playerSize"} bg={lobby.lobbySetting.maxPlayers === lobby.players.length ? "danger" : "primary"} pill>
+                                        {lobby.players.length} / {lobby.lobbySetting.maxPlayers}
+                                    </Badge>
+                                </div>
+                                <UsernameModal c_names="home join-btn" joiningAllowed={lobby.players.length === lobby.lobbySetting.maxPlayers} title={"Join Game"} submit={props.action} code={lobby.code} />
+                            </ListGroup.Item>
+                        </div>
                     )
                 }
 

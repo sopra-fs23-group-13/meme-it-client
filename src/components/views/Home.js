@@ -2,18 +2,36 @@ import React, {useState} from 'react';
 import "styles/views/Home.scss";
 //import {useHistory} from "react-router-dom";
 import LobbyList from "./LobbyList";
-import {Col, Container, Row, Button, Stack} from "react-bootstrap";
+import {Col, Container, Row, Button, Stack, Toast} from "react-bootstrap";
 import {FormField} from "../../helpers/formField";
 import UsernameModal from "./UsernameModal";
 import BaseContainer from "../ui/BaseContainer";
 import {useHistory} from "react-router-dom";
 import {api} from "../../helpers/api";
+import {IoMdAlert} from "react-icons/io";
+
 
 const Home = () => {
     const history = useHistory();
     const [gameCode, setGameCode] = useState("");
-
+    const [showAlert, setShowAlert] = useState(true);
     const [show, setShow] = useState(false);
+
+    const toggleShowAlert = () => setShowAlert(!showAlert);
+
+    const alert = (reason) => {
+        return (
+            <Toast bg={"white"} show={showAlert} delay={5000} autohide onClose={() => {
+                toggleShowAlert();
+                sessionStorage.removeItem("alert");
+            }}>
+                <Toast.Header>
+                    <strong className="me-auto"> <IoMdAlert/> Alert</strong>
+                </Toast.Header>
+                <Toast.Body className="me-auto"><b>{reason}</b></Toast.Body>
+            </Toast>
+        )
+    }
 
     const lobbyList  = () => {
         return(
@@ -35,7 +53,7 @@ const Home = () => {
         console.log(lobbyValues);
     }
 
-    const joinExistingGame = async (userValues) => {
+    const joinExistingGame = async () => {
         if (gameCode != null) {
             localStorage.setItem("code", gameCode);
             //const joinResponse = await api.post('/' + gameValues.code + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
@@ -43,8 +61,10 @@ const Home = () => {
         history.push("/lobby");
     }
     return (
-
         <Container className={"home content"}>
+            <div className={"home alert"}>
+                {sessionStorage.getItem("alert") && alert(sessionStorage.getItem("alert"))}
+            </div>
             <Stack gap={3}>
             <Row>
                 <Container>

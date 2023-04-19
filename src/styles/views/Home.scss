@@ -70,5 +70,9 @@
     transition: all 0.3s ease;
     border: solid $buttonColorHover;
   }
-
+  &.alert{
+    position: absolute;
+    top: 20px;
+    right: 0px;
+  }
 }
