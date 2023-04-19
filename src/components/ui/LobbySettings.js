@@ -5,9 +5,11 @@ import "styles/views/Home.scss";
 import {Button, Container, Row} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {api} from "../../helpers/api";
+import Cookies from "universal-cookie";
 
 
 const LobbySettings = ({Lobby, isAdmin}) => {
+    const cookies = new Cookies();
     const [lobbyValues, setLobbyValues] = useState({
         name: "",
         maxPlayers: "",
@@ -25,9 +27,8 @@ const LobbySettings = ({Lobby, isAdmin}) => {
         isAdmin: PropTypes.bool
     }
     const updateSettings = async () => {
-        console.log(lobbyValues.isPublic)
         try {
-            await api.put('/lobby/' + Lobby.id, JSON.stringify(lobbyValues));
+            await api.put('/lobbies/' + Lobby.code, JSON.stringify(lobbyValues), {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         }
         catch (error){
             console.log(error);
@@ -37,7 +38,6 @@ const LobbySettings = ({Lobby, isAdmin}) => {
     const handleChange = (event) => {
         const { name, value } = event.target;
         if(name === "isPublic"){
-            console.log(lobbyValues.isPublic)
             setLobbyValues({
                 ...lobbyValues,
                 [name]: !Lobby.lobbySetting.isPublic,

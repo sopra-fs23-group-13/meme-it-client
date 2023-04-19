@@ -13,12 +13,14 @@ import { FaCopy } from "react-icons/fa";
 import MockData from '../../mockData/lobbyScreenDataMock.json'
 import {api} from "../../helpers/api";
 import PropTypes from "prop-types";
+import Cookies from "universal-cookie";
 
 const Lobby = () => {
-  const activePlayers = MockData
+  const cookies = new Cookies();
   const history = useHistory();
   const [showChat, setShowChat] = useState(false);
   const [currentLobby, setCurrentLobby] = useState({});
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const toggleChat = () => {
     setShowChat(!showChat);
@@ -28,24 +30,18 @@ const Lobby = () => {
     navigator.clipboard.writeText(currentLobby.code);
   };
 
-
   useEffect( () => {
     const getLobbyData = async () => {
-      let validCode = false;
       try {
-        const response = await api.get('/lobby');
-        for(let i = 0; i < response.data.length; i++){
-          if(response.data[i].code === localStorage.getItem("hash")){
-            setCurrentLobby(response.data[i]);
-            validCode = true;
-
-          }
+        const response = await api.get('/lobbies/' + localStorage.getItem("code"), {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+        setCurrentLobby(response.data);
+        if(response.data.owner.uuid === cookies.get("token")){
+          setIsAdmin(true);
         }
-        if(!validCode){
-          leaveLobby();
         }
-      }
       catch (error){
+        alert("Invalid Code!")
+        sendToHome()
         console.log(error);
       }
     }
@@ -54,14 +50,19 @@ const Lobby = () => {
     }, 500);
     return () => clearInterval(interval);
   })
+
   const leaveLobby = async () => {
-    //const leaveResponse = await api.delete('/' + localStorage.getItem("hash") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
-    localStorage.clear();
-    history.push("/");
+    const leaveResponse = await api.delete('/lobbies/' + currentLobby.code + '/players', {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+    sendToHome();
   }
 
 
-  let isAdmin = currentLobby.owner === localStorage.getItem("username")? true : false;
+  const sendToHome = () => {
+    localStorage.clear();
+    cookies.remove("token");
+    history.push("/");
+  }
+
 
   if (isAdmin){
     return (
@@ -77,7 +78,7 @@ const Lobby = () => {
               <Row>
                 <Col>
                   <h2 className="lobby player-title">Players</h2>
-                  <ActivePlayersList players={activePlayers} />
+                  <ActivePlayersList lobby={currentLobby} players={currentLobby.players}/>
                 </Col>
 
                 <Col
@@ -153,7 +154,7 @@ const Lobby = () => {
                   <Row>
                     <Col>
                       <h2 className="lobby player-title">Players</h2>
-                      <ActivePlayersList players={activePlayers} />
+                      <ActivePlayersList lobby={currentLobby} players={currentLobby.players}/>
                     </Col>
 
                     <Col

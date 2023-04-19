@@ -26,7 +26,7 @@ export const FormField = props => {
                 c_names = {props.c_names}
             />
             {props.action &&
-                <UsernameModal c_names={props.c_names} title={"Join Game"} submit={props.action} />
+                <UsernameModal c_names={props.c_names} title={"Join Game"} submit={props.action} code={props.code}/>
             }
         </InputGroup>
     );

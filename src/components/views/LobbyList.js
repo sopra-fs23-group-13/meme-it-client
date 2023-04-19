@@ -9,12 +9,20 @@ import UsernameModal from "./UsernameModal";
 import {api, handleError} from "../../helpers/api";
 
 const LobbyList = props => {
-    const [lobbies, setLobbies] = useState(null);
+    const [lobbies, setLobbies] = useState([]);
     useEffect(() => {
         // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
         async function fetchData() {
             try {
-                const response = await api.get('/lobby');
+                //Simulate a user to get a token to view lobbies
+                const permissionResponse = await api.post('/users', {name: "randomUserName123"});
+                sessionStorage.setItem("viewLobbiesToken", permissionResponse.data.uuid)
+            }
+            catch{
+
+            }
+            try {
+                const response = await api.get('/lobbies', {headers: {'Authorization': 'Bearer ' + sessionStorage.getItem("viewLobbiesToken")}});
                 setLobbies(response.data);
             } catch {
                 alert("Couldn't fetch lobbies")
@@ -25,7 +33,7 @@ const LobbyList = props => {
 
     const refreshLobbies = async () => {
         try {
-            const response = await api.get('/lobby');
+            const response = await api.get('/lobbies', {headers: {'Authorization': 'Bearer ' + sessionStorage.getItem("viewLobbiesToken")}});
             setLobbies(response.data);
         } catch {
             alert("Couldn't fetch lobbies")
@@ -45,14 +53,14 @@ const LobbyList = props => {
                         >
                             <div className="ms-2 me-auto">
                                 <div className="fw-bold">{lobby.name}</div>
-                                Admin: {lobby.owner}
+                                Admin: {lobby.owner.name}
                             </div>
                             <div>
-                                <Badge className={"align-self-center lobbyList playerSize"} bg={lobby.lobbySetting.maxPlayers === lobby.players.users.length ? "danger" : "primary"} pill>
-                                    {lobby.players.users.length} / {lobby.lobbySetting.maxPlayers}
+                                <Badge className={"align-self-center lobbyList playerSize"} bg={lobby.lobbySetting.maxPlayers === lobby.players.length ? "danger" : "primary"} pill>
+                                    {lobby.players.length} / {lobby.lobbySetting.maxPlayers}
                                 </Badge>
                             </div>
-                            <UsernameModal c_names="home join-btn" joiningAllowed={lobby.players.users.length === lobby.lobbySetting.maxPlayers} title={"Join Game"} submit={props.action} hash={lobby.code} />
+                            <UsernameModal c_names="home join-btn" joiningAllowed={lobby.players.length === lobby.lobbySetting.maxPlayers} title={"Join Game"} submit={props.action} code={lobby.code} />
                         </ListGroup.Item>
                     )
                 }

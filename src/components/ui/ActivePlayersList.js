@@ -1,5 +1,8 @@
 import React from 'react';
 import { FaCrown } from 'react-icons/fa';
+import PropTypes from "prop-types";
+import Cookies from "universal-cookie";
+import {Button} from "react-bootstrap";
 
 const PlayerAvatar = ({ name, color, isAdmin }) => {
   const initials = name.charAt(0).toUpperCase();
@@ -41,24 +44,54 @@ const PlayerAvatar = ({ name, color, isAdmin }) => {
   );
 };
 
-const ActivePlayersList = ({ players }) => {
-  return (
-    <div>
-      {players.map((player) => (
-        <div key={player.id} style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid gray', padding: '10px' }}>
-          <div style={{ marginRight: '10px' }}>
-          <PlayerAvatar name={player.name} color={player.color} isAdmin={player.isAdmin} /> 
-          </div>
-          <div style={{ flexGrow: 1 }}>
-            <div>{player.name}</div>
-          </div>
-          <div>
-            <button style={{ backgroundColor: 'red', color: 'white', padding: '10px', border: 'none', borderRadius: '5px' }}>Kick</button>
-          </div>
+const ActivePlayersList = ({lobby, players}) => {
+  const cookies = new Cookies();
+  let playerItems;
+
+  if(players && lobby.owner.uuid=== cookies.get("token")){
+    playerItems = (
+        <div>
+          {players.map(player => (
+              <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid gray', padding: '10px' }}>
+                <div style={{ marginRight: '10px' }}>
+                  <PlayerAvatar name={player.name} color={"pink"} isAdmin={player.uuid === lobby.owner.uuid} />
+                </div>
+                <div style={{ flexGrow: 1 }}>
+                  <div>{player.name}</div>
+                </div>
+                <div>
+                  <Button className="lobby kick-btn">
+                    Kick
+                  </Button>
+                </div>
+              </div>
+          ))}
         </div>
-      ))}
-    </div>
-  );
+    );
+  }
+  else if(players){
+    playerItems = (
+        <div>
+          {players.map(player => (
+              <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid gray', padding: '10px' }}>
+                <div style={{ marginRight: '10px' }}>
+                  <PlayerAvatar name={player.name} color={"pink"} isAdmin={player.uuid === lobby.owner.uuid} />
+                </div>
+                <div style={{ flexGrow: 1 }}>
+                  <div>{player.name}</div>
+                </div>
+              </div>
+          ))}
+        </div>
+    );
+  }
+
+  return (
+      <div>
+        {playerItems}
+      </div>
+  )
+
 };
 
 export default ActivePlayersList;

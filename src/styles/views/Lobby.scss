@@ -66,5 +66,20 @@
       width:auto;
       margin-bottom:1em;
     }
+    &.kick-btn{
+      &:hover {
+        background-color: #af0000;
+        border: solid #af0000;
+      }
+      &:active {
+        color: white !important;
+        border: solid #da0000;
+        background: #da0000;
+      }
+      width:auto;
+      background: #da0000;
+      border: solid #af0000;
+    }
+
   }
 }

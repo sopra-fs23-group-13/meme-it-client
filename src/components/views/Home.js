@@ -11,22 +11,9 @@ import {api} from "../../helpers/api";
 
 const Home = () => {
     const history = useHistory();
-    const [gameValues, setGameValues] = useState({ hash: "", username: ""});
+    const [gameCode, setGameCode] = useState("");
 
     const [show, setShow] = useState(false);
-
-    // Idea: Regardless of whether user joins using a Public Lobby Join button or a specific hash, if they press the
-    // join button it always joins using the join hash method but in case of public lobby it just gets the lobby's hash
-    // first.
-    // Check if user has a name set in joinGame method.
-    /*const joinHash = () => {
-        if(!hash){
-            //Popup: You need to enter a hash (should only happen if they try to join using hash code)
-            return;
-        }
-        //Check if hash valid, otherwise show alert.
-        history.push("/" + hash);
-    }*/
 
     const lobbyList  = () => {
         return(
@@ -41,11 +28,7 @@ const Home = () => {
     }
 
     const handleChange = (event) => {
-        const { name, value } = event.target;
-        setGameValues((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
+        setGameCode(event.target.value);
     };
 
     const createNewGame = (lobbyValues) => {
@@ -53,14 +36,12 @@ const Home = () => {
     }
 
     const joinExistingGame = async (userValues) => {
-        console.log(userValues);
-        if (gameValues.hash != null) {
-            localStorage.setItem("hash", gameValues.hash);
-            //const joinResponse = await api.post('/' + gameValues.hash + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
+        if (gameCode != null) {
+            localStorage.setItem("code", gameCode);
+            //const joinResponse = await api.post('/' + gameValues.code + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
         }
         history.push("/lobby");
     }
-
     return (
 
         <Container className={"home content"}>
@@ -80,10 +61,10 @@ const Home = () => {
                             <Row>
                                 <Col>
                                     <FormField
-                                        placeholder="Game Hash"
-                                        value={gameValues.hash}
-                                        name="hash"
-                                        label="Game Hash"
+                                        placeholder="Game Code"
+                                        code={gameCode}
+                                        name="code"
+                                        label="Game Code"
                                         action={joinExistingGame}
                                         onChange={handleChange}
                                         c_names="home join-btn"
