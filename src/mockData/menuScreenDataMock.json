@@ -9,7 +9,7 @@
     "rounds": [
       {
         "id": 1,
-        "timeout": 35000,
+        "timeout": 10000,
         "memes": [
           {
             "id": 1,
