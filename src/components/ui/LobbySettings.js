@@ -6,6 +6,7 @@ import {Button, Container, Row} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
+import {LoadingButton} from "./LoadingButton";
 
 
 const LobbySettings = ({Lobby, isAdmin}) => {
@@ -121,7 +122,7 @@ const LobbySettings = ({Lobby, isAdmin}) => {
                     <Form.Range defaultValue={Lobby.lobbySetting.superDislikeLimit} min={0} max={10} name="superDislikeLimit" onChange={handleChange}/>
 
                 </Form>
-                <Button onClick={updateSettings}>Update Settings</Button>
+                <LoadingButton onClick={updateSettings} buttonText={"Update Settings"} loadingText={"Updating..."} c_name={"primary"}/>
             </Container>
         );
     }

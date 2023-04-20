@@ -9,6 +9,8 @@ import {useHistory} from "react-router-dom";
 import {api} from "../../helpers/api";
 import User from "../../models/User";
 import Cookies from "universal-cookie"
+import PropTypes from "prop-types";
+import {LoadingButton} from "../ui/LoadingButton";
 const LOBBY_CREATION = "Create Lobby";
 const LOBBY_JOIN = "Join Game";
 
@@ -86,13 +88,9 @@ const UsernameModal = props => {
                         Close
                     </Button>
                     {props.title === LOBBY_CREATION &&
-                        <Button disabled={username===''} className="home join-btn"  onClick={createLobby}>
-                            Set Username
-                        </Button>                    }
+                        <LoadingButton onClick={createLobby} loadingText={"Creating Lobby..."} buttonText={"Create Lobby"}/>                 }
                     {props.title === LOBBY_JOIN &&
-                        <Button disabled={username===''} className="home join-btn"  onClick={submitAndJoin}>
-                            Set Username
-                        </Button>
+                        <LoadingButton onClick={submitAndJoin} loadingText={"Joining..."} buttonText={"Join Game"}/>
                     }
                 </Modal.Footer>
             </Modal>

@@ -14,6 +14,7 @@ import MockData from '../../mockData/lobbyScreenDataMock.json'
 import {api} from "../../helpers/api";
 import PropTypes from "prop-types";
 import Cookies from "universal-cookie";
+import {LoadingButton} from "../ui/LoadingButton";
 
 const Lobby = () => {
   const cookies = new Cookies();
@@ -127,13 +128,13 @@ const Lobby = () => {
               </Row>
               <Row>
                 <Col>
-                  <Button
-                      width="200px"
+                  <LoadingButton
+                      buttonText={"Leave Lobby"}
+                      loadingText={"Leaving..."}
                       onClick={() => leaveLobby("Disconnected")}
-                      className="back-to-login-button"
-                  >
-                    Leave Lobby
-                  </Button>
+                      c_name={"lobby leave-btn"}
+                      loadingTime={500}
+                  />
                 </Col>
               </Row>
             </BaseContainer>
@@ -203,13 +204,13 @@ const Lobby = () => {
                   </Row>
                   <Row>
                     <Col>
-                      <Button
-                          width="200px"
+                      <LoadingButton
+                          buttonText={"Leave Lobby"}
+                          loadingText={"Leaving..."}
                           onClick={() => leaveLobby("Disconnected")}
-                          className="back-to-login-button"
-                      >
-                        Leave Lobby
-                      </Button>
+                          c_name={"lobby leave-btn"}
+                          loadingTime={500}
+                      />
                     </Col>
                   </Row>
                 </BaseContainer>
