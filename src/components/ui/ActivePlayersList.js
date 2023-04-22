@@ -45,13 +45,14 @@ const PlayerAvatar = ({ name, color, isAdmin }) => {
   );
 };
 
-const ActivePlayersList = ({lobby, players}) => {
+const ActivePlayersList = ({lobby, players, isEditable}) => {
   const cookies = new Cookies();
   let playerItems;
 
   //Temporary Kick Solution
   const kickPlayer = async (uuid) => {
     try {
+      sessionStorage.setItem("alert", "You were removed from the lobby")
       await api.delete(`${lobbyEndpoint}/${lobby.code}/players`, {headers: {'Authorization': 'Bearer ' + uuid}});
     }
     catch (error) {
@@ -71,7 +72,7 @@ const ActivePlayersList = ({lobby, players}) => {
                   <div>{player.name}</div>
                 </div>
                 <div>
-                  {player.uuid != lobby.owner.uuid && <Button className="lobby kick-btn" onClick={() => kickPlayer(player.uuid)}>
+                  {player.uuid != lobby.owner.uuid && <Button className="lobby kick-btn" onClick={() => kickPlayer(player.uuid)} disabled={isEditable}>
                     Kick
                   </Button>}
                 </div>

@@ -144,7 +144,7 @@ const Lobby = () => {
             <Row>
               <Col>
                 <h2 className="lobby player-title">Players</h2>
-                <ActivePlayersList lobby={currentLobby} players={currentLobby.players}/>
+                <ActivePlayersList lobby={currentLobby} players={currentLobby.players} isEditable={isSynchronizing}/>
               </Col>
 
               <Col

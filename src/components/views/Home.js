@@ -11,7 +11,7 @@ import {Notification} from "../ui/Notification";
 const Home = () => {
     const history = useHistory();
     const [gameCode, setGameCode] = useState("");
-    const [showAlert, setShowAlert] = useState(false);
+    const [showAlert, setShowAlert] = useState(sessionStorage.getItem("alert") === null ? false : true);
     const [show, setShow] = useState(false);
 
     const toggleShowAlert = () => setShowAlert(!showAlert);
