@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
 import "styles/views/Home.scss";
 import LobbyList from "./LobbyList";
-import {Col, Container, Row, Button, Stack, Toast} from "react-bootstrap";
+import {Col, Container, Row, Button, Stack} from "react-bootstrap";
 import {FormField} from "../../helpers/formField";
 import UsernameModal from "./UsernameModal";
 import {useHistory} from "react-router-dom";
-import {IoMdAlert} from "react-icons/io";
 import {Notification} from "../ui/Notification";
 
 
