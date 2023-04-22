@@ -9,7 +9,8 @@ export const FormField = props => {
         value: PropTypes.string,
         onChange: PropTypes.func,
         action: PropTypes.func,
-        c_names: PropTypes.string
+        c_names: PropTypes.string,
+        disabled: PropTypes.bool
     };
 
     return (
@@ -24,6 +25,7 @@ export const FormField = props => {
                 name={props.name}
                 onChange={e => props.onChange(e)}
                 c_names = {props.c_names}
+                disabled={props.disabled}
             />
             {props.action &&
                 <UsernameModal c_names={props.c_names} title={"Join Game"} submit={props.action} code={props.code}/>

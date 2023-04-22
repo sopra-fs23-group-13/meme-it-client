@@ -14,18 +14,24 @@ import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
 import {Spinner} from "../ui/Spinner";
 import {lobby} from "../../helpers/endpoints";
+import {Notification} from "../ui/Notification"
 
 const Lobby = () => {
   const cookies = new Cookies();
   const history = useHistory();
-  //const [showChat, setShowChat] = useState(false);
   const [currentLobby, setCurrentLobby] = useState({});
+  const [showAlert, setShowAlert] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSynchronizing, setIsSynchronizing] = useState(false);
+  const toggleShowAlert = () => setShowAlert(!showAlert);
 
-/*  const toggleChat = () => {
-    setShowChat(!showChat);
-  };
-*/
+  /*
+    //const [showChat, setShowChat] = useState(false);
+    const toggleChat = () => {
+      setShowChat(!showChat);
+    };
+  */
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(currentLobby.code);
   };
@@ -45,7 +51,13 @@ const Lobby = () => {
           if(player.uuid === cookies.get("token")){
             playerIsInLobby = true;
           }
-        })
+        });
+        if(response.data.startTime !== null){
+          executeForAllPlayersAtSameTime(new Date(response.data.startTime), () => {
+            startGameAtTheSameTime();
+          });
+        }
+
         if(!playerIsInLobby){
           await leaveLobby("Kicked from Lobby");
         }
@@ -83,11 +95,43 @@ const Lobby = () => {
   );
 
   const startGame = async () => {
-    await api.post
+    console.log(currentLobby)
+    const response = await api.put(`${lobby}/${currentLobby.code}/sync`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+    console.log(response.data);
+    //TODO: pre load game -> await api.post(`${game}/${currentLobby.id}`, {},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+
+    executeForAllPlayersAtSameTime(new Date(response.data.startTime), () => {
+      startGameAtTheSameTime();
+    });
   }
+
+  const startGameAtTheSameTime= () =>{
+    localStorage.setItem("started", "true")
+    history.push(`/game/${currentLobby.id}`);
+  }
+
+
+  const executeForAllPlayersAtSameTime = (time, callback) => {
+    if(!isSynchronizing){
+      const delay = time - Date.now();
+      if (delay <= 0) {
+        callback();
+      } else {
+        setTimeout(callback, delay);
+      }
+      setIsSynchronizing(!isSynchronizing);
+      setShowAlert(true);
+    }
+  };
 
   return (
       <Container>
+        <div className={"lobby alert"}>
+          <Notification reason="Game is synchronizing all players and will start soon..."
+                        showAlert={(showAlert && isSynchronizing)}
+                        toggleShowAlert={toggleShowAlert}
+          />
+        </div>
         <Stack gap={3}>
           <Container>
             <Col>
@@ -111,7 +155,7 @@ const Lobby = () => {
               </Col>
               <Col>
                 <h2 className="lobby player-title">Settings</h2>
-                    <LobbySettings Lobby={currentLobby} isAdmin={isAdmin}/>
+                    <LobbySettings Lobby={currentLobby} isAdmin={isAdmin} isEditable={isSynchronizing}/>
                 <div className="lobby-code-container">
                   <h2 className="lobby-code-heading">Lobby Code:</h2>
                   <div className="lobby-code">
@@ -148,6 +192,7 @@ const Lobby = () => {
                     width="200px"
                     onClick={() => leaveLobby("Disconnected")}
                     className="back-to-login-button"
+                    disabled={isSynchronizing}
                 >
                   Leave Lobby
                 </Button>
@@ -158,6 +203,7 @@ const Lobby = () => {
           <Row className={"d-flex align-items-center justify-content-center"}>
             <Button
                 onClick={startGame}
+                disabled={currentLobby.startTime}
                 className="lobby btn start"
             >
               Start Game

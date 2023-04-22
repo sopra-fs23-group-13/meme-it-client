@@ -9,12 +9,12 @@ import Cookies from "universal-cookie";
 import {lobby} from "../../helpers/endpoints";
 
 /**
- * TODO: reload page fix (only lobby?)
- * TODO: game flow fix
+ * TODO: start game -> remove it from public lobby list (as it is in progress)
+ *
  * TODO: leaderboard?
  */
 
-const LobbySettings = ({Lobby, isAdmin}) => {
+const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
     const cookies = new Cookies();
     const [lobbyValues, setLobbyValues] = useState({
         name: Lobby.name,
@@ -81,6 +81,7 @@ const LobbySettings = ({Lobby, isAdmin}) => {
                     name="isPublic"
                     defaultChecked={!Lobby.lobbySetting.isPublic}
                     onChange={handleChange}
+                    disabled={isEditable}
                 />
 
 
@@ -93,16 +94,17 @@ const LobbySettings = ({Lobby, isAdmin}) => {
                         name="name"
                         value={lobbyValues.name}
                         onChange={handleChange}
+                        disabled={isEditable}
                     />
 
                     <Form.Label><b>Player Limit:</b> {lobbyValues.maxPlayers === "" ? Lobby.lobbySetting.maxPlayers : lobbyValues.maxPlayers} </Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.maxPlayers} min={2} max={8} name="maxPlayers" onChange={handleChange}/>
+                    <Form.Range defaultValue={Lobby.lobbySetting.maxPlayers} min={2} max={8} name="maxPlayers" onChange={handleChange} disabled={isEditable}/>
 
                     <Form.Label><b>Number of Rounds:</b> {lobbyValues.maxRounds === "" ? Lobby.lobbySetting.maxRounds : lobbyValues.maxRounds} </Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.maxRounds} min={1} max={6} name="maxRounds" onChange={handleChange}/>
+                    <Form.Range defaultValue={Lobby.lobbySetting.maxRounds} min={1} max={6} name="maxRounds" onChange={handleChange} disabled={isEditable}/>
 
                     <Form.Label><b>Meme Change Limit</b></Form.Label>
-                    <Form.Select style={{marginBottom:'1em'}} value={lobbyValues.memeChangeLimit} name="memeChangeLimit" onChange={handleChange}>
+                    <Form.Select style={{marginBottom:'1em'}} value={lobbyValues.memeChangeLimit} name="memeChangeLimit" onChange={handleChange} disabled={isEditable}>
                         <option>0</option>
                         <option>3</option>
                         <option>5</option>
@@ -110,18 +112,18 @@ const LobbySettings = ({Lobby, isAdmin}) => {
                     </Form.Select>
 
                     <Form.Label><b>Meme Creation Time Limit:</b> {lobbyValues.timeRoundLimit === '' ? Lobby.lobbySetting.timeRoundLimit : lobbyValues.timeRoundLimit} seconds</Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.timeRoundLimit} min={15} max={180} name="timeRoundLimit" onChange={handleChange}/>
+                    <Form.Range defaultValue={Lobby.lobbySetting.timeRoundLimit} min={15} max={180} name="timeRoundLimit" onChange={handleChange} disabled={isEditable}/>
 
                     <Form.Label><b>Voting Phase Time Limit:</b> {lobbyValues.timeVoteLimit === '' ? Lobby.lobbySetting.timeVoteLimit : lobbyValues.timeVoteLimit} seconds</Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.timeVoteLimit} min={15} max={180} name="timeVoteLimit" onChange={handleChange}/>
+                    <Form.Range defaultValue={Lobby.lobbySetting.timeVoteLimit} min={15} max={180} name="timeVoteLimit" onChange={handleChange} disabled={isEditable}/>
 
                     <Form.Label><b>Super Likes:</b> {lobbyValues.superLikeLimit === '' ? Lobby.lobbySetting.superLikeLimit : lobbyValues.superLikeLimit}</Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.superLikeLimit} min={0} max={10} name="superLikeLimit" onChange={handleChange}/>
+                    <Form.Range defaultValue={Lobby.lobbySetting.superLikeLimit} min={0} max={10} name="superLikeLimit" onChange={handleChange} disabled={isEditable}/>
                     <Form.Label><b>Super Dislikes:</b> {lobbyValues.superDislikeLimit === '' ? Lobby.lobbySetting.superDislikeLimit : lobbyValues.superDislikeLimit}</Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.superDislikeLimit} min={0} max={10} name="superDislikeLimit" onChange={handleChange}/>
+                    <Form.Range defaultValue={Lobby.lobbySetting.superDislikeLimit} min={0} max={10} name="superDislikeLimit" onChange={handleChange} disabled={isEditable}/>
 
                 </Form>
-                <Button onClick={updateSettings}>Update Settings</Button>
+                <Button onClick={updateSettings} disabled={isEditable}>Update Settings</Button>
             </Container>
         );
     }
