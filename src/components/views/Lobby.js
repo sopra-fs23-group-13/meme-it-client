@@ -3,17 +3,16 @@ import "styles/views/Lobby.scss";
 import "styles/ui/LobbyCode.scss"; //Copyfield of LobbyCode
 import "styles/ui/Button.scss";
 import BaseContainer from "../ui/BaseContainer";
-import {Button, OverlayTrigger, Tooltip, Accordion, Card} from "react-bootstrap";
+import {Button, OverlayTrigger, Tooltip} from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import ActivePlayersList from "../ui/ActivePlayersList";
 import LobbySettings from "../ui/LobbySettings";
 import { FaCopy } from "react-icons/fa";
 
-import MockData from '../../mockData/lobbyScreenDataMock.json'
 import {api} from "../../helpers/api";
-import PropTypes from "prop-types";
 import Cookies from "universal-cookie";
+import {Spinner} from "../ui/Spinner";
 
 const Lobby = () => {
   const cookies = new Cookies();
@@ -22,10 +21,10 @@ const Lobby = () => {
   const [currentLobby, setCurrentLobby] = useState({});
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const toggleChat = () => {
+/*  const toggleChat = () => {
     setShowChat(!showChat);
   };
-
+*/
   const copyToClipboard = () => {
     navigator.clipboard.writeText(currentLobby.code);
   };
@@ -57,7 +56,7 @@ const Lobby = () => {
     }
     const interval = setInterval(() => {
       getLobbyData();
-    }, 500);
+    }, 1000);
     return () => clearInterval(interval);
   })
 
@@ -77,147 +76,91 @@ const Lobby = () => {
   }
 
 
-  if (isAdmin){
-    return (
-        <Container>
-          <Stack gap={3}>
-            <Container>
+  return (
+      <Container>
+        <Stack gap={3}>
+          <Container>
+            <Col>
+              <h1 className="lobby title">Meme-It</h1>
+              <p className="lobby subtitle"> The Meme Creation Game</p>
+            </Col>
+          </Container>
+          <BaseContainer className="lobby container">
+            { currentLobby.lobbySetting ?
+            <Row>
               <Col>
-                <h1 className="lobby title">Meme-It</h1>
-                <p className="lobby subtitle"> The Meme Creation Game</p>
+                <h2 className="lobby player-title">Players</h2>
+                <ActivePlayersList lobby={currentLobby} players={currentLobby.players}/>
               </Col>
-            </Container>
-            <BaseContainer className="lobby container">
-              <Row>
-                <Col>
-                  <h2 className="lobby player-title">Players</h2>
-                  <ActivePlayersList lobby={currentLobby} players={currentLobby.players}/>
-                </Col>
 
-                <Col
-                    xs={1}
-                    className="d-flex align-items-center justify-content-center"
-                >
-                  <div className="vertical-line"></div>
-                </Col>
-                <Col>
-                  <h2 className="lobby player-title">Settings</h2>
-                  <LobbySettings Lobby={currentLobby} isAdmin={true}/>
-                  <div className="lobby-code-container">
-                    <h2 className="lobby-code-heading">Lobby Code:</h2>
-                    <div className="lobby-code">
-                      <span className="lobby-code-text">{currentLobby.code}</span>
-                      <OverlayTrigger
-                          placement="left"
-                          overlay={
-                            <Tooltip id="button-tooltip">Copy to clipboard</Tooltip>
-                          }
-                      >
-                    <span
-                        className="copy-icon"
-                        onClick={copyToClipboard}
-                        title="Copy to clipboard"
-                    >
-                      <FaCopy />
-                    </span>
-                      </OverlayTrigger>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <Button
-                      width="200px"
-                      onClick={() => leaveLobby("Disconnected")}
-                      className="back-to-login-button"
-                  >
-                    Leave Lobby
-                  </Button>
-                </Col>
-              </Row>
-            </BaseContainer>
-            <Row className={"d-flex align-items-center justify-content-center"}>
-              <Button
-                  onClick={() =>{
-                    localStorage.setItem("started", "true")
-                    history.push("/game/1")
-                  }
-                  }
-                  className="lobby btn start"
+              <Col
+                  xs={1}
+                  className="d-flex align-items-center justify-content-center"
               >
-                Start Game
-              </Button>
-            </Row>
-          </Stack>
-        </Container>
-    )
-  }
-    else {
-      return (
-            <Container>
-              <Stack gap={3}>
-                <Container>
-                  <Col>
-                    <h1 className="lobby title">Meme-It</h1>
-                    <p className="lobby subtitle"> The Meme Creation Game</p>
-                  </Col>
-                </Container>
-                <BaseContainer className="lobby container">
-                  <Row>
-                    <Col>
-                      <h2 className="lobby player-title">Players</h2>
-                      <ActivePlayersList lobby={currentLobby} players={currentLobby.players}/>
-                    </Col>
-
-                    <Col
-                        xs={1}
-                        className="d-flex align-items-center justify-content-center"
+                <div className="vertical-line"></div>
+              </Col>
+              <Col>
+                <h2 className="lobby player-title">Settings</h2>
+                    <LobbySettings Lobby={currentLobby} isAdmin={isAdmin}/>
+                <div className="lobby-code-container">
+                  <h2 className="lobby-code-heading">Lobby Code:</h2>
+                  <div className="lobby-code">
+                    <span className="lobby-code-text">{currentLobby.code}</span>
+                    <OverlayTrigger
+                        placement="left"
+                        delay={{ show: 250, hide: 400 }}
+                        overlay={
+                          <Tooltip id="button-tooltip">Copy to clipboard</Tooltip>
+                        }
                     >
-                      <div className="vertical-line"></div>
-                    </Col>
-                    <Col>
-                      <h2 className="lobby player-title">Settings</h2>
-                      <LobbySettings Lobby={currentLobby} isAdmin={false}/>
-                      <div className="lobby-code-container">
-                        <h2 className="lobby-code-heading">Lobby Code:</h2>
-                        <div className="lobby-code">
-                          <span className="lobby-code-text">{currentLobby.code}</span>
-                          <OverlayTrigger
-                              placement="left"
-                              overlay={
-                                <Tooltip id="button-tooltip">Copy to clipboard</Tooltip>
-                              }
-                          >
-                        <span
-                            className="copy-icon"
-                            onClick={copyToClipboard}
-                            title="Copy to clipboard"
-                        >
-                          <FaCopy />
-                        </span>
-                          </OverlayTrigger>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <Button
-                          width="200px"
-                          onClick={() => leaveLobby("Disconnected")}
-                          className="back-to-login-button"
-                      >
-                        Leave Lobby
-                      </Button>
-                    </Col>
-                  </Row>
-                </BaseContainer>
-              </Stack>
-            </Container>
-        )
-    }
+                  <span
+                      className="copy-icon"
+                      onClick={copyToClipboard}
+                      title="Copy to clipboard"
+                  >
+                    <FaCopy />
+                  </span>
+                    </OverlayTrigger>
+                  </div>
+                </div>
+              </Col>
 
+            </Row>
+                : (
+                    <Row>
+                      <Col>
+                        <Spinner />
+                      </Col>
+                    </Row>
+                )
+              }
+            <Row>
+              <Col>
+                <Button
+                    width="200px"
+                    onClick={() => leaveLobby("Disconnected")}
+                    className="back-to-login-button"
+                >
+                  Leave Lobby
+                </Button>
+              </Col>
+            </Row>
+          </BaseContainer>
+          <Row className={"d-flex align-items-center justify-content-center"}>
+            <Button
+                onClick={() =>{
+                  localStorage.setItem("started", "true")
+                  history.push("/game/1")
+                }
+                }
+                className="lobby btn start"
+            >
+              Start Game
+            </Button>
+          </Row>
+        </Stack>
+      </Container>
+  )
 };
 
 export default Lobby;

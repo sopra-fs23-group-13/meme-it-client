@@ -8,7 +8,9 @@ import AppContextProvider from "./context";
 const App = () => {
   return (
       <div>
-        <AppRouter />
+          <AppContextProvider >
+            <AppRouter />
+          </AppContextProvider>
       </div>
   );
 };

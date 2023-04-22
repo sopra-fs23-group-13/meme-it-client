@@ -2,11 +2,17 @@ import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import {FormField} from "../../helpers/formField";
 import "styles/views/Home.scss";
-import {Button, Container, Row} from "react-bootstrap";
+import {Button, Container} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
 
+/**
+ * TODO: private und public games fix
+ * TODO: reload page fix (only lobby?)
+ * TODO: game flow fix
+ * TODO: leaderboard?
+ */
 
 const LobbySettings = ({Lobby, isAdmin}) => {
     const cookies = new Cookies();
@@ -43,7 +49,7 @@ const LobbySettings = ({Lobby, isAdmin}) => {
                 [name]: !Lobby.lobbySetting.isPublic,
             });
         }
-        else if(name == "name"){
+        else if(name === "name"){
             setLobbyValues({
                 ...lobbyValues,
                 [name]: value,
@@ -62,13 +68,6 @@ const LobbySettings = ({Lobby, isAdmin}) => {
         event.preventDefault(); //noch anpassen
         console.log("Form submitted with values:", lobbyValues);
     };
-
-    //This is required because on page refresh the Lobby is undefined for the first render and stops page from loading properly
-    if(Lobby.lobbySetting === undefined){
-        return (
-            <div> Loading ...</div>
-        )
-    }
 
     if(isAdmin){
         return (

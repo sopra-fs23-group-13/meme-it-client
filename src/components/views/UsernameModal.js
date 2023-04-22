@@ -4,10 +4,8 @@ import Modal from 'react-bootstrap/Modal';
 import {FormField} from "../../helpers/formField";
 import "styles/views/Home.scss";
 import {Button} from "react-bootstrap";
-import LobbyCreationModal from "./LobbyCreationModal";
 import {useHistory} from "react-router-dom";
 import {api} from "../../helpers/api";
-import User from "../../models/User";
 import Cookies from "universal-cookie"
 const LOBBY_CREATION = "Create Lobby";
 const LOBBY_JOIN = "Join Game";
@@ -32,7 +30,7 @@ const UsernameModal = props => {
         localStorage.setItem("code", props.code);
         console.log(localStorage.getItem("code"))
         try {
-            const joinResponse = await api.post('/lobbies/' + props.code + '/players', {name: response.data.name}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            await api.post('/lobbies/' + props.code + '/players', {name: response.data.name}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         }
         catch{
             sessionStorage.setItem("alert", "Lobby Not Found")
@@ -54,7 +52,7 @@ const UsernameModal = props => {
             const requestBody = JSON.stringify({name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit});
             const response = await api.post('/lobbies', requestBody, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
             localStorage.setItem("code", response.data.code)
-            const joinResponse = await api.post('/lobbies/' + response.data.code + '/players', {name: username}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            await api.post('/lobbies/' + response.data.code + '/players', {name: username}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         } catch {
             alert("Couldn't create lobby")
         }
