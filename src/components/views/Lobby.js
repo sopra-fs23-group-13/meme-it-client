@@ -26,13 +26,6 @@ const Lobby = () => {
   const [isSynchronizing, setIsSynchronizing] = useState(false);
   const toggleShowAlert = () => setShowAlert(!showAlert);
 
-  /*
-    //const [showChat, setShowChat] = useState(false);
-    const toggleChat = () => {
-      setShowChat(!showChat);
-    };
-  */
-
   const copyToClipboard = () => {
     navigator.clipboard.writeText(currentLobby.code);
   };
