@@ -17,7 +17,7 @@ import {Spinner} from "../ui/Spinner";
 const Lobby = () => {
   const cookies = new Cookies();
   const history = useHistory();
-  const [showChat, setShowChat] = useState(false);
+  //const [showChat, setShowChat] = useState(false);
   const [currentLobby, setCurrentLobby] = useState({});
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -75,6 +75,11 @@ const Lobby = () => {
     }
   }
 
+  const renderTooltip = (props) => (
+      <Tooltip id="button-tooltip" {...props}>
+        Copy to clipboard
+      </Tooltip>
+  );
 
   return (
       <Container>
@@ -109,15 +114,13 @@ const Lobby = () => {
                     <OverlayTrigger
                         placement="left"
                         delay={{ show: 250, hide: 400 }}
-                        overlay={
-                          <Tooltip id="button-tooltip">Copy to clipboard</Tooltip>
-                        }
+                        overlay={renderTooltip}
                     >
-                  <span
-                      className="copy-icon"
-                      onClick={copyToClipboard}
-                      title="Copy to clipboard"
-                  >
+                      <span
+                          className="copy-icon"
+                          onClick={copyToClipboard}
+                          title="Copy to clipboard"
+                      >
                     <FaCopy />
                   </span>
                     </OverlayTrigger>
