@@ -21,7 +21,7 @@ const Chat = (props) => {
                         name={props.currentLobby.owner.name}
                         code={props.currentLobby.code}
                         uuid={props.currentLobby}
-                        author={props.currentLobby.players.find((player) => player.uuid === cookies.get("token"))}
+                        author={props.currentLobby.players.find((player) => player.id === cookies.get("token"))}
                     />
                 </div>
             )}

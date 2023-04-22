@@ -44,12 +44,12 @@ const Lobby = () => {
         const response = await api.get(`${lobby}/${localStorage.getItem("code")}`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         setCurrentLobby(response.data);
         //Check if player is the owner
-        if(response.data.owner.uuid === cookies.get("token")){
+        if(response.data.owner.id === cookies.get("token")){
           setIsAdmin(true);
         }
         //Check if player is in the lobby's player list
         response.data.players.forEach(player => {
-          if(player.uuid === cookies.get("token")){
+          if(player.id === cookies.get("token")){
             playerIsInLobby = true;
           }
         });

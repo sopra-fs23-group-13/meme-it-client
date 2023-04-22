@@ -60,19 +60,19 @@ const ActivePlayersList = ({lobby, players, isEditable}) => {
     }
   }
   //If player is the owner of the lobby (show kick button)
-  if(players && lobby.owner.uuid=== cookies.get("token")){
+  if(players && lobby.owner.id=== cookies.get("token")){
     playerItems = (
         <div>
           {players.map(player => (
-              <div key={player.uuid} style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid gray', padding: '10px' }}>
+              <div key={player.id} style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid gray', padding: '10px' }}>
                 <div style={{ marginRight: '10px' }}>
-                  <PlayerAvatar name={player.name} color={"#7260e3"} isAdmin={player.uuid === lobby.owner.uuid} />
+                  <PlayerAvatar name={player.name} color={"#7260e3"} isAdmin={player.id === lobby.owner.id} />
                 </div>
                 <div style={{ flexGrow: 1 }}>
                   <div>{player.name}</div>
                 </div>
                 <div>
-                  {player.uuid != lobby.owner.uuid && <Button className="lobby kick-btn" onClick={() => kickPlayer(player.uuid)} disabled={isEditable}>
+                  {player.id != lobby.owner.id && <Button className="lobby kick-btn" onClick={() => kickPlayer(player.id)} disabled={isEditable}>
                     Kick
                   </Button>}
                 </div>
@@ -86,9 +86,9 @@ const ActivePlayersList = ({lobby, players, isEditable}) => {
     playerItems = (
         <div>
           {players.map(player => (
-              <div key={player.uuid} style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid gray', padding: '10px' }}>
+              <div key={player.id} style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid gray', padding: '10px' }}>
                 <div style={{ marginRight: '10px' }}>
-                  <PlayerAvatar name={player.name} color={"#7260e3"} isAdmin={player.uuid === lobby.owner.uuid} />
+                  <PlayerAvatar name={player.name} color={"#7260e3"} isAdmin={player.id === lobby.owner.id} />
                 </div>
                 <div style={{ flexGrow: 1 }}>
                   <div>{player.name}</div>

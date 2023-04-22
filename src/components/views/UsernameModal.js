@@ -27,7 +27,7 @@ const UsernameModal = props => {
     const submitAndJoin = async () => {
         const response = await api.post(users, {name: username});
         localStorage.setItem("username", username)
-        cookies.set("token", response.data.uuid)
+        cookies.set("token", response.data.id)
         localStorage.setItem("code", props.code);
         console.log(localStorage.getItem("code"))
         try {
@@ -47,12 +47,12 @@ const UsernameModal = props => {
     const createLobby = async () => {
         const response = await api.post(users, {name: username});
         localStorage.setItem("username", username)
-        cookies.set("token", response.data.uuid)
+        cookies.set("token", response.data.id)
         try {
-            let {name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit} = {name: "Lobby of " + localStorage.getItem("username"), isPublic:true, maxPlayers:4,maxRounds:3, memeChangeLimit:0, superLikeLimit:1, superDislikeLimit:1, timeRoundLimit:60,timeVoteLimit:30  }
-            const requestBody = JSON.stringify({name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit});
+            let {name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, roundDuration, ratingDuration} = {name: "Lobby of " + localStorage.getItem("username"), isPublic:true, maxPlayers:4,maxRounds:3, memeChangeLimit:0, superLikeLimit:1, superDislikeLimit:1, roundDuration:60,ratingDuration:30  }
+            const requestBody = JSON.stringify({name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, roundDuration, ratingDuration});
             const createdLobby = await api.post(lobby, requestBody, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-            localStorage.setItem("code", createdLobby.data.code)
+            localStorage.setItem("code", createdLobby.data.code);
             await api.post(`${lobby}/${createdLobby.data.code}/players`, {name: username},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         } catch {
             alert("Couldn't create lobby")

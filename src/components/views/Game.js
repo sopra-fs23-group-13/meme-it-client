@@ -183,7 +183,7 @@ const Game = () => {
           {currentMeme?.image ? (
               <>
                 <div className="meme-content">
-                  <img src={currentMeme?.image} />
+                  <img src={currentMeme?.image} alt={"meme lmao"} />
 
               {memeTextNodes?.map((item, i) => (
                 <Draggable
