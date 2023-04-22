@@ -17,20 +17,6 @@ const Home = () => {
 
     const toggleShowAlert = () => setShowAlert(!showAlert);
 
-    const alert = (reason) => {
-        return (
-            <Toast bg={"white"} show={showAlert} delay={5000} autohide onClose={() => {
-                toggleShowAlert();
-                sessionStorage.removeItem("alert");
-            }}>
-                <Toast.Header>
-                    <strong className="me-auto"> <IoMdAlert/> Alert</strong>
-                </Toast.Header>
-                <Toast.Body className="me-auto"><b>{reason}</b></Toast.Body>
-            </Toast>
-        )
-    }
-
     const lobbyList  = () => {
         return(
             <Container>
