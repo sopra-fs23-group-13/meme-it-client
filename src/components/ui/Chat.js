@@ -11,7 +11,7 @@ const Chat = (props) => {
     };
 
     return (
-        <div className="chat-container">
+        <div className={`chat-container${collapsed ? " chat-collapsed" : ""}`} >
             <button className="chat-toggle" onClick={toggleCollapsed}>
                 {collapsed ? "Open Chat" : "Close Chat"}
             </button>

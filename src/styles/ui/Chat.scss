@@ -10,6 +10,11 @@
   font-family: 'Roboto', sans-serif;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.chat-collapsed {
+  transform: translateY(calc(100% - 40px));
 }
 
 .chat-toggle {
