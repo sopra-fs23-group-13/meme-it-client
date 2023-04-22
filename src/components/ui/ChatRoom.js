@@ -44,9 +44,9 @@ const ChatRoom = (props) => {
         <div className={"chat"}>
             <ul className="message-list">
                 {messages.map((message, index) => (
-                    <li key={index} className={message.author === props.name ? "message-item author-message": "message-item"}>
+                    <li key={index} className={message.author === props.author.name ? "message-item author-message": "message-item"}>
                         <span className="message-item-time">
-                          {message.time} -{" "} {/*.split("T")[1].split(":")[0] + ":" + message.time.split("T")[1].split(":")[1]*/}
+                          {message.time?.split("T")[1]?.split(":")[0] + ":" + message.time?.split("T")[1]?.split(":")[1]} -{" "} {/**/}
                         </span>
                                     <span className="message-item-author">
                           {message.author}:

@@ -1,7 +1,9 @@
 import { useState } from "react";
 import ChatRoom from "./ChatRoom";
 import "styles/ui/Chat.scss";
+import Cookies from "universal-cookie";
 const Chat = (props) => {
+    const cookies = new Cookies();
     const [collapsed, setCollapsed] = useState(true);
 
     const toggleCollapsed = () => {
@@ -19,6 +21,7 @@ const Chat = (props) => {
                         name={props.currentLobby.owner.name}
                         code={props.currentLobby.code}
                         uuid={props.currentLobby}
+                        author={props.currentLobby.players.find((player) => player.uuid === cookies.get("token"))}
                     />
                 </div>
             )}
