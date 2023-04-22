@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { api } from "../../helpers/api";
-import { chat } from "../../helpers/endpoints";
+import React, {useState, useEffect} from "react";
+import {api} from "../../helpers/api";
+import {chat} from "../../helpers/endpoints";
 import Cookies from "universal-cookie";
 
 const ChatRoom = (props) => {
@@ -10,9 +10,10 @@ const ChatRoom = (props) => {
 
     useEffect(() => {
         const getChatData = async () => {
+            console.log(props)
             try {
                 const response = await api.get(`${chat}/${props.code}`, {
-                    headers: { Authorization: "Bearer " + cookies.get("token") },
+                    headers: {Authorization: "Bearer " + cookies.get("token")},
                 });
                 setMessages(response.data);
                 console.log(response.data);
@@ -28,27 +29,28 @@ const ChatRoom = (props) => {
 
     const sendMessage = async () => {
         const newMessage = {
-            sender: props.name,
+            author: cookies.get("token"),
             message: messageText,
         };
+        console.log(newMessage)
         setMessages((prevMessages) => [...prevMessages, newMessage]);
         await api.post(`${chat}/${props.code}`, newMessage, {
-            headers: { Authorization: "Bearer " + cookies.get("token") },
+            headers: {Authorization: "Bearer " + cookies.get("token")},
         });
         setMessageText("");
     };
 
     return (
-        <div>
+        <div className={"chat"}>
             <ul className="message-list">
                 {messages.map((message, index) => (
-                    <li key={index} className="message-item">
-            <span className="message-item-time">
-              {message.time} -{" "}
-            </span>
-                        <span className="message-item-author">
-              {message.author}:
-            </span>{" "}
+                    <li key={index} className={message.author === props.name ? "message-item author-message": "message-item"}>
+                        <span className="message-item-time">
+                          {message.time} -{" "} {/*.split("T")[1].split(":")[0] + ":" + message.time.split("T")[1].split(":")[1]*/}
+                        </span>
+                                    <span className="message-item-author">
+                          {message.author}:
+                        </span>{" "}
                         {message.message}
                     </li>
                 ))}
