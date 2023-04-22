@@ -15,6 +15,7 @@ import Cookies from "universal-cookie";
 import {Spinner} from "../ui/Spinner";
 import {lobby} from "../../helpers/endpoints";
 import {Notification} from "../ui/Notification";
+import Chat from "../ui/Chat";
 
 const Lobby = () => {
   const cookies = new Cookies();
@@ -212,6 +213,7 @@ const Lobby = () => {
           ) : <div></div>
           }
         </Stack>
+        <Chat currentLobby={currentLobby} />
       </Container>
   )
 };
