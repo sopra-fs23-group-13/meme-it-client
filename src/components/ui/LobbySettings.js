@@ -8,7 +8,6 @@ import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
 
 /**
- * TODO: private und public games fix
  * TODO: reload page fix (only lobby?)
  * TODO: game flow fix
  * TODO: leaderboard?

@@ -149,6 +149,7 @@ const Lobby = () => {
               </Col>
             </Row>
           </BaseContainer>
+          {isAdmin ? (
           <Row className={"d-flex align-items-center justify-content-center"}>
             <Button
                 onClick={() =>{
@@ -161,6 +162,8 @@ const Lobby = () => {
               Start Game
             </Button>
           </Row>
+          ) : <div></div>
+          }
         </Stack>
       </Container>
   )
