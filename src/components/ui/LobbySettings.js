@@ -17,15 +17,15 @@ import {lobby} from "../../helpers/endpoints";
 const LobbySettings = ({Lobby, isAdmin}) => {
     const cookies = new Cookies();
     const [lobbyValues, setLobbyValues] = useState({
-        name: "",
-        maxPlayers: "",
-        maxRounds: "",
-        memeChangeLimit: "",
-        timeRoundLimit: "",
-        timeVoteLimit: "",
-        superLikeLimit: "",
-        superDislikeLimit: "",
-        isPublic: ""
+        name: Lobby.name,
+        maxPlayers: Lobby.lobbySetting.maxPlayers,
+        maxRounds: Lobby.lobbySetting.maxRounds,
+        memeChangeLimit: Lobby.lobbySetting.memeChangeLimit,
+        timeRoundLimit: Lobby.lobbySetting.timeRoundLimit,
+        timeVoteLimit: Lobby.lobbySetting.timeVoteLimit,
+        superLikeLimit: Lobby.lobbySetting.superLikeLimit,
+        superDislikeLimit: Lobby.lobbySetting.superDislikeLimit,
+        isPublic: Lobby.lobbySetting.isPublic
     });
 
     LobbySettings.propTypes = {
@@ -34,6 +34,7 @@ const LobbySettings = ({Lobby, isAdmin}) => {
     }
     const updateSettings = async () => {
         try {
+            console.log(lobbyValues)
             await api.put(`${lobby}/${Lobby.code}`, JSON.stringify(lobbyValues), {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         }
         catch (error){
