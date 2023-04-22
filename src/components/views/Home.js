@@ -1,20 +1,18 @@
 import React, {useState} from 'react';
 import "styles/views/Home.scss";
-//import {useHistory} from "react-router-dom";
 import LobbyList from "./LobbyList";
 import {Col, Container, Row, Button, Stack, Toast} from "react-bootstrap";
 import {FormField} from "../../helpers/formField";
 import UsernameModal from "./UsernameModal";
-import BaseContainer from "../ui/BaseContainer";
 import {useHistory} from "react-router-dom";
-import {api} from "../../helpers/api";
 import {IoMdAlert} from "react-icons/io";
+import {Notification} from "../ui/Notification";
 
 
 const Home = () => {
     const history = useHistory();
     const [gameCode, setGameCode] = useState("");
-    const [showAlert, setShowAlert] = useState(true);
+    const [showAlert, setShowAlert] = useState(false);
     const [show, setShow] = useState(false);
 
     const toggleShowAlert = () => setShowAlert(!showAlert);
@@ -63,7 +61,10 @@ const Home = () => {
     return (
         <Container className={"home content"}>
             <div className={"home alert"}>
-                {sessionStorage.getItem("alert") && alert(sessionStorage.getItem("alert"))}
+            <Notification reason={sessionStorage.getItem("alert")}
+                          showAlert={showAlert}
+                          toggleShowAlert={toggleShowAlert}
+            />
             </div>
             <Stack gap={3}>
             <Row>

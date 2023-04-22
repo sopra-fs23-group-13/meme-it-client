@@ -14,7 +14,7 @@ import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
 import {Spinner} from "../ui/Spinner";
 import {lobby} from "../../helpers/endpoints";
-import {Notification} from "../ui/Notification"
+import {Notification} from "../ui/Notification";
 
 const Lobby = () => {
   const cookies = new Cookies();
