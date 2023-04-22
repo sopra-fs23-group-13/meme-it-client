@@ -13,6 +13,7 @@ import { FaCopy } from "react-icons/fa";
 import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
 import {Spinner} from "../ui/Spinner";
+import {lobby} from "../../helpers/endpoints";
 
 const Lobby = () => {
   const cookies = new Cookies();
@@ -33,7 +34,7 @@ const Lobby = () => {
     const getLobbyData = async () => {
       let playerIsInLobby = false;
       try {
-        const response = await api.get('/lobbies/' + localStorage.getItem("code"), {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+        const response = await api.get(`${lobby}/${localStorage.getItem("code")}`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         setCurrentLobby(response.data);
         //Check if player is the owner
         if(response.data.owner.uuid === cookies.get("token")){
@@ -62,7 +63,7 @@ const Lobby = () => {
 
   const leaveLobby = async (reason) => {
     try {
-      await api.delete('/lobbies/' + currentLobby.code + '/players', {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+      await api.delete(`${lobby}/${currentLobby.code}/players`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
     }
     catch {
       //Do nothing, alert is handled in Home using sessionStorage alert.
@@ -80,6 +81,10 @@ const Lobby = () => {
         Copy to clipboard
       </Tooltip>
   );
+
+  const startGame = async () => {
+    await api.post
+  }
 
   return (
       <Container>
@@ -152,11 +157,7 @@ const Lobby = () => {
           {isAdmin ? (
           <Row className={"d-flex align-items-center justify-content-center"}>
             <Button
-                onClick={() =>{
-                  localStorage.setItem("started", "true")
-                  history.push("/game/1")
-                }
-                }
+                onClick={startGame}
                 className="lobby btn start"
             >
               Start Game

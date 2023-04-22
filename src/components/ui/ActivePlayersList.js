@@ -1,9 +1,9 @@
 import React from 'react';
 import { FaCrown } from 'react-icons/fa';
-import PropTypes from "prop-types";
 import Cookies from "universal-cookie";
 import {Button} from "react-bootstrap";
 import {api} from "../../helpers/api";
+import {lobby as lobbyEndpoint} from "../../helpers/endpoints";
 
 const PlayerAvatar = ({ name, color, isAdmin }) => {
   const initials = name.charAt(0).toUpperCase();
@@ -52,7 +52,7 @@ const ActivePlayersList = ({lobby, players}) => {
   //Temporary Kick Solution
   const kickPlayer = async (uuid) => {
     try {
-      await api.delete('/lobbies/' + lobby.code + '/players', {headers: {'Authorization': 'Bearer ' + uuid}});
+      await api.delete(`${lobbyEndpoint}/${lobby.code}/players`, {headers: {'Authorization': 'Bearer ' + uuid}});
     }
     catch (error) {
       console.log(error)

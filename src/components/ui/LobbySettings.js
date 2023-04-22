@@ -6,6 +6,7 @@ import {Button, Container} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
+import {lobby} from "../../helpers/endpoints";
 
 /**
  * TODO: reload page fix (only lobby?)
@@ -33,7 +34,7 @@ const LobbySettings = ({Lobby, isAdmin}) => {
     }
     const updateSettings = async () => {
         try {
-            await api.put('/lobbies/' + Lobby.code, JSON.stringify(lobbyValues), {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            await api.put(`${lobby}/${Lobby.code}`, JSON.stringify(lobbyValues), {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         }
         catch (error){
             console.log(error);

@@ -7,6 +7,7 @@ import {Button} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
 import {api} from "../../helpers/api";
 import Cookies from "universal-cookie"
+import {lobby, users} from "../../helpers/endpoints";
 const LOBBY_CREATION = "Create Lobby";
 const LOBBY_JOIN = "Join Game";
 
@@ -24,13 +25,13 @@ const UsernameModal = props => {
         setUsername(event.target.value);
     };
     const submitAndJoin = async () => {
-        const response = await api.post('/users', {name: username});
+        const response = await api.post(users, {name: username});
         localStorage.setItem("username", username)
         cookies.set("token", response.data.uuid)
         localStorage.setItem("code", props.code);
         console.log(localStorage.getItem("code"))
         try {
-            await api.post('/lobbies/' + props.code + '/players', {name: response.data.name}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            await api.post(`${lobby}/${props.code}/players`, {name: response.data.name}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         }
         catch{
             sessionStorage.setItem("alert", "Lobby Not Found")
@@ -44,15 +45,15 @@ const UsernameModal = props => {
     }
 
     const createLobby = async () => {
-        const response = await api.post('/users', {name: username});
+        const response = await api.post(users, {name: username});
         localStorage.setItem("username", username)
         cookies.set("token", response.data.uuid)
         try {
             let {name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit} = {name: "Lobby of " + localStorage.getItem("username"), isPublic:true, maxPlayers:4,maxRounds:3, memeChangeLimit:0, superLikeLimit:1, superDislikeLimit:1, timeRoundLimit:60,timeVoteLimit:30  }
             const requestBody = JSON.stringify({name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit});
-            const response = await api.post('/lobbies', requestBody, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-            localStorage.setItem("code", response.data.code)
-            await api.post('/lobbies/' + response.data.code + '/players', {name: username}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            const createdLobby = await api.post(lobby, requestBody, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            localStorage.setItem("code", createdLobby.data.code)
+            await api.post(`${lobby}/${createdLobby.data.code}/players`, {name: username},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         } catch {
             alert("Couldn't create lobby")
         }
