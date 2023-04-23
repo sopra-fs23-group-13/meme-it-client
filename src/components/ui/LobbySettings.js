@@ -48,7 +48,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
         if(name === "isPublic"){
             setLobbyValues({
                 ...lobbyValues,
-                [name]: !Lobby.lobbySetting.isPublic,
+                [name]: !lobbyValues.isPublic,
             });
         }
         else if(name === "name"){
@@ -80,7 +80,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
                     label="Private"
                     reverse={true}
                     name="isPublic"
-                    defaultChecked={!Lobby.lobbySetting.isPublic}
+                    defaultChecked={!lobbyValues.isPublic}
                     onChange={handleChange}
                     disabled={isEditable}
                 />

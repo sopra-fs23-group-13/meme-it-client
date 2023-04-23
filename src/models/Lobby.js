@@ -13,6 +13,10 @@ class Lobby {
             roundDuration: null,
             ratingDuration: null,
         }
+        this.players = [];
+        this.messages = [];
+        this.gameId = null;
+        this.gameStartedAT = null;
         Object.assign(this, data);
     }
 }

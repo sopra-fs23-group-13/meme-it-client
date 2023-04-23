@@ -34,8 +34,17 @@ const UsernameModal = props => {
         try {
             await api.post(`${lobby}/${props.code}/players`, {name: response.data.name}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         }
-        catch{
-            sessionStorage.setItem("alert", "Lobby Not Found")
+        catch (error){
+            if (error.response !== undefined && error.response.status === 404){
+                sessionStorage.setItem("alert", "Lobby Not Found")
+            }
+            //409 can also be caused by Full Lobby, so need to add possibility to differentiate in backend
+            else if (error.response !== undefined && error.response.status === 409 ){
+                sessionStorage.setItem("alert", "Game has already started")
+            }
+            else {
+                sessionStorage.setItem("alert", "Something went wrong")
+            }
             localStorage.clear();
             history.push("/lobby");
             handleClose();
