@@ -1,12 +1,20 @@
 @import 'styles/theme';
 
 .lobby {
-  &.container{
-    background-color: rgba(161, 168, 196, 0.39);
-    border: solid slategray;
-    color: $themeColor;
-    padding-bottom:1em;
+  &.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
   }
+  &.card {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
   &.alert{
     position: absolute;
     top: 40px;

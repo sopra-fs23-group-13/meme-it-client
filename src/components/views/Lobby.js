@@ -17,6 +17,7 @@ import {lobby, game} from "../../helpers/endpoints";
 import {Notification} from "../ui/Notification";
 import Chat from "../ui/Chat";
 import {LoadingButton} from "../ui/LoadingButton";
+import {AnimatedBackground} from "../../styles/images/AnimatedBackground";
 
 const Lobby = () => {
   const cookies = new Cookies();
@@ -115,7 +116,8 @@ const Lobby = () => {
   };
 
   return (
-      <Container>
+      <div className={"lobby content"}>
+      <Container >
         <div className={"lobby alert"}>
           <Notification reason="Game is synchronizing all players and will start soon..."
                         showAlert={(showAlert && isSynchronizing)}
@@ -123,38 +125,38 @@ const Lobby = () => {
           />
         </div>
         <Stack gap={3}>
-          <Container>
+          <div className={"lobby card"}>
             <Col>
               <h1 className="lobby title">Meme-It</h1>
               <p className="lobby subtitle"> The Meme Creation Game</p>
             </Col>
-          </Container>
-          <BaseContainer className="lobby container">
-            { currentLobby.lobbySetting ?
-            <Row>
-              <Col>
-                <h2 className="lobby player-title">Players</h2>
-                <ActivePlayersList lobby={currentLobby} players={currentLobby.players} isEditable={isSynchronizing}/>
-              </Col>
 
-              <Col
-                  xs={1}
-                  className="d-flex align-items-center justify-content-center"
-              >
-                <div className="vertical-line"></div>
-              </Col>
-              <Col>
-                <h2 className="lobby player-title">Settings</h2>
-                    <LobbySettings Lobby={currentLobby} isAdmin={isAdmin} isEditable={isSynchronizing}/>
-                <div className="lobby-code-container">
-                  <h2 className="lobby-code-heading">Lobby Code:</h2>
-                  <div className="lobby-code">
-                    <span className="lobby-code-text">{currentLobby.code}</span>
-                    <OverlayTrigger
-                        placement="left"
-                        delay={{ show: 250, hide: 400 }}
-                        overlay={renderTooltip}
+            <BaseContainer className="lobby container">
+              { currentLobby.lobbySetting ?
+                  <Row>
+                    <Col>
+                      <h2 className="lobby player-title">Players</h2>
+                      <ActivePlayersList lobby={currentLobby} players={currentLobby.players} isEditable={isSynchronizing}/>
+                    </Col>
+
+                    <Col
+                        xs={1}
+                        className="d-flex align-items-center justify-content-center"
                     >
+                      <div className="vertical-line"></div>
+                    </Col>
+                    <Col>
+                      <h2 className="lobby player-title">Settings</h2>
+                      <LobbySettings Lobby={currentLobby} isAdmin={isAdmin} isEditable={isSynchronizing}/>
+                      <div className="lobby-code-container">
+                        <h2 className="lobby-code-heading">Lobby Code:</h2>
+                        <div className="lobby-code">
+                          <span className="lobby-code-text">{currentLobby.code}</span>
+                          <OverlayTrigger
+                              placement="left"
+                              delay={{ show: 250, hide: 400 }}
+                              overlay={renderTooltip}
+                          >
                       <span
                           className="copy-icon"
                           onClick={copyToClipboard}
@@ -162,48 +164,51 @@ const Lobby = () => {
                       >
                     <FaCopy />
                   </span>
-                    </OverlayTrigger>
-                  </div>
-                </div>
-              </Col>
+                          </OverlayTrigger>
+                        </div>
+                      </div>
+                    </Col>
 
-            </Row>
-                : (
-                    <Row>
-                      <Col>
-                        <Spinner />
-                      </Col>
-                    </Row>
-                )
+                  </Row>
+                  : (
+                      <Row>
+                        <Col>
+                          <Spinner />
+                        </Col>
+                      </Row>
+                  )
               }
-            <Row>
-              <Col>
-                <LoadingButton
-                    buttonText={"Leave Lobby"}
-                    loadingText={"Leaving..."}
-                    onClick={() => leaveLobby("Disconnected")}
-                    c_name={"lobby leave-btn"}
-                    loadingTime={500}
-                    disabledIf={isSynchronizing}
-                />
-              </Col>
-            </Row>
-          </BaseContainer>
-          {isAdmin ? (
-          <Row className={"d-flex align-items-center justify-content-center"}>
-            <Button
-                onClick={startGame}
-                disabled={currentLobby.startTime}
-                className="lobby btn start"
-            >
-              Start Game
-            </Button>
-          </Row>
-          ) : <div></div>
-          }
+              <Row>
+                <Col>
+                  <LoadingButton
+                      buttonText={"Leave Lobby"}
+                      loadingText={"Leaving..."}
+                      onClick={() => leaveLobby("Disconnected")}
+                      c_name={"lobby leave-btn"}
+                      loadingTime={500}
+                      disabledIf={isSynchronizing}
+                  />
+                </Col>
+              </Row>
+            </BaseContainer>
+            {isAdmin ? (
+                <Row className={"d-flex align-items-center justify-content-center"}>
+                  <Button
+                      onClick={startGame}
+                      disabled={currentLobby.startTime}
+                      className="lobby btn start"
+                  >
+                    Start Game
+                  </Button>
+                </Row>
+            ) : <div></div>
+            }
+          </div>
+
         </Stack>
         <Chat currentLobby={currentLobby} />
       </Container>
+      </div>
   )
 };
 

@@ -45,16 +45,16 @@ const Home = () => {
         history.push("/lobby");
     }
     return (
-        <div className={"home overall"}>
+        <div className={"animationContentProperties"}>
             <AnimatedBackground/>
+            <div className={"home alert"}>
+                <Notification reason={sessionStorage.getItem("alert")}
+                              showAlert={showAlert}
+                              toggleShowAlert={toggleShowAlert}
+                />
+            </div>
             <Container className={"home content"}>
                 <div className={"home card"}>
-                    <div className={"home alert"}>
-                        <Notification reason={sessionStorage.getItem("alert")}
-                                      showAlert={showAlert}
-                                      toggleShowAlert={toggleShowAlert}
-                        />
-                    </div>
                     <Stack gap={3}>
                         <Row>
                             <Container>

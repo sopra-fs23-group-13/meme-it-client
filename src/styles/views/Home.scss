@@ -1,11 +1,6 @@
 @import 'styles/theme';
 
 .home {
-  &.overall {
-    position: relative;
-    minHeight: 100vh;
-    overflow: hidden;
-  }
   &.content {
     display: flex;
     flex-direction: column;
