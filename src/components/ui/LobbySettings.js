@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
 import {lobby} from "../../helpers/endpoints";
+import {LoadingButton} from "./LoadingButton";
 
 /**
  * TODO: start game -> remove it from public lobby list (as it is in progress)
@@ -123,7 +124,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
                     <Form.Range defaultValue={Lobby.lobbySetting.superDislikeLimit} min={0} max={10} name="superDislikeLimit" onChange={handleChange} disabled={isEditable}/>
 
                 </Form>
-                <Button onClick={updateSettings} disabled={isEditable}>Update Settings</Button>
+                <LoadingButton onClick={updateSettings} buttonText={"Update Settings"} loadingText={"Updating..."} c_name={"primary"} disabledIf={isEditable}/>
             </Container>
         );
     }

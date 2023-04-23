@@ -16,6 +16,7 @@ import {Spinner} from "../ui/Spinner";
 import {lobby, game} from "../../helpers/endpoints";
 import {Notification} from "../ui/Notification";
 import Chat from "../ui/Chat";
+import {LoadingButton} from "../ui/LoadingButton";
 
 const Lobby = () => {
   const cookies = new Cookies();
@@ -177,14 +178,14 @@ const Lobby = () => {
               }
             <Row>
               <Col>
-                <Button
-                    width="200px"
+                <LoadingButton
+                    buttonText={"Leave Lobby"}
+                    loadingText={"Leaving..."}
                     onClick={() => leaveLobby("Disconnected")}
-                    className="back-to-login-button"
-                    disabled={isSynchronizing}
-                >
-                  Leave Lobby
-                </Button>
+                    c_name={"lobby leave-btn"}
+                    loadingTime={500}
+                    disabledIf={isSynchronizing}
+                />
               </Col>
             </Row>
           </BaseContainer>
