@@ -1,8 +1,23 @@
 @import 'styles/theme';
 
 .home {
+  &.overall {
+    position: relative;
+    minHeight: 100vh;
+    overflow: hidden;
+  }
   &.content {
-    margin-top: 10rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  &.card {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   &.title {
     &:hover {
