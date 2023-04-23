@@ -10,12 +10,14 @@ import BaseContainer from "../ui/BaseContainer";
 import { findGame } from "helpers/functions";
 import { AppContext } from "context";
 import TimerProgressBar from "components/ui/TimerProgressBar";
+import {api} from "../../helpers/api";
+import {game as gameEndpoint} from "../../helpers/endpoints"
 
 const Game = () => {
   const delay = 1000;
   const history = useHistory();
   const { id } = useParams();
-  const { setGameData, gameData } = useContext(AppContext);
+  const { setGameData, gameData, loadedGameData } = useContext(AppContext);
   const game = findGame(MockData, id);
   const gameRounds = useMemo(() => game?.rounds, [game]);
 
@@ -33,11 +35,12 @@ const Game = () => {
     },
   ]);
   const [currentTextNodeValues, setCurrentTextNodeValues] = useState([]);
-  useEffect(() => {
+  useEffect(async () => {
+    console.log(loadedGameData);
     setGameData([]);
-    setCurrentRound(gameRounds[gameData?.currentRound?.id ?? 0]);
-    setCurrentMeme(gameRounds?.[0]?.memes?.[0]);
-    setMaxRound(3);
+    setCurrentRound(loadedGameData?.currentRound);
+    setCurrentMeme(loadedGameData?.meme?.imageUrl);
+    setMaxRound(loadedGameData?.totalRounds);
     setNow(0);
     setIsPlaying(true);
   }, [gameRounds]);
@@ -59,7 +62,7 @@ const Game = () => {
 
   const currentMemes = useMemo(() => currentRound?.memes, [currentRound]);
   useEffect(() => {
-    setCurrentMeme(currentRound?.memes?.[0]);
+    setCurrentMeme(loadedGameData?.meme);
   }, [currentRound]);
 
   useEffect(() => {
@@ -89,11 +92,11 @@ const Game = () => {
   );
 
   const handleNextRound = () => {
-    if (now < currentRound?.timeout) {
+    if (now < loadedGameData?.roundDuration * 1000) {
       setNow(now + 1000);
     } else {
       setNow(null);
-      setCurrentRound(gameRounds[currentRoundIndex + 1]);
+      //setCurrentRound(gameRounds[currentRoundIndex + 1]);
       currentMeme && setGameData(
         {
           id: uuid(),
@@ -108,8 +111,7 @@ const Game = () => {
       );
       history.push("/game-rating/" + id);
     }
-
-    if (currentRoundIndex < 0 && isPlaying) {
+    if (currentRound < 0 && isPlaying) {
       setNow(null);
       setCurrentRound(null);
       setIsPlaying(false);
@@ -164,26 +166,24 @@ const Game = () => {
         </Button>
         <Stack gap={3} className="pt-5 container ">
           <Stack gap={3} className={`pt-5  `}>
-            {currentRoundIndex + 1 && (
-                <h1 className="fw-bolder fs-3 text-start text-black">
-                  {`Round ${currentRoundIndex + 1}/${gameRounds?.length} `}
-                </h1>
-            )}
+            <h1 className="fw-bolder fs-3 text-start text-black">
+              {`Round ${currentRound}/${maxRound} `}
+            </h1>
             <p className="fs-6 text-start text-black">
               Drag the text nodes over the image
             </p>
             <TimerProgressBar
                 delay={delay}
                 now={now}
-                max={currentRound?.timeout}
+                max={loadedGameData?.roundDuration * 1000}
                 callbackFunc={() => handleNextRound()}
                 isPlaying={isPlaying}
             />
           </Stack>
-          {currentMeme?.image ? (
+          {currentMeme?.imageUrl ? (
               <>
                 <div className="meme-content">
-                  <img src={currentMeme?.image} alt={"meme lmao"} />
+                  <img src={currentMeme?.imageUrl} alt={"meme lmao"} />
 
               {memeTextNodes?.map((item, i) => (
                 <Draggable

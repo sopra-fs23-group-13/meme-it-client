@@ -5,7 +5,7 @@ import "styles/ui/Button.scss";
 import BaseContainer from "../ui/BaseContainer";
 import {Button, OverlayTrigger, Tooltip} from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import ActivePlayersList from "../ui/ActivePlayersList";
 import LobbySettings from "../ui/LobbySettings";
 import { FaCopy } from "react-icons/fa";
@@ -13,15 +13,16 @@ import { FaCopy } from "react-icons/fa";
 import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
 import {Spinner} from "../ui/Spinner";
-import {lobby, game} from "../../helpers/endpoints";
+import {lobby, game, game as gameEndpoint} from "../../helpers/endpoints";
 import {Notification} from "../ui/Notification";
 import Chat from "../ui/Chat";
 import {LoadingButton} from "../ui/LoadingButton";
-import {AnimatedBackground} from "../../styles/images/AnimatedBackground";
+import {AppContext} from "../../context";
 
 const Lobby = () => {
   const cookies = new Cookies();
   const history = useHistory();
+  const {setLoadedGameData} = useContext(AppContext);
   const [currentLobby, setCurrentLobby] = useState({});
   const [showAlert, setShowAlert] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -50,9 +51,13 @@ const Lobby = () => {
         });
 
         if(response.data.gameStartedAT !== null){
-          executeForAllPlayersAtSameTime(new Date(response.data.gameStartedAT), () => {
-            startGameAtTheSameTime(response.data);
-          });
+          if(!isSynchronizing) {
+            executeForAllPlayersAtSameTime(new Date(response.data.gameStartedAT), () => {
+              startGameAtTheSameTime(response.data);
+            });
+            preloadGame(response);
+            setIsSynchronizing(!isSynchronizing);
+          }
         }
 
         if(!playerIsInLobby){
@@ -92,7 +97,19 @@ const Lobby = () => {
   );
 
   const startGame = async () => {
-    await api.post(`/${game}/${currentLobby.code}`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+    const response = await api.post(`/${game}/${currentLobby.code}`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+    preloadGame(response);
+  }
+
+  const preloadGame = async (response) => {
+    const preLoadedGameData = await api.get(`${gameEndpoint}/${response.data.gameId}`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+    const preLoadedMemeTemplate = await api.get(`${gameEndpoint}/${response.data.gameId}/template`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+    const memeData = {
+      ...preLoadedGameData.data,
+      meme: {...preLoadedMemeTemplate.data}
+    }
+    console.log(memeData);
+    setLoadedGameData(memeData);
   }
 
   const startGameAtTheSameTime= (currentLobby) =>{
@@ -102,7 +119,7 @@ const Lobby = () => {
   }
 
 
-  const executeForAllPlayersAtSameTime = (time, callback) => {
+  const executeForAllPlayersAtSameTime = async (time, callback) => {
     if(!isSynchronizing){
       const delay = time - Date.now();
       if (delay <= 0) {
