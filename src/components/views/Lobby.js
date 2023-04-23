@@ -13,7 +13,7 @@ import { FaCopy } from "react-icons/fa";
 import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
 import {Spinner} from "../ui/Spinner";
-import {lobby} from "../../helpers/endpoints";
+import {lobby, game} from "../../helpers/endpoints";
 import {Notification} from "../ui/Notification";
 import Chat from "../ui/Chat";
 
@@ -46,12 +46,12 @@ const Lobby = () => {
             playerIsInLobby = true;
           }
         });
-        /*
-        if(response.data.startTime !== null){
-          executeForAllPlayersAtSameTime(new Date(response.data.startTime), () => {
-            startGameAtTheSameTime();
+
+        if(response.data.gameStartedAT !== null){
+          executeForAllPlayersAtSameTime(new Date(response.data.gameStartedAT), () => {
+            startGameAtTheSameTime(response.data);
           });
-        }*/
+        }
 
         if(!playerIsInLobby){
           await leaveLobby("Kicked from Lobby");
@@ -90,19 +90,13 @@ const Lobby = () => {
   );
 
   const startGame = async () => {
-    console.log(currentLobby);
-    /*const response = await api.put(`${lobby}/${currentLobby.code}/sync`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-    console.log(response.data);
-    //await api.post(`${game}/${currentLobby.id}`, {},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-
-    executeForAllPlayersAtSameTime(new Date(response.data.startTime), () => {
-      startGameAtTheSameTime();
-    });*/
+    await api.post(`/${game}/${currentLobby.code}`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
   }
 
-  const startGameAtTheSameTime= () =>{
+  const startGameAtTheSameTime= (currentLobby) =>{
+    console.log(currentLobby);
     localStorage.setItem("started", "true")
-    history.push(`/game/${currentLobby.id}`);
+    history.push(`/game/${currentLobby.gameId}`);
   }
 
 
