@@ -13,6 +13,7 @@
     border-radius: 10px;
     padding: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: black;
   }
 
   &.alert{
@@ -24,17 +25,14 @@
     &:hover {
       color: $buttonColor ;
     }
-    margin-top: 80px;
     color: $themeColor;
     font-weight: 750;
     font-size: 50px;
     text-align:center;
     transition: all 0.5s ease;
-    margin-bottom: -90px;
   }
   &.subtitle {
     text-align:center;
-    margin-top: 90px;
     padding-bottom:5em;
     font-size:18px;
     color: $buttonColor;
@@ -76,8 +74,8 @@
       margin-top:5px;
     }
     &.start {
-      width:auto;
-      margin-bottom:1em;
+      width: 90%;
+      margin-top: 1rem;
     }
     &.kick-btn{
       &:hover {

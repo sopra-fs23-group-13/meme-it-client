@@ -68,7 +68,7 @@ const ActivePlayersList = ({lobby, players, isEditable}) => {
                 <div style={{ marginRight: '10px' }}>
                   <PlayerAvatar name={player.name} color={"#7260e3"} isAdmin={player.id === lobby.owner.id} />
                 </div>
-                <div style={{ flexGrow: 1, color: "black" }}>
+                <div style={{ flexGrow: 1 }}>
                   <div>{player.name}</div>
                 </div>
                 <div>
@@ -90,7 +90,7 @@ const ActivePlayersList = ({lobby, players, isEditable}) => {
                 <div style={{ marginRight: '10px' }}>
                   <PlayerAvatar name={player.name} color={"#7260e3"} isAdmin={player.id === lobby.owner.id} />
                 </div>
-                <div style={{ flexGrow: 1, color: "black" }}>
+                <div style={{ flexGrow: 1 }}>
                   <div>{player.name}</div>
                 </div>
               </div>
@@ -100,7 +100,7 @@ const ActivePlayersList = ({lobby, players, isEditable}) => {
   }
 
   return (
-      <div>
+      <div className={"lobby card"}>
         {playerItems}
       </div>
   )

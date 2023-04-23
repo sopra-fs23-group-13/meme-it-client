@@ -73,7 +73,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
 
     if(isAdmin){
         return (
-            <Container className={"lobby settings-container"}>
+            <Container className={"lobby card"}>
                 <Form.Check
                     type="switch"
                     id="custom-switch"
@@ -130,7 +130,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
     }
     else {
         return (
-            <Container className={"lobby settings-container"}>
+            <Container className={"lobby card"}>
                 <p className={"lobby settings-text"}><b>Lobby Name:</b> {Lobby.name}</p>
                 <p className={"lobby settings-text"}><b>Player Limit:</b> {Lobby.lobbySetting.maxPlayers}</p>
                 <p className={"lobby settings-text"}><b>Number of Rounds:</b> {Lobby.lobbySetting.maxRounds}</p>

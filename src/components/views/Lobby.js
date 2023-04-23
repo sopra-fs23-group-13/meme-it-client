@@ -126,11 +126,12 @@ const Lobby = () => {
         </div>
         <Stack gap={3}>
           <div className={"lobby card"}>
+            {/*
             <Col>
               <h1 className="lobby title">Meme-It</h1>
               <p className="lobby subtitle"> The Meme Creation Game</p>
             </Col>
-
+            */}
             <BaseContainer className="lobby container">
               { currentLobby.lobbySetting ?
                   <Row>
@@ -148,7 +149,9 @@ const Lobby = () => {
                     <Col>
                       <h2 className="lobby player-title">Settings</h2>
                       <LobbySettings Lobby={currentLobby} isAdmin={isAdmin} isEditable={isSynchronizing}/>
-                      <div className="lobby-code-container">
+
+
+                      <div className="lobby-code-container lobby card">
                         <h2 className="lobby-code-heading">Lobby Code:</h2>
                         <div className="lobby-code">
                           <span className="lobby-code-text">{currentLobby.code}</span>
