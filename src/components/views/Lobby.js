@@ -46,11 +46,12 @@ const Lobby = () => {
             playerIsInLobby = true;
           }
         });
+        /*
         if(response.data.startTime !== null){
           executeForAllPlayersAtSameTime(new Date(response.data.startTime), () => {
             startGameAtTheSameTime();
           });
-        }
+        }*/
 
         if(!playerIsInLobby){
           await leaveLobby("Kicked from Lobby");
@@ -89,14 +90,14 @@ const Lobby = () => {
   );
 
   const startGame = async () => {
-    console.log(currentLobby)
-    const response = await api.put(`${lobby}/${currentLobby.code}/sync`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+    console.log(currentLobby);
+    /*const response = await api.put(`${lobby}/${currentLobby.code}/sync`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
     console.log(response.data);
-    //TODO: pre load game -> await api.post(`${game}/${currentLobby.id}`, {},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+    //await api.post(`${game}/${currentLobby.id}`, {},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
 
     executeForAllPlayersAtSameTime(new Date(response.data.startTime), () => {
       startGameAtTheSameTime();
-    });
+    });*/
   }
 
   const startGameAtTheSameTime= () =>{
