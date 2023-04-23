@@ -10,8 +10,8 @@ class Lobby {
             memeChangeLimit: null,
             superLikeLimit: null,
             superDislikeLimit: null,
-            timeRoundLimit: null,
-            timeVoteLimit: null,
+            roundDuration: null,
+            ratingDuration: null,
         }
         Object.assign(this, data);
     }

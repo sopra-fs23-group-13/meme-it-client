@@ -2,24 +2,31 @@ import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import {FormField} from "../../helpers/formField";
 import "styles/views/Home.scss";
-import {Button, Container, Row} from "react-bootstrap";
+import {Button, Container} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
+import {lobby} from "../../helpers/endpoints";
+import {LoadingButton} from "./LoadingButton";
 
+/**
+ * TODO: start game -> remove it from public lobby list (as it is in progress)
+ *
+ * TODO: leaderboard?
+ */
 
-const LobbySettings = ({Lobby, isAdmin}) => {
+const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
     const cookies = new Cookies();
     const [lobbyValues, setLobbyValues] = useState({
-        name: "",
-        maxPlayers: "",
-        maxRounds: "",
-        memeChangeLimit: "",
-        timeRoundLimit: "",
-        timeVoteLimit: "",
-        superLikeLimit: "",
-        superDislikeLimit: "",
-        isPublic: ""
+        name: Lobby.name,
+        maxPlayers: Lobby.lobbySetting.maxPlayers,
+        maxRounds: Lobby.lobbySetting.maxRounds,
+        memeChangeLimit: Lobby.lobbySetting.memeChangeLimit,
+        roundDuration: Lobby.lobbySetting.roundDuration,
+        ratingDuration: Lobby.lobbySetting.ratingDuration,
+        superLikeLimit: Lobby.lobbySetting.superLikeLimit,
+        superDislikeLimit: Lobby.lobbySetting.superDislikeLimit,
+        isPublic: Lobby.lobbySetting.isPublic
     });
 
     LobbySettings.propTypes = {
@@ -28,7 +35,8 @@ const LobbySettings = ({Lobby, isAdmin}) => {
     }
     const updateSettings = async () => {
         try {
-            await api.put('/lobbies/' + Lobby.code, JSON.stringify(lobbyValues), {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            console.log(lobbyValues)
+            await api.put(`${lobby}/${Lobby.code}`, JSON.stringify(lobbyValues), {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         }
         catch (error){
             console.log(error);
@@ -43,7 +51,7 @@ const LobbySettings = ({Lobby, isAdmin}) => {
                 [name]: !Lobby.lobbySetting.isPublic,
             });
         }
-        else if(name == "name"){
+        else if(name === "name"){
             setLobbyValues({
                 ...lobbyValues,
                 [name]: value,
@@ -63,13 +71,6 @@ const LobbySettings = ({Lobby, isAdmin}) => {
         console.log("Form submitted with values:", lobbyValues);
     };
 
-    //This is required because on page refresh the Lobby is undefined for the first render and stops page from loading properly
-    if(Lobby.lobbySetting === undefined){
-        return (
-            <div> Loading ...</div>
-        )
-    }
-
     if(isAdmin){
         return (
             <Container className={"lobby settings-container"}>
@@ -81,6 +82,7 @@ const LobbySettings = ({Lobby, isAdmin}) => {
                     name="isPublic"
                     defaultChecked={!Lobby.lobbySetting.isPublic}
                     onChange={handleChange}
+                    disabled={isEditable}
                 />
 
 
@@ -93,35 +95,36 @@ const LobbySettings = ({Lobby, isAdmin}) => {
                         name="name"
                         value={lobbyValues.name}
                         onChange={handleChange}
+                        disabled={isEditable}
                     />
 
                     <Form.Label><b>Player Limit:</b> {lobbyValues.maxPlayers === "" ? Lobby.lobbySetting.maxPlayers : lobbyValues.maxPlayers} </Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.maxPlayers} min={2} max={8} name="maxPlayers" onChange={handleChange}/>
+                    <Form.Range defaultValue={Lobby.lobbySetting.maxPlayers} min={2} max={8} name="maxPlayers" onChange={handleChange} disabled={isEditable}/>
 
                     <Form.Label><b>Number of Rounds:</b> {lobbyValues.maxRounds === "" ? Lobby.lobbySetting.maxRounds : lobbyValues.maxRounds} </Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.maxRounds} min={1} max={6} name="maxRounds" onChange={handleChange}/>
+                    <Form.Range defaultValue={Lobby.lobbySetting.maxRounds} min={1} max={6} name="maxRounds" onChange={handleChange} disabled={isEditable}/>
 
                     <Form.Label><b>Meme Change Limit</b></Form.Label>
-                    <Form.Select style={{marginBottom:'1em'}} value={lobbyValues.memeChangeLimit} name="memeChangeLimit" onChange={handleChange}>
+                    <Form.Select style={{marginBottom:'1em'}} value={lobbyValues.memeChangeLimit} name="memeChangeLimit" onChange={handleChange} disabled={isEditable}>
                         <option>0</option>
                         <option>3</option>
                         <option>5</option>
                         <option>10</option>
                     </Form.Select>
 
-                    <Form.Label><b>Meme Creation Time Limit:</b> {lobbyValues.timeRoundLimit === '' ? Lobby.lobbySetting.timeRoundLimit : lobbyValues.timeRoundLimit} seconds</Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.timeRoundLimit} min={15} max={180} name="timeRoundLimit" onChange={handleChange}/>
+                    <Form.Label><b>Meme Creation Time Limit:</b> {lobbyValues.roundDuration === '' ? Lobby.lobbySetting.roundDuration : lobbyValues.roundDuration} seconds</Form.Label>
+                    <Form.Range defaultValue={Lobby.lobbySetting.roundDuration} min={15} max={180} name="roundDuration" onChange={handleChange} disabled={isEditable}/>
 
-                    <Form.Label><b>Voting Phase Time Limit:</b> {lobbyValues.timeVoteLimit === '' ? Lobby.lobbySetting.timeVoteLimit : lobbyValues.timeVoteLimit} seconds</Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.timeVoteLimit} min={15} max={180} name="timeVoteLimit" onChange={handleChange}/>
+                    <Form.Label><b>Voting Phase Time Limit:</b> {lobbyValues.ratingDuration === '' ? Lobby.lobbySetting.ratingDuration : lobbyValues.ratingDuration} seconds</Form.Label>
+                    <Form.Range defaultValue={Lobby.lobbySetting.ratingDuration} min={15} max={180} name="ratingDuration" onChange={handleChange} disabled={isEditable}/>
 
                     <Form.Label><b>Super Likes:</b> {lobbyValues.superLikeLimit === '' ? Lobby.lobbySetting.superLikeLimit : lobbyValues.superLikeLimit}</Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.superLikeLimit} min={0} max={10} name="superLikeLimit" onChange={handleChange}/>
+                    <Form.Range defaultValue={Lobby.lobbySetting.superLikeLimit} min={0} max={10} name="superLikeLimit" onChange={handleChange} disabled={isEditable}/>
                     <Form.Label><b>Super Dislikes:</b> {lobbyValues.superDislikeLimit === '' ? Lobby.lobbySetting.superDislikeLimit : lobbyValues.superDislikeLimit}</Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.superDislikeLimit} min={0} max={10} name="superDislikeLimit" onChange={handleChange}/>
+                    <Form.Range defaultValue={Lobby.lobbySetting.superDislikeLimit} min={0} max={10} name="superDislikeLimit" onChange={handleChange} disabled={isEditable}/>
 
                 </Form>
-                <Button onClick={updateSettings}>Update Settings</Button>
+                <LoadingButton onClick={updateSettings} buttonText={"Update Settings"} loadingText={"Updating..."} c_name={"primary"} disabledIf={isEditable}/>
             </Container>
         );
     }
@@ -131,8 +134,8 @@ const LobbySettings = ({Lobby, isAdmin}) => {
                 <p className={"lobby settings-text"}><b>Lobby Name:</b> {Lobby.name}</p>
                 <p className={"lobby settings-text"}><b>Player Limit:</b> {Lobby.lobbySetting.maxPlayers}</p>
                 <p className={"lobby settings-text"}><b>Number of Rounds:</b> {Lobby.lobbySetting.maxRounds}</p>
-                <p className={"lobby settings-text"}><b>Meme Creation Time Limit:</b> {Lobby.lobbySetting.timeRoundLimit}s</p>
-                <p className={"lobby settings-text"}><b>Voting Phase Time Limit:</b> {Lobby.lobbySetting.timeVoteLimit}s</p>
+                <p className={"lobby settings-text"}><b>Meme Creation Time Limit:</b> {Lobby.lobbySetting.roundDuration}s</p>
+                <p className={"lobby settings-text"}><b>Voting Phase Time Limit:</b> {Lobby.lobbySetting.ratingDuration}s</p>
                 <p className={"lobby settings-text"}><b>Meme Change Limit:</b> {Lobby.lobbySetting.memeChangeLimit}</p>
                 <p className={"lobby settings-text"}><b>Super Likes:</b> {Lobby.lobbySetting.superLikeLimit}</p>
                 <p className={"lobby settings-text"}><b>Super Dislikes:</b> {Lobby.lobbySetting.superDislikeLimit}</p>

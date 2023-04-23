@@ -2,27 +2,17 @@ import React, {useEffect, useState} from "react";
 import {ListGroup, Button, Badge} from "react-bootstrap";
 import "styles/views/LobbyList.scss";
 import { TfiReload } from 'react-icons/tfi';
-
-
-import MockData from '../../mockData/menuScreenDataMock.json'
 import UsernameModal from "./UsernameModal";
-import {api, handleError} from "../../helpers/api";
+import {api} from "../../helpers/api";
+import {lobby} from "../../helpers/endpoints";
 
 const LobbyList = props => {
     const [lobbies, setLobbies] = useState([]);
     useEffect(() => {
         // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
         async function fetchData() {
-            try {
-                //Simulate a user to get a token to view lobbies
-                const permissionResponse = await api.post('/users', {name: "randomUserName123"});
-                sessionStorage.setItem("viewLobbiesToken", permissionResponse.data.uuid)
-            }
-            catch{
-
-            }
-            try {
-                const response = await api.get('/lobbies', {headers: {'Authorization': 'Bearer ' + sessionStorage.getItem("viewLobbiesToken")}});
+            try{
+                const response = await api.get(lobby);
                 setLobbies(response.data);
             } catch {
                 alert("Couldn't fetch lobbies")
@@ -33,7 +23,7 @@ const LobbyList = props => {
 
     const refreshLobbies = async () => {
         try {
-            const response = await api.get('/lobbies', {headers: {'Authorization': 'Bearer ' + sessionStorage.getItem("viewLobbiesToken")}});
+            const response = await api.get(lobby);
             setLobbies(response.data);
         } catch {
             alert("Couldn't fetch lobbies")

@@ -4,11 +4,11 @@ import Modal from 'react-bootstrap/Modal';
 import {FormField} from "../../helpers/formField";
 import "styles/views/Home.scss";
 import {Button} from "react-bootstrap";
-import LobbyCreationModal from "./LobbyCreationModal";
 import {useHistory} from "react-router-dom";
 import {api} from "../../helpers/api";
-import User from "../../models/User";
 import Cookies from "universal-cookie"
+import {lobby, users} from "../../helpers/endpoints";
+import {LoadingButton} from "../ui/LoadingButton";
 const LOBBY_CREATION = "Create Lobby";
 const LOBBY_JOIN = "Join Game";
 
@@ -26,13 +26,13 @@ const UsernameModal = props => {
         setUsername(event.target.value);
     };
     const submitAndJoin = async () => {
-        const response = await api.post('/users', {name: username});
+        const response = await api.post(users, {name: username});
         localStorage.setItem("username", username)
-        cookies.set("token", response.data.uuid)
+        cookies.set("token", response.data.id)
         localStorage.setItem("code", props.code);
         console.log(localStorage.getItem("code"))
         try {
-            const joinResponse = await api.post('/lobbies/' + props.code + '/players', {name: response.data.name}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            await api.post(`${lobby}/${props.code}/players`, {name: response.data.name}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         }
         catch{
             sessionStorage.setItem("alert", "Lobby Not Found")
@@ -46,15 +46,15 @@ const UsernameModal = props => {
     }
 
     const createLobby = async () => {
-        const response = await api.post('/users', {name: username});
+        const response = await api.post(users, {name: username});
         localStorage.setItem("username", username)
-        cookies.set("token", response.data.uuid)
+        cookies.set("token", response.data.id)
         try {
-            let {name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit} = {name: "Lobby of " + localStorage.getItem("username"), isPublic:true, maxPlayers:4,maxRounds:3, memeChangeLimit:0, superLikeLimit:1, superDislikeLimit:1, timeRoundLimit:60,timeVoteLimit:30  }
-            const requestBody = JSON.stringify({name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit});
-            const response = await api.post('/lobbies', requestBody, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-            localStorage.setItem("code", response.data.code)
-            const joinResponse = await api.post('/lobbies/' + response.data.code + '/players', {name: username}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            let {name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, roundDuration, ratingDuration} = {name: "Lobby of " + localStorage.getItem("username"), isPublic:true, maxPlayers:4,maxRounds:3, memeChangeLimit:0, superLikeLimit:1, superDislikeLimit:1, roundDuration:60,ratingDuration:30  }
+            const requestBody = JSON.stringify({name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, roundDuration, ratingDuration});
+            const createdLobby = await api.post(lobby, requestBody, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            localStorage.setItem("code", createdLobby.data.code);
+            await api.post(`${lobby}/${createdLobby.data.code}/players`, {name: username},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         } catch {
             alert("Couldn't create lobby")
         }
@@ -86,13 +86,9 @@ const UsernameModal = props => {
                         Close
                     </Button>
                     {props.title === LOBBY_CREATION &&
-                        <Button disabled={username===''} className="home join-btn"  onClick={createLobby}>
-                            Set Username
-                        </Button>                    }
+                        <LoadingButton onClick={createLobby} loadingText={"Creating Lobby..."} buttonText={"Create Lobby"} disabledIf={username === ""}/>}
                     {props.title === LOBBY_JOIN &&
-                        <Button disabled={username===''} className="home join-btn"  onClick={submitAndJoin}>
-                            Set Username
-                        </Button>
+                        <LoadingButton onClick={submitAndJoin} loadingText={"Joining..."} buttonText={"Join Game"} disabledIf={username === ""}/>
                     }
                 </Modal.Footer>
             </Modal>
