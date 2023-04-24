@@ -13,7 +13,7 @@ import { FaCopy } from "react-icons/fa";
 import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
 import {Spinner} from "../ui/Spinner";
-import {lobby, game, game as gameEndpoint} from "../../helpers/endpoints";
+import {lobby, game} from "../../helpers/endpoints";
 import {Notification} from "../ui/Notification";
 import Chat from "../ui/Chat";
 import {LoadingButton} from "../ui/LoadingButton";
@@ -102,8 +102,8 @@ const Lobby = () => {
   }
 
   const preloadGame = async (response) => {
-    const preLoadedGameData = await api.get(`${gameEndpoint}/${response.data.gameId}`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-    const preLoadedMemeTemplate = await api.get(`${gameEndpoint}/${response.data.gameId}/template`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+    const preLoadedGameData = await api.get(`${game}/${response.data.gameId}`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+    const preLoadedMemeTemplate = await api.get(`${game}/${response.data.gameId}/template`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
     const memeData = {
       ...preLoadedGameData.data,
       meme: {...preLoadedMemeTemplate.data}
@@ -215,7 +215,7 @@ const Lobby = () => {
                 <Row className={"d-flex align-items-center justify-content-center"}>
                   <Button
                       onClick={startGame}
-                      disabled={currentLobby.startTime}
+                      disabled={currentLobby.startTimeAT}
                       className="lobby btn start"
                   >
                     Start Game
