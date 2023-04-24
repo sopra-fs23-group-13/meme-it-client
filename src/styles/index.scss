@@ -10,7 +10,7 @@ body {
   min-width: 100vw;
   min-height: 100vh;
   font-family: $fontDefault;
-  background-image: linear-gradient(180deg, $accent 10%, $accentDark 100%);
+  background-image: url("images/homepage_animated.svg");
 }
 
 input,
@@ -33,4 +33,18 @@ button {
 }
 .progress-bar {
   color: $themeColor !important;
+}
+
+.animationBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+.animationContentProperties {
+  position: relative;
+  minHeight: 100vh;
+  overflow: hidden;
 }

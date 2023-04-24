@@ -1,6 +1,10 @@
 @import 'styles/theme';
 
 .lobbyList {
+  &.content {
+    max-height: 400px;
+    overflow-y: scroll;
+  }
 
   &.playerSize {
     margin-right: 2rem;

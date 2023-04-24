@@ -100,7 +100,7 @@ const ActivePlayersList = ({lobby, players, isEditable}) => {
   }
 
   return (
-      <div>
+      <div className={"lobby card"}>
         {playerItems}
       </div>
   )

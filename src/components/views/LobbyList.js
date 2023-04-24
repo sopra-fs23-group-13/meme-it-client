@@ -63,7 +63,7 @@ const LobbyList = props => {
     }
 
     return (
-        <div>
+        <div className={"lobbyList content"}>
             <ListGroup as="ol" >
             <ListGroup.Item
                 as="li"
