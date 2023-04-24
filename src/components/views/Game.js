@@ -11,7 +11,8 @@ import {findGame} from "helpers/functions";
 import {AppContext} from "context";
 import TimerProgressBar from "components/ui/TimerProgressBar";
 import {api} from "../../helpers/api";
-import {game as gameEndpoint} from "../../helpers/endpoints"
+import {game as gameEndpoint, lobby} from "../../helpers/endpoints"
+import Chat from "../ui/Chat";
 
 const Game = () => {
     const delay = 1000;
@@ -36,7 +37,6 @@ const Game = () => {
     ]);
     const [currentTextNodeValues, setCurrentTextNodeValues] = useState([]);
     useEffect(async () => {
-        console.log(loadedGameData);
         setGameData([]);
         setCurrentRound(loadedGameData?.currentRound);
         setCurrentMeme(loadedGameData?.meme?.imageUrl);
@@ -243,6 +243,7 @@ const Game = () => {
                         <Spinner/>
                     )}
                 </Stack>
+                <Chat currentLobby={loadedGameData} />
             </BaseContainer>
           </div>
         </div>

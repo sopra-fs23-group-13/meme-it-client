@@ -18,10 +18,10 @@ const Chat = (props) => {
             {!collapsed && (
                 <div className="chat-room-container">
                     <ChatRoom
-                        name={props.currentLobby.owner.name}
-                        code={props.currentLobby.code}
+                        name={props.currentLobby?.owner?.name || props.currentLobby.id}
+                        code={localStorage.getItem("code")}
                         uuid={props.currentLobby}
-                        author={props.currentLobby.players.find((player) => player.id === cookies.get("token"))}
+                        author={props.currentLobby.players.find((player) => player?.id === cookies.get("token") || player?.user?.id === cookies.get("token"))}
                     />
                 </div>
             )}

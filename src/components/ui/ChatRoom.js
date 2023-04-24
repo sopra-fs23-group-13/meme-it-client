@@ -10,13 +10,11 @@ const ChatRoom = (props) => {
 
     useEffect(() => {
         const getChatData = async () => {
-            console.log(props)
             try {
                 const response = await api.get(`${chat}/${props.code}`, {
                     headers: {Authorization: "Bearer " + cookies.get("token")},
                 });
                 setMessages(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.log(error);
             }
@@ -32,7 +30,6 @@ const ChatRoom = (props) => {
             author: cookies.get("token"),
             message: messageText,
         };
-        console.log(newMessage)
         setMessages((prevMessages) => [...prevMessages, newMessage]);
         await api.post(`${chat}/${props.code}`, newMessage, {
             headers: {Authorization: "Bearer " + cookies.get("token")},
@@ -44,8 +41,9 @@ const ChatRoom = (props) => {
         <div className={"chat"}>
             <ul className="message-list">
                 {messages.map((message, index) => (
+
                     <div className={"message-content-block"}>
-                    <li key={index} className={`message-item ${message.author === props.author.name ? "author-message" : ""}`}>
+                    <li key={index} className={`message-item ${(message.id === props?.author?.id || message.id === props?.author?.user?.id) ? "author-message" : ""}`}>
                         <span className="message-item-time">
                           {message.time?.split("T")[1]?.split(":")[0] + ":" + message.time?.split("T")[1]?.split(":")[1]} -{" "}
                         </span>
