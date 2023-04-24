@@ -193,7 +193,7 @@ const Lobby = () => {
           <Row className={"d-flex align-items-center justify-content-center"}>
             <Button
                 onClick={startGame}
-                disabled={currentLobby.startTime}
+                disabled={isSynchronizing}
                 className="lobby btn start"
             >
               Start Game
