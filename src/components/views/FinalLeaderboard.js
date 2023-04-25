@@ -4,10 +4,46 @@ import { ListGroup, Badge } from "react-bootstrap";
 import "styles/views/FinalLeaderboard.scss";
 import MockData from '../../mockData/leaderboardScreenDataMock.json'
 import { FaMedal } from 'react-icons/fa';
+import {api, handleError} from "../../helpers/api";
 
 
 
 const FinalLeaderboard = ({ leaderboardData }) => {
+
+  const getLeaderboardData = async () => {
+    try {
+      const response = await api.get('/ratings');
+      const ratings = response.data;
+      const users = {};
+      for (let rating of ratings) {
+        const userId = rating.user.id;
+        const points = rating.rating;
+        if (!users[userId]) {
+          users[userId] = { username: rating.user.username, score: 0 };
+        }
+        users[userId].score += points;
+      }
+      const leaderboardData = Object.values(users)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 3);
+      return leaderboardData;
+    } catch {
+      alert("Couldn't fetch ratings");
+      return [];
+    }
+  };
+
+  const [leaderboardData, setLeaderboardData] = useState([]);
+
+
+  useEffect(() => {
+    const fetchLeaderboardData = async () => {
+      const data = await getLeaderboardData();
+      setLeaderboardData(data);
+    };
+    fetchLeaderboardData();
+  }, []);
+
   const firstPlace = leaderboardData[0];
   const secondPlace = leaderboardData[1];
   const thirdPlace = leaderboardData[2];
