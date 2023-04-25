@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { ListGroup, Badge } from "react-bootstrap";
 import "styles/views/FinalLeaderboard.scss";
-import MockData from '../../mockData/leaderboardScreenDataMock.json'
 import { FaMedal } from 'react-icons/fa';
-import {api, handleError} from "../../helpers/api";
+import { api, handleError } from "../../helpers/api";
 
-
-
-const FinalLeaderboard = ({ leaderboardData }) => {
+const FinalLeaderboard = () => {
+  const [leaderboardData, setLeaderboardData] = useState([]);
 
   const getLeaderboardData = async () => {
     try {
@@ -26,21 +24,13 @@ const FinalLeaderboard = ({ leaderboardData }) => {
       const leaderboardData = Object.values(users)
         .sort((a, b) => b.score - a.score)
         .slice(0, 3);
-      return leaderboardData;
+      setLeaderboardData(leaderboardData);
     } catch {
       alert("Couldn't fetch ratings");
-      return [];
     }
   };
 
-  const [leaderboardData, setLeaderboardData] = useState([]);
-
-
   useEffect(() => {
-    const fetchLeaderboardData = async () => {
-      const data = await getLeaderboardData();
-      setLeaderboardData(data);
-    };
     fetchLeaderboardData();
   }, []);
 
@@ -53,7 +43,6 @@ const FinalLeaderboard = ({ leaderboardData }) => {
     history.push('/');
   };
 
-
   return (
     <div className="final-leaderboard-container">
       <div className="podium">
@@ -63,7 +52,7 @@ const FinalLeaderboard = ({ leaderboardData }) => {
           <span className="score">{secondPlace.score} points</span>
         </div>
         <div className="first-place">
-        <FaMedal size={32} color="black" />
+          <FaMedal size={32} color="black" />
           <span className="rank">1st</span>
           <span className="username">{firstPlace.username}</span>
           <span className="score">{firstPlace.score} points</span>
