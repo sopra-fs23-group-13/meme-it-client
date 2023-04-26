@@ -1,0 +1,85 @@
+[
+      {
+           "code": "apprehensive-border",
+           "name": "Lobby of yxcv",
+           "owner": {
+               "name": "yxcv",
+               "id": "0373a0d0-e1c9-4763-bbbe-600df9eb4f37"
+           },
+           "lobbySetting": {
+               "isPublic": true,
+               "maxPlayers": 4,
+               "maxRounds": 3,
+               "memeChangeLimit": 0,
+               "superLikeLimit": 1,
+               "superDislikeLimit": 1,
+               "roundDuration": 60,
+               "ratingDuration": 30
+           },
+           "players": [
+               {
+                   "name": "yxcv",
+                   "id": "0373a0d0-e1c9-4763-bbbe-600df9eb4f37"
+               }
+           ],
+           "messages": [],
+           "gameId": "cfc917a0-12e6-40e0-8f0e-4c45c38c74db",
+           "gameStartedAT": "2023-04-26T09:51:25.852+00:00"
+       }
+
+    {
+        "code": "apprehensive-border",
+        "name": "Lobby of yxcv 2",
+        "owner": {
+            "name": "yxcv",
+            "id": "0373a0d0-e1c9-4763-bbbe-600df9eb4f37"
+        },
+        "lobbySetting": {
+            "isPublic": true,
+            "maxPlayers": 4,
+            "maxRounds": 3,
+            "memeChangeLimit": 0,
+            "superLikeLimit": 1,
+            "superDislikeLimit": 1,
+            "roundDuration": 60,
+            "ratingDuration": 30
+        },
+        "players": [
+            {
+                "name": "yxcv",
+                "id": "0373a0d0-e1c9-4763-bbbe-600df9eb4f37"
+            }
+        ],
+        "messages": [],
+        "gameId": null,
+        "gameStartedAT": null
+    },
+
+    {
+        "code": "apprehensive-border",
+        "name": "Lobby of yxcv 3",
+        "owner": {
+            "name": "yxcv",
+            "id": "0373a0d0-e1c9-4763-bbbe-600df9eb4f37"
+        },
+        "lobbySetting": {
+            "isPublic": true,
+            "maxPlayers": 4,
+            "maxRounds": 3,
+            "memeChangeLimit": 0,
+            "superLikeLimit": 1,
+            "superDislikeLimit": 1,
+            "roundDuration": 60,
+            "ratingDuration": 30
+        },
+        "players": [
+            {
+                "name": "yxcv",
+                "id": "0373a0d0-e1c9-4763-bbbe-600df9eb4f37"
+            }
+        ],
+        "messages": [],
+        "gameId": null,
+        "gameStartedAT": null
+    }
+]

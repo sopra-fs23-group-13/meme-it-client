@@ -11,17 +11,21 @@ import {findGame} from "helpers/functions";
 import {AppContext} from "context";
 import TimerProgressBar from "components/ui/TimerProgressBar";
 import {api} from "../../helpers/api";
-import {game as gameEndpoint, lobby} from "../../helpers/endpoints"
+import {game, game as gameEndpoint} from "../../helpers/endpoints"
 import Chat from "../ui/Chat";
+import Cookies from "universal-cookie";
+import getMeme from "../../mockData/getMeme.json"
 
 const Game = () => {
     const delay = 1000;
     const history = useHistory();
     const {id} = useParams();
-    const {setGameData, gameData, loadedGameData} = useContext(AppContext);
+    const {setGameData, loadedGameData,  setPreLoadedMemesForVoting} = useContext(AppContext);
     const game = findGame(MockData, id);
     const gameRounds = useMemo(() => game?.rounds, [game]);
+    const cookies = new Cookies();
 
+    const [isSynchronizing, setIsSynchronizing] = useState(false)
     const [fontSize, setFontSize] = useState(14);
     const [color, setColor] = useState("#ffffff");
     const [currentRound, setCurrentRound] = useState(null);
@@ -37,6 +41,17 @@ const Game = () => {
     ]);
     const [currentTextNodeValues, setCurrentTextNodeValues] = useState([]);
     useEffect(async () => {
+        /*
+        if(!loadedGameData === undefined || loadedGameData.length === 0){
+            const preLoadedGameData = await api.get(`${game}/${response.data.gameId}`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            const preLoadedMemeTemplate = await api.get(`${game}/${response.data.gameId}/template`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            const memeData = {
+                ...preLoadedGameData.data,
+                meme: {...preLoadedMemeTemplate.data}
+            }
+            console.log(memeData);
+            setLoadedGameData(memeData);
+        }*/
         setGameData([]);
         setCurrentRound(loadedGameData?.currentRound);
         setCurrentMeme(loadedGameData?.meme?.imageUrl);
@@ -85,31 +100,25 @@ const Game = () => {
         currentNodePositions.pop();
         setCurrentTextNodePositions(currentNodePositions);
     }
-
-    const currentRoundIndex = useMemo(
-        () => gameRounds?.findIndex(({id}) => id === currentRound?.id),
-        [currentRound]
-    );
-
     const handleNextRound = () => {
         if (now < loadedGameData?.roundDuration * 1000) {
             setNow(now + 1000);
-        } else {
-            setNow(null);
-            //setCurrentRound(gameRounds[currentRoundIndex + 1]);
-            currentMeme && setGameData(
-                {
-                    id: uuid(),
-                    currentTextNodeValues,
-                    currentTextNodePositions,
-                    currentMeme,
-                    currentRound,
-                    color,
-                    fontSize,
-                    maxRound
-                }
-            );
-            history.push("/game-rating/" + id);
+        } else if (!isSynchronizing){
+            const started = new Date(loadedGameData.startedAt);
+            const ended = new Date(started.getTime() + loadedGameData?.roundDuration * 1000);
+            const loadDataAfterSubmitting = new Date(ended.getTime() + 5 * 1000);
+            const pushNextPage = new Date(loadDataAfterSubmitting.getTime() + 5 * 1000);
+            executeForAllPlayersAtSameTime(ended, () => {
+                submitMemesAtSameTime();
+            });
+            executeForAllPlayersAtSameTime(loadDataAfterSubmitting, () => {
+                preloadVotingRound();
+            });
+            executeForAllPlayersAtSameTime(pushNextPage, () => {
+                startVotingAtSameTime();
+            });
+            setIsSynchronizing(!isSynchronizing);
+            //history.push("/game-rating/" + id);
         }
         if (currentRound < 0 && isPlaying) {
             setNow(null);
@@ -155,6 +164,62 @@ const Game = () => {
         setColor(event.target.value);
     };
 
+    const submitMemesAtSameTime = () => {
+        console.log("submitting memes")
+        //setIsSynchronizing(!isSynchronizing);
+        // freeze all elements, no edits possible
+        // submit all elements via api
+        currentMeme && setGameData(
+            {
+                id: uuid(),
+                currentTextNodeValues,
+                currentTextNodePositions,
+                currentMeme,
+                currentRound,
+                color,
+                fontSize,
+                maxRound
+            }
+        );
+        const textBoxes = currentTextNodePositions.map((position, index) => ({
+            ...position,
+            text: currentTextNodeValues[index]
+        }));
+        const meme = {
+            id: uuid(),
+            textBoxes,
+            currentMeme,
+            color,
+            fontSize,
+        };
+        console.log(meme)
+        api.post(`${gameEndpoint}/${id}/meme/${loadedGameData?.meme?.id}`, meme, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+    }
+
+    const preloadVotingRound = async (response) => {
+        // get all memes from this round
+        const preLoadedMemesForVoting = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+        setPreLoadedMemesForVoting(preLoadedMemesForVoting.data);
+        console.log(preLoadedMemesForVoting.data)
+        //setPreLoadedMemesForVoting(getMeme);
+    }
+
+    const startVotingAtSameTime= () =>{
+        // reset time and push next page
+        // load page from context
+        setNow(null);
+        history.push("/game-rating/" + id);
+    }
+
+    const executeForAllPlayersAtSameTime = async (time, callback) => {
+        const delay = time - Date.now();
+        if (delay <= 0) {
+            callback();
+        } else {
+            setTimeout(callback, delay);
+        }
+    };
+
     return (
         <div className={"game content"}>
           <div className={"game card"}>
@@ -196,12 +261,14 @@ const Game = () => {
                                             y: currentTextNodePositions?.[i]?.yRate,
                                         }}
                                         onDrag={(e, data) => onTextNodeDrag(e, data, i)}
+                                        disabled={isSynchronizing}
                                     >
                   <textarea
                       placeholder="TEXT HERE"
                       value={currentTextNodeValues[i]}
                       onChange={(e) => onTextNodeChange(e, i)}
                       style={{fontSize: `${fontSize}px`, color: color}}
+                      disabled={isSynchronizing}
                   />
                                     </Draggable>
                                 ))}
@@ -216,6 +283,7 @@ const Game = () => {
                                     step="1"
                                     onChange={handleFontSizeChange}
                                     style={{marginRight: "10px"}}
+                                    disabled={isSynchronizing}
                                 />
                                 <label htmlFor="color">Color: </label>
                                 <input
@@ -223,19 +291,21 @@ const Game = () => {
                                     value={color}
                                     onChange={handleColorChange}
                                     style={{marginRight: "10px"}}
+                                    disabled={isSynchronizing}
                                 />
                             </div>
                             <Button
                                 className="home join-btn"
                                 onClick={handleGetDifferentTemplate}
+                                disabled={isSynchronizing}
                             >
                                 Get different template
                             </Button>
 
-                            <Button onClick={addMemeTextNode}>
+                            <Button onClick={addMemeTextNode} disabled={isSynchronizing}>
                                 Add new Text Node
                             </Button>
-                            <Button onClick={removeMemeTextNode}>
+                            <Button onClick={removeMemeTextNode} disabled={isSynchronizing}>
                                 Remove the most recent Text Node
                             </Button>
                         </>

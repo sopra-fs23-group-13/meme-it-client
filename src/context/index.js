@@ -4,7 +4,9 @@ const contextDefaultValues = {
   gameData: [],
   setGameData: () => {},
   loadedGameData: [],
-  setLoadedGameData: () => {}
+  setLoadedGameData: () => {},
+  preLoadedMemesForVoting: [],
+  setPreLoadedMemesForVoting: () => {}
 };
 
 export const AppContext = createContext(contextDefaultValues);
@@ -15,7 +17,10 @@ const AppContextProvider = ({ children }) => {
   );
   const [loadedGameData, setLoadedGameData] = useState(
         contextDefaultValues.loadedGameData
-    )
+  );
+  const [preLoadedMemesForVoting, setPreLoadedMemesForVoting] = useState(
+        contextDefaultValues.preLoadedMemesForVoting
+  );
 
   return (
     <AppContext.Provider
@@ -23,7 +28,9 @@ const AppContextProvider = ({ children }) => {
         gameData,
         setGameData,
         loadedGameData,
-        setLoadedGameData
+        setLoadedGameData,
+        preLoadedMemesForVoting,
+        setPreLoadedMemesForVoting
       }}
     >
       {children}
