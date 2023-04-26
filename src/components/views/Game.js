@@ -1,196 +1,323 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, {useContext, useEffect, useMemo, useState} from "react";
 import Draggable from "react-draggable";
-import { Stack, Button } from "react-bootstrap";
-import { v4 as uuid } from "uuid";
-import { useParams, useHistory } from "react-router-dom";
-import { Spinner } from "components/ui/Spinner";
+import {Stack, Button} from "react-bootstrap";
+import {v4 as uuid} from "uuid";
+import {useParams, useHistory} from "react-router-dom";
+import {Spinner} from "components/ui/Spinner";
 import "styles/views/Game.scss";
 import MockData from "../../mockData/menuScreenDataMock.json";
 import BaseContainer from "../ui/BaseContainer";
-import { findGame } from "helpers/functions";
-import { AppContext } from "context";
+import {findGame} from "helpers/functions";
+import {AppContext} from "context";
 import TimerProgressBar from "components/ui/TimerProgressBar";
+import {api} from "../../helpers/api";
+import {game, game as gameEndpoint} from "../../helpers/endpoints"
+import Chat from "../ui/Chat";
+import Cookies from "universal-cookie";
+import getMeme from "../../mockData/getMeme.json"
 
 const Game = () => {
-  const delay = 1000;
-  const history = useHistory();
-  const { id } = useParams();
-  const { setFinalGameData } = useContext(AppContext);
-  const game = findGame(MockData, id);
-  const gameRounds = useMemo(() => game?.rounds, [game]);
+    const delay = 1000;
+    const history = useHistory();
+    const {id} = useParams();
+    const {setGameData, loadedGameData,  setPreLoadedMemesForVoting} = useContext(AppContext);
+    const game = findGame(MockData, id);
+    const gameRounds = useMemo(() => game?.rounds, [game]);
+    const cookies = new Cookies();
 
-  const [currentRound, setCurrentRound] = useState(null);
-  const [currentMeme, setCurrentMeme] = useState(null);
-  const [now, setNow] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTextNodePositions, setCurrentTextNodePositions] = useState([
-    {
-      xRate: 150,
-      yRate: 150,
-    },
-  ]);
-  const [currentTextNodeValues, setCurrentTextNodeValues] = useState([]);
-  useEffect(() => {
-    setFinalGameData([]);
-    setCurrentRound(gameRounds[0]);
-    setCurrentMeme(gameRounds?.[0]?.memes?.[0]);
-    setNow(0);
-    setIsPlaying(true);
-  }, [gameRounds]);
-
-  const memeTextNodes = useMemo(() => {
-    return [...Array(currentMeme?.number_of_text_nodes).keys()].map(
-        (item, i) => {
-          return {
-            xRate: 0,
-            yRate: (i + 1) * 50,
-          };
-        }
-    );
-  }, [currentMeme]);
-
-  const memeTextNodesDefaultValues = useMemo(() => {
-    return memeTextNodes.map((item) => "");
-  }, [memeTextNodes]);
-
-  const currentMemes = useMemo(() => currentRound?.memes, [currentRound]);
-  useEffect(() => {
-    setCurrentMeme(currentRound?.memes?.[0]);
-  }, [currentRound]);
-
-  useEffect(() => {
-    setCurrentTextNodePositions(memeTextNodes);
-    setCurrentTextNodeValues(memeTextNodesDefaultValues);
-  }, [currentMeme]);
-
-  const currentRoundIndex = useMemo(
-      () => gameRounds?.findIndex(({ id }) => id === currentRound?.id),
-      [currentRound]
-  );
-
-  const handleNextRound = () => {
-    if (now < currentRound?.timeout) {
-      setNow(now + 1000);
-    } else {
-      setNow(null);
-      setCurrentRound(gameRounds[currentRoundIndex + 1]);
-      currentMeme &&
-      setFinalGameData((prev) => [
-        ...prev,
+    const [isSynchronizing, setIsSynchronizing] = useState(false)
+    const [fontSize, setFontSize] = useState(14);
+    const [color, setColor] = useState("#ffffff");
+    const [currentRound, setCurrentRound] = useState(null);
+    const [maxRound, setMaxRound] = useState(null);
+    const [currentMeme, setCurrentMeme] = useState(null);
+    const [now, setNow] = useState(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [currentTextNodePositions, setCurrentTextNodePositions] = useState([
         {
-          id: uuid(),
-          currentTextNodeValues,
-          currentTextNodePositions,
-          currentMeme,
+            xRate: 150,
+            yRate: 150,
         },
-      ]);
+    ]);
+    const [currentTextNodeValues, setCurrentTextNodeValues] = useState([]);
+    useEffect(async () => {
+        /*
+        if(!loadedGameData === undefined || loadedGameData.length === 0){
+            const preLoadedGameData = await api.get(`${game}/${response.data.gameId}`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            const preLoadedMemeTemplate = await api.get(`${game}/${response.data.gameId}/template`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            const memeData = {
+                ...preLoadedGameData.data,
+                meme: {...preLoadedMemeTemplate.data}
+            }
+            console.log(memeData);
+            setLoadedGameData(memeData);
+        }*/
+        setGameData([]);
+        setCurrentRound(loadedGameData?.currentRound);
+        setCurrentMeme(loadedGameData?.meme?.imageUrl);
+        setMaxRound(loadedGameData?.totalRounds);
+        setNow(0);
+        setIsPlaying(true);
+    }, [gameRounds]);
+
+    const memeTextNodes = useMemo(() => {
+        return [...Array(currentMeme?.number_of_text_nodes).keys()].map(
+            (item, i) => {
+                return {
+                    xRate: 0,
+                    yRate: (i + 1) * 50,
+                };
+            }
+        );
+    }, [currentMeme]);
+
+    const memeTextNodesDefaultValues = useMemo(() => {
+        return memeTextNodes.map(() => "");
+    }, [memeTextNodes]);
+
+    const currentMemes = useMemo(() => currentRound?.memes, [currentRound]);
+    useEffect(() => {
+        setCurrentMeme(loadedGameData?.meme);
+    }, [currentRound]);
+
+    useEffect(() => {
+        setCurrentTextNodePositions(memeTextNodes);
+        setCurrentTextNodeValues(memeTextNodesDefaultValues);
+    }, [currentMeme]);
+
+
+    const addMemeTextNode = () => {
+        const newNode = {xRate: 0, yRate: 100}
+        const currentNodePositions = [...currentTextNodePositions];
+        memeTextNodes.push(newNode);
+        currentNodePositions.push(newNode);
+        setCurrentTextNodePositions(currentNodePositions);
     }
 
-    if (currentRoundIndex < 0 && isPlaying) {
-      setNow(null);
-      setCurrentRound(null);
-      setIsPlaying(false);
-      history.push("/game-rating/" + id);
+    const removeMemeTextNode = () => {
+        memeTextNodes.pop();
+        const currentNodePositions = [...currentTextNodePositions];
+        currentNodePositions.pop();
+        setCurrentTextNodePositions(currentNodePositions);
     }
-  };
-  const onTextNodeDrag = (e, data, i) => {
-    let prevPositions = [...currentTextNodePositions];
-    prevPositions[i] = { xRate: data.lastX, yRate: data.lastY };
-    setCurrentTextNodePositions(prevPositions);
-  };
+    const handleNextRound = () => {
+        if (now < loadedGameData?.roundDuration * 1000) {
+            setNow(now + 1000);
+        } else if (!isSynchronizing){
+            const started = new Date(loadedGameData.startedAt);
+            const ended = new Date(started.getTime() + loadedGameData?.roundDuration * 1000);
+            const loadDataAfterSubmitting = new Date(ended.getTime() + 5 * 1000);
+            const pushNextPage = new Date(loadDataAfterSubmitting.getTime() + 5 * 1000);
+            executeForAllPlayersAtSameTime(ended, () => {
+                submitMemesAtSameTime();
+            });
+            executeForAllPlayersAtSameTime(loadDataAfterSubmitting, () => {
+                preloadVotingRound();
+            });
+            executeForAllPlayersAtSameTime(pushNextPage, () => {
+                startVotingAtSameTime();
+            });
+            setIsSynchronizing(!isSynchronizing);
+            //history.push("/game-rating/" + id);
+        }
+        if (currentRound < 0 && isPlaying) {
+            setNow(null);
+            setCurrentRound(null);
+            setIsPlaying(false);
+            history.push("/game-rating/" + id);
+        }
+    };
+    const onTextNodeDrag = (e, data, i) => {
+        let prevPositions = [...currentTextNodePositions];
+        prevPositions[i] = {xRate: data.lastX, yRate: data.lastY};
+        setCurrentTextNodePositions(prevPositions);
+    };
 
-  const onTextNodeChange = (e, i) => {
-    let prevValues = [...currentTextNodeValues];
-    prevValues[i] = e.target.value;
-    setCurrentTextNodeValues(prevValues);
-  };
+    const onTextNodeChange = (e, i) => {
+        let prevValues = [...currentTextNodeValues];
+        prevValues[i] = e.target.value;
+        setCurrentTextNodeValues(prevValues);
+    };
 
-  const memeChangesLeft = useMemo(
-      () => currentTextNodeValues?.filter((item) => !item).length,
-      [currentTextNodeValues]
-  );
-
-  const currentMemeIndex = useMemo(
-      () => currentMemes?.findIndex(({ id }) => id === currentMeme?.id),
-      [currentMeme]
-  );
-
-  const handleGetDifferentTemplate = () => {
-    const newMemeIndex = currentMemeIndex + 1;
-    setCurrentMeme(
-        currentMemes[newMemeIndex === currentMemes?.length ? 0 : newMemeIndex]
+    const currentMemeIndex = useMemo(
+        () => currentMemes?.findIndex(({id}) => id === currentMeme?.id),
+        [currentMeme]
     );
-  };
 
-  const leaveGame = async () => {
-    //const leaveResponse = await api.delete('/' + localStorage.getItem("hash") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
-    localStorage.clear();
-    history.push("/");
-  }
-  return (
-      <BaseContainer className="game">
-        <Button
-            width="200px"
-            onClick={leaveGame}
-            className="back-to-login-button"
-        >
-          Leave Game
-        </Button>
-        <Stack gap={3} className="pt-5 container ">
-          <Stack gap={3} className={`pt-5  `}>
-            {currentRoundIndex + 1 && (
-                <h1 className="fw-bolder fs-3 text-start text-black">
-                  {`Round ${currentRoundIndex + 1}/${gameRounds?.length} `}
-                </h1>
-            )}
-            <p className="fs-6 text-start text-black">
-              Drag the text nodes over the image
-            </p>
-            <TimerProgressBar
-                delay={delay}
-                now={now}
-                max={currentRound?.timeout}
-                callbackFunc={() => handleNextRound()}
-                isPlaying={isPlaying}
-            />
-          </Stack>
-          {currentMeme?.image ? (
-              <>
-                <div className="meme-content">
-                  <img src={currentMeme?.image} />
+    const handleGetDifferentTemplate = () => {
+        const newMemeIndex = currentMemeIndex + 1;
+        setCurrentMeme(
+            currentMemes[newMemeIndex === currentMemes?.length ? 0 : newMemeIndex]
+        );
+    };
 
-                  {memeTextNodes?.map((item, i) => (
-                      <Draggable
-                          key={i}
-                          bounds="parent"
-                          position={{
-                            x: currentTextNodePositions?.[i]?.xRate,
-                            y: currentTextNodePositions?.[i]?.yRate,
-                          }}
-                          onDrag={(e, data) => onTextNodeDrag(e, data, i)}
-                      >
+    const leaveGame = async () => {
+        //const leaveResponse = await api.delete('/' + localStorage.getItem("code") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
+        localStorage.clear();
+        history.push("/");
+    }
+    const handleFontSizeChange = (event) => {
+        setFontSize(event.target.value);
+    };
+
+    const handleColorChange = (event) => {
+        setColor(event.target.value);
+    };
+
+    const submitMemesAtSameTime = () => {
+        console.log("submitting memes")
+        //setIsSynchronizing(!isSynchronizing);
+        // freeze all elements, no edits possible
+        // submit all elements via api
+        currentMeme && setGameData(
+            {
+                id: uuid(),
+                currentTextNodeValues,
+                currentTextNodePositions,
+                currentMeme,
+                currentRound,
+                color,
+                fontSize,
+                maxRound
+            }
+        );
+        const textBoxes = currentTextNodePositions.map((position, index) => ({
+            ...position,
+            text: currentTextNodeValues[index]
+        }));
+        const meme = {
+            id: uuid(),
+            textBoxes,
+            currentMeme,
+            color,
+            fontSize,
+        };
+        console.log(meme)
+        api.post(`${gameEndpoint}/${id}/meme/${loadedGameData?.meme?.id}`, meme, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+    }
+
+    const preloadVotingRound = async (response) => {
+        // get all memes from this round
+        const preLoadedMemesForVoting = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+        setPreLoadedMemesForVoting(preLoadedMemesForVoting.data);
+        console.log(preLoadedMemesForVoting.data)
+        //setPreLoadedMemesForVoting(getMeme);
+    }
+
+    const startVotingAtSameTime= () =>{
+        // reset time and push next page
+        // load page from context
+        setNow(null);
+        history.push("/game-rating/" + id);
+    }
+
+    const executeForAllPlayersAtSameTime = async (time, callback) => {
+        const delay = time - Date.now();
+        if (delay <= 0) {
+            callback();
+        } else {
+            setTimeout(callback, delay);
+        }
+    };
+
+    return (
+        <div className={"game content"}>
+          <div className={"game card"}>
+            <BaseContainer className="game">
+                <Button
+                    width="200px"
+                    onClick={leaveGame}
+                    className="back-to-login-button"
+                >
+                    Leave Game
+                </Button>
+                <Stack gap={3} className="pt-5 container ">
+                    <Stack gap={3} className={`pt-5  `}>
+                        <h1 className="fw-bolder fs-3 text-start text-black">
+                            {`Round ${currentRound}/${maxRound} `}
+                        </h1>
+                        <p className="fs-6 text-start text-black">
+                            Drag the text nodes over the image
+                        </p>
+                        <TimerProgressBar
+                            delay={delay}
+                            now={now}
+                            max={loadedGameData?.roundDuration * 1000}
+                            callbackFunc={() => handleNextRound()}
+                            isPlaying={isPlaying}
+                        />
+                    </Stack>
+                    {currentMeme?.imageUrl ? (
+                        <>
+                            <div className="meme-content">
+                                <img src={currentMeme?.imageUrl} alt={"meme lmao"}/>
+
+                                {memeTextNodes?.map((item, i) => (
+                                    <Draggable
+                                        key={i}
+                                        bounds="parent"
+                                        position={{
+                                            x: currentTextNodePositions?.[i]?.xRate,
+                                            y: currentTextNodePositions?.[i]?.yRate,
+                                        }}
+                                        onDrag={(e, data) => onTextNodeDrag(e, data, i)}
+                                        disabled={isSynchronizing}
+                                    >
                   <textarea
                       placeholder="TEXT HERE"
                       value={currentTextNodeValues[i]}
                       onChange={(e) => onTextNodeChange(e, i)}
+                      style={{fontSize: `${fontSize}px`, color: color}}
+                      disabled={isSynchronizing}
                   />
-                      </Draggable>
-                  ))}
-                </div>
-                <Button
-                    className="home join-btn"
-                    onClick={handleGetDifferentTemplate}
-                >
-                  Get different template
-                </Button>
-                <p>{memeChangesLeft} Meme Changes Left</p>
-              </>
-          ) : (
-              <Spinner />
-          )}
-        </Stack>
-      </BaseContainer>
-  );
+                                    </Draggable>
+                                ))}
+                            </div>
+                            <div>
+                                <label htmlFor="fontSize">Font size: </label>
+                                <input
+                                    type="number"
+                                    value={fontSize}
+                                    min="10"
+                                    max="48"
+                                    step="1"
+                                    onChange={handleFontSizeChange}
+                                    style={{marginRight: "10px"}}
+                                    disabled={isSynchronizing}
+                                />
+                                <label htmlFor="color">Color: </label>
+                                <input
+                                    type="color"
+                                    value={color}
+                                    onChange={handleColorChange}
+                                    style={{marginRight: "10px"}}
+                                    disabled={isSynchronizing}
+                                />
+                            </div>
+                            <Button
+                                className="home join-btn"
+                                onClick={handleGetDifferentTemplate}
+                                disabled={isSynchronizing}
+                            >
+                                Get different template
+                            </Button>
+
+                            <Button onClick={addMemeTextNode} disabled={isSynchronizing}>
+                                Add new Text Node
+                            </Button>
+                            <Button onClick={removeMemeTextNode} disabled={isSynchronizing}>
+                                Remove the most recent Text Node
+                            </Button>
+                        </>
+                    ) : (
+                        <Spinner/>
+                    )}
+                </Stack>
+                <Chat currentLobby={loadedGameData} />
+            </BaseContainer>
+          </div>
+        </div>
+    );
 };
 
 export default Game;

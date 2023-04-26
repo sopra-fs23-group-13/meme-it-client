@@ -12,10 +12,10 @@ import PropTypes from "prop-types";
  */
 export const GameGuard = props => {
   //If user has hash in local storage + if lobby with such hash exists atm (backend needs to be fixed first i think)
-  if (localStorage.getItem("hash") && localStorage.getItem("started")){
+  if (localStorage.getItem("code") && localStorage.getItem("started")){
     return props.children;
   }
-  if (localStorage.getItem("hash")){
+  if (localStorage.getItem("code")){
     return <Redirect to="/lobby"/>;
   }
   return <Redirect to="/"/>;

@@ -24,9 +24,14 @@
     background-color: #af0000;
     border: solid #af0000;
   }
+  &:active {
+    color: white !important;
+    border: solid #da0000;
+    background: #da0000;
+  }
   position: absolute;
   top: 20px;
   right: 20px;
-  background-color: #da0000;
+  background: #da0000;
   border: solid #af0000;
 }

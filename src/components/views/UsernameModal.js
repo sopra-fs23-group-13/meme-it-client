@@ -4,59 +4,67 @@ import Modal from 'react-bootstrap/Modal';
 import {FormField} from "../../helpers/formField";
 import "styles/views/Home.scss";
 import {Button} from "react-bootstrap";
-import LobbyCreationModal from "./LobbyCreationModal";
 import {useHistory} from "react-router-dom";
 import {api} from "../../helpers/api";
-import User from "../../models/User";
+import Cookies from "universal-cookie"
+import {lobby, users} from "../../helpers/endpoints";
+import {LoadingButton} from "../ui/LoadingButton";
 const LOBBY_CREATION = "Create Lobby";
 const LOBBY_JOIN = "Join Game";
 
 const UsernameModal = props => {
+    const cookies = new Cookies();
     const history = useHistory();
     const [show, setShow] = useState(false);
-    const [usernameValues, setUsernameValues] = useState({ username: ""});
-    const handleClose = () => setShow(false);
+    const [username, setUsername] = useState("");
+    const handleClose = () => {
+        setUsername("");
+        setShow(false);
+    }
     const handleShow = () => setShow(true);
-
     const handleChange = (event) => {
-        const { name, value } = event.target;
-        setUsernameValues((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
+        setUsername(event.target.value);
     };
-
-    const submit = async (childValues) => {
-        let values = {
-            username: usernameValues.username,
+    const submitAndJoin = async () => {
+        const response = await api.post(users, {name: username});
+        localStorage.setItem("username", username)
+        cookies.set("token", response.data.id)
+        localStorage.setItem("code", props.code);
+        console.log(localStorage.getItem("code"))
+        try {
+            await api.post(`${lobby}/${props.code}/players`, {name: response.data.name}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         }
-        // check if the key exists, then return the complete lobby to home else just the username
-        if ("lobby_name" in childValues)
-            values = {
-                ...childValues,
-                username: usernameValues.username
+        catch (error){
+            if (error.response !== undefined && error.response.status === 404){
+                sessionStorage.setItem("alert", "Lobby Not Found")
             }
-        localStorage.setItem("username", usernameValues.username)
-        props.submit(values);
-        // Temporary Lobby Join (Through List)
+            //409 can also be caused by Full Lobby, so need to add possibility to differentiate in backend
+            else if (error.response !== undefined && error.response.status === 409 ){
+                sessionStorage.setItem("alert", "Game has already started")
+            }
+            else {
+                sessionStorage.setItem("alert", "Something went wrong")
+            }
+            localStorage.clear();
+            history.push("/lobby");
+            handleClose();
+            return;
+        }
         history.push("/lobby");
         handleClose();
-        if (props.hash != null) {
-            localStorage.setItem("hash", props.hash);
-            //const joinResponse = await api.post('/' + props.hash + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
-        }
     }
 
-    const createLobby = async (childValues) => {
-        submit(childValues);
+    const createLobby = async () => {
+        const response = await api.post(users, {name: username});
+        localStorage.setItem("username", username)
+        cookies.set("token", response.data.id)
         try {
-            let {name, owner, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit} = {name: "Lobby of " + localStorage.getItem("username") , owner: localStorage.getItem("username"), isPublic:true, maxPlayers:4,maxRounds:3, memeChangeLimit:0, superLikeLimit:1, superDislikeLimit:1, timeRoundLimit:60,timeVoteLimit:30  }
-            const requestBody = JSON.stringify({name, owner, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, timeRoundLimit, timeVoteLimit});
-            const response = await api.post('/lobby', requestBody);
-            localStorage.setItem("hash", response.data.code)
-
-            //Get Lobby Code from Response, then add player to lobby (doesn't work atm)
-            //const joinResponse = await api.post('/' + response.data.code + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
+            let {name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, roundDuration, ratingDuration} = {name: "Lobby of " + localStorage.getItem("username"), isPublic:true, maxPlayers:4,maxRounds:3, memeChangeLimit:0, superLikeLimit:1, superDislikeLimit:1, roundDuration:60,ratingDuration:30  }
+            const requestBody = JSON.stringify({name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, roundDuration, ratingDuration});
+            const createdLobby = await api.post(lobby, requestBody, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            localStorage.setItem("code", createdLobby.data.code);
+            // Removed: Admin automatically added to player list on lobby creation
+            // await api.post(`${lobby}/${createdLobby.data.code}/players`, {name: username},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         } catch {
             alert("Couldn't create lobby")
         }
@@ -78,7 +86,7 @@ const UsernameModal = props => {
                             type="text"
                             placeholder={"Username"}
                             name="username"
-                            value={usernameValues.username}
+                            value={username}
                             onChange={handleChange}
                         />
                     </Form>
@@ -88,13 +96,9 @@ const UsernameModal = props => {
                         Close
                     </Button>
                     {props.title === LOBBY_CREATION &&
-                        <Button disabled={usernameValues.username===''} className="home join-btn"  onClick={createLobby}>
-                            Set Username
-                        </Button>                    }
+                        <LoadingButton onClick={createLobby} loadingText={"Creating Lobby..."} buttonText={"Create Lobby"} disabledIf={username === ""}/>}
                     {props.title === LOBBY_JOIN &&
-                        <Button disabled={usernameValues.username===''} className="home join-btn"  onClick={submit}>
-                            Set Username
-                        </Button>
+                        <LoadingButton onClick={submitAndJoin} loadingText={"Joining..."} buttonText={"Join Game"} disabledIf={username === ""}/>
                     }
                 </Modal.Footer>
             </Modal>

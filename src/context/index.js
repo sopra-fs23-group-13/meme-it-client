@@ -1,22 +1,36 @@
-import { ReactNode } from "react";
 import { useState, createContext } from "react";
 
 const contextDefaultValues = {
-  finalGameData: [],
-  setFinalGameData: () => {},
+  gameData: [],
+  setGameData: () => {},
+  loadedGameData: [],
+  setLoadedGameData: () => {},
+  preLoadedMemesForVoting: [],
+  setPreLoadedMemesForVoting: () => {}
 };
 
 export const AppContext = createContext(contextDefaultValues);
 const AppContextProvider = ({ children }) => {
-  const [finalGameData, setFinalGameData] = useState(
-    contextDefaultValues.finalGameData
+
+  const [gameData, setGameData] = useState(
+      contextDefaultValues.gameData
+  );
+  const [loadedGameData, setLoadedGameData] = useState(
+        contextDefaultValues.loadedGameData
+  );
+  const [preLoadedMemesForVoting, setPreLoadedMemesForVoting] = useState(
+        contextDefaultValues.preLoadedMemesForVoting
   );
 
   return (
     <AppContext.Provider
       value={{
-        finalGameData,
-        setFinalGameData,
+        gameData,
+        setGameData,
+        loadedGameData,
+        setLoadedGameData,
+        preLoadedMemesForVoting,
+        setPreLoadedMemesForVoting
       }}
     >
       {children}

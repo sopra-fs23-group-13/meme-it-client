@@ -6,6 +6,7 @@ import {Button} from 'components/ui/Button';
 import 'styles/views/Login.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import {users} from "../../helpers/endpoints";
 
 /*
 It is possible to add multiple components inside a single file,
@@ -43,7 +44,7 @@ const Login = props => {
   const doLogin = async () => {
     try {
       const requestBody = JSON.stringify({username, name});
-      const response = await api.post('/users', requestBody);
+      const response = await api.post(users, requestBody);
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
