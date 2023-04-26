@@ -11,7 +11,10 @@ body {
   min-height: 100vh;
   font-family: $fontDefault;
   background-image: url("images/homepage_animated.svg");
+  background-size: cover;
 }
+
+
 
 input,
 textarea,

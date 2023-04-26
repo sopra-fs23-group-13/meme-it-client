@@ -18,6 +18,7 @@ import {Notification} from "../ui/Notification";
 import Chat from "../ui/Chat";
 import {LoadingButton} from "../ui/LoadingButton";
 import {AppContext} from "../../context";
+import {LobbyCodeContainer} from "../ui/LobbyCodeContainer";
 
 const Lobby = () => {
   const cookies = new Cookies();
@@ -29,9 +30,6 @@ const Lobby = () => {
   const [isSynchronizing, setIsSynchronizing] = useState(false);
   const toggleShowAlert = () => setShowAlert(!showAlert);
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(currentLobby.code);
-  };
 
   useEffect( () => {
     const getLobbyData = async () => {
@@ -90,12 +88,6 @@ const Lobby = () => {
     }
   }
 
-  const renderTooltip = (props) => (
-      <Tooltip id="button-tooltip" {...props}>
-        Copy to clipboard
-      </Tooltip>
-  );
-
   const startGame = async () => {
     const response = await api.post(`/${game}/${currentLobby.code}`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
     preloadGame(response);
@@ -131,101 +123,75 @@ const Lobby = () => {
       setShowAlert(true);
     }
   };
-
   return (
       <div className={"lobby content"}>
-      <Container >
+      <Container>
         <div className={"lobby alert"}>
-          <Notification reason="Game is synchronizing all players and will start soon..."
-                        showAlert={(showAlert && isSynchronizing)}
-                        toggleShowAlert={toggleShowAlert}
+          <Notification
+              reason="Game is synchronizing all players and will start soon..."
+              showAlert={(showAlert && isSynchronizing)}
+              toggleShowAlert={toggleShowAlert}
           />
         </div>
-        <Stack gap={3}>
-          <div className={"lobby card"}>
-            {/*
-            <Col>
+          {
+            <Row>
               <h1 className="lobby title">Meme-It</h1>
               <p className="lobby subtitle"> The Meme Creation Game</p>
-            </Col>
-            */}
-            <BaseContainer className="lobby container">
-              { currentLobby.lobbySetting ?
-                  <Row>
-                    <Col>
-                      <h2 className="lobby player-title">Players</h2>
-                      <ActivePlayersList lobby={currentLobby} players={currentLobby.players} isEditable={isSynchronizing}/>
-                    </Col>
+            </Row>
+          }
 
-                    <Col
-                        xs={1}
-                        className="d-flex align-items-center justify-content-center"
-                    >
-                      <div className="vertical-line"></div>
-                    </Col>
-                    <Col>
-                      <h2 className="lobby player-title">Settings</h2>
-                      <LobbySettings Lobby={currentLobby} isAdmin={isAdmin} isEditable={isSynchronizing}/>
-
-
-                      <div className="lobby-code-container lobby card">
-                        <h2 className="lobby-code-heading">Lobby Code:</h2>
-                        <div className="lobby-code">
-                          <span className="lobby-code-text">{currentLobby.code}</span>
-                          <OverlayTrigger
-                              placement="left"
-                              delay={{ show: 250, hide: 400 }}
-                              overlay={renderTooltip}
+          <Stack gap={3}>
+            <div className={"lobby card"}>
+              {currentLobby.lobbySetting ?
+                  <div>
+                    <Row>
+                      <h2 className={"d-flex align-items-center justify-content-center"}>{currentLobby.name} - Waiting...</h2>
+                    </Row>
+                    <Row>
+                      <hr className={"lobby line"}/>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <h3 className="lobby player-title">Players</h3>
+                        <ActivePlayersList lobby={currentLobby} players={currentLobby.players} isEditable={isSynchronizing}/>
+                      </Col>
+                      <Col>
+                        <h3 className="lobby player-title">Settings</h3>
+                        <LobbySettings Lobby={currentLobby} isAdmin={isAdmin} isEditable={isSynchronizing}/>
+                      </Col>
+                      <Col>
+                        <Row>
+                          <LoadingButton
+                              buttonText={"Leave Lobby"}
+                              loadingText={"Leaving..."}
+                              onClick={() => leaveLobby("Disconnected")}
+                              c_name={"lobby leave-btn"}
+                              loadingTime={500}
+                              disabledIf={isSynchronizing}
+                          />
+                        </Row>
+                        <Row>
+                          <LobbyCodeContainer code={currentLobby.code}/>
+                        </Row>
+                      </Col>
+                    </Row>
+                    {isAdmin ? (
+                        <Row className={"d-flex align-items-center justify-content-center"}>
+                          <Button
+                              onClick={startGame}
+                              disabled={currentLobby.gameStartedAt}
+                              className="lobby btn start"
                           >
-                      <span
-                          className="copy-icon"
-                          onClick={copyToClipboard}
-                          title="Copy to clipboard"
-                      >
-                    <FaCopy />
-                  </span>
-                          </OverlayTrigger>
-                        </div>
-                      </div>
-                    </Col>
-
-                  </Row>
-                  : (
-                      <Row>
-                        <Col>
-                          <Spinner />
-                        </Col>
-                      </Row>
-                  )
+                            Start Game
+                          </Button>
+                        </Row>
+                    ) : <div></div>
+                    }
+                  </div>
+                  : (<Row> <Col> <Spinner /> </Col> </Row>)
               }
-              <Row>
-                <Col>
-                  <LoadingButton
-                      buttonText={"Leave Lobby"}
-                      loadingText={"Leaving..."}
-                      onClick={() => leaveLobby("Disconnected")}
-                      c_name={"lobby leave-btn"}
-                      loadingTime={500}
-                      disabledIf={isSynchronizing}
-                  />
-                </Col>
-              </Row>
-            </BaseContainer>
-            {isAdmin ? (
-                <Row className={"d-flex align-items-center justify-content-center"}>
-                  <Button
-                      onClick={startGame}
-                      disabled={currentLobby.gameStartedAt}
-                      className="lobby btn start"
-                  >
-                    Start Game
-                  </Button>
-                </Row>
-            ) : <div></div>
-            }
-          </div>
-
-        </Stack>
+            </div>
+          </Stack>
         <Chat currentLobby={currentLobby} />
       </Container>
       </div>
