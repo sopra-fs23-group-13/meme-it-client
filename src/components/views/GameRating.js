@@ -73,7 +73,6 @@ const GameRating = () => {
     };
 
     const submitVotesAtSameTime = async () => {
-        //TODO: freeze voting.
         const cgd = currentGameData.filter(meme => meme?.vote);
         await cgd.forEach(memeWithVote => api.post(`${gameEndpoint}/${id}/rating/${memeWithVote.id}`, {rating: memeWithVote.vote}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}}));
     }
