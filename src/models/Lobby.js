@@ -16,7 +16,7 @@ class Lobby {
         this.players = [];
         this.messages = [];
         this.gameId = null;
-        this.gameStartedAT = null;
+        this.gameStartedAt = null;
         Object.assign(this, data);
     }
 }

@@ -35,7 +35,7 @@ const LobbyList = props => {
         lobbyItems = (
             <div>
             {lobbies.map(lobby => {
-                if(lobby.lobbySetting.isPublic && lobby.gameStartedAT === null){
+                if(lobby.lobbySetting.isPublic && lobby.gameStartedAt === null){
                     return(
                         <div key={lobby.code}>
                             <ListGroup.Item

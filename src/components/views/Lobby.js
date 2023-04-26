@@ -50,9 +50,9 @@ const Lobby = () => {
           }
         });
 
-        if(response.data.gameStartedAT !== null){
+        if(response.data.gameStartedAt !== null){
           if(!isSynchronizing) {
-            executeForAllPlayersAtSameTime(new Date(response.data.gameStartedAT), () => {
+            executeForAllPlayersAtSameTime(new Date(response.data.gameStartedAt), () => {
               startGameAtTheSameTime(response.data);
             });
             preloadGame(response);
@@ -215,7 +215,7 @@ const Lobby = () => {
                 <Row className={"d-flex align-items-center justify-content-center"}>
                   <Button
                       onClick={startGame}
-                      disabled={currentLobby.gameStartedAT}
+                      disabled={currentLobby.gameStartedAt}
                       className="lobby btn start"
                   >
                     Start Game

@@ -63,7 +63,8 @@ const UsernameModal = props => {
             const requestBody = JSON.stringify({name, isPublic, maxPlayers, maxRounds, memeChangeLimit, superLikeLimit, superDislikeLimit, roundDuration, ratingDuration});
             const createdLobby = await api.post(lobby, requestBody, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
             localStorage.setItem("code", createdLobby.data.code);
-            await api.post(`${lobby}/${createdLobby.data.code}/players`, {name: username},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            // Removed: Admin automatically added to player list on lobby creation
+            // await api.post(`${lobby}/${createdLobby.data.code}/players`, {name: username},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         } catch {
             alert("Couldn't create lobby")
         }
