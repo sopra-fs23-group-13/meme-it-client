@@ -26,7 +26,7 @@ const GameRating = () => {
     const {gameData, loadedGameData, preLoadedMemesForVoting} = useContext(AppContext);
 
     const [reaction, setReaction] = useState("");
-    const [currentGameData, setCurrentGameData] = useState(null);
+    const [currentGameData, setCurrentGameData] = useState(preLoadedMemesForVoting);
 
     const [currentRound, setCurrentRound] = useState(null);
     const [maxRound, setMaxRound] = useState(null);
@@ -36,7 +36,6 @@ const GameRating = () => {
     const [isSynchronizing, setIsSynchronizing] = useState(false)
 
     useEffect(async () => {
-
         if (preLoadedMemesForVoting === undefined || preLoadedMemesForVoting.length === 0) {
             const votingMemeData = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
             setCurrentGameData(votingMemeData);
@@ -56,11 +55,14 @@ const GameRating = () => {
         } else if (!isSynchronizing) {
             const started = new Date(loadedGameData?.startedAt);
             const ended = new Date(started.getTime() + loadedGameData?.votingDuration * 1000);
+            const pushNextPage = new Date(ended.getTime() + 5 * 1000);
             executeForAllPlayersAtSameTime(ended, () => {
-                submitVotesAtSameTimeAndPushToLeaderboard();
+                submitVotesAtSameTime();
+            });
+            executeForAllPlayersAtSameTime(pushNextPage, () => {
+                pushToLeaderboard();
             });
             setIsSynchronizing(!isSynchronizing);
-            //history.push("/game-rating/" + id);
         }
         if (currentRound < 0 && isPlaying) {
             setNow(null);
@@ -70,11 +72,13 @@ const GameRating = () => {
         }
     };
 
-    const submitVotesAtSameTimeAndPushToLeaderboard = () => {
-        console.log("submitting votings at same time")
-        //history.push("/game-rating/" + id);
-
-        //await api.get(`${gameEndpoint}/${id}/rating`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+    const submitVotesAtSameTime = async () => {
+        //TODO: freeze voting.
+        const cgd = currentGameData.filter(meme => meme?.vote);
+        await cgd.forEach(memeWithVote => api.post(`${gameEndpoint}/${id}/rating/${memeWithVote.id}`, {rating: memeWithVote.vote}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}}));
+    }
+    const pushToLeaderboard = async () => {
+        //TODO: history.push("/game-rating/" + id); push result page
     }
 
     const executeForAllPlayersAtSameTime = async (time, callback) => {
@@ -93,10 +97,12 @@ const GameRating = () => {
     };
 
     const handleReaction = (userReaction) => {
-        const cgd = [...currentGameData];
-        const voted = {...currentGameData[index], vote: userReaction};
-        cgd[index] = voted;
-        setCurrentGameData(cgd);
+        if(!isSynchronizing){
+            const cgd = [...currentGameData];
+            const voted = {...currentGameData[index], vote: userReaction};
+            cgd[index] = voted;
+            setCurrentGameData(cgd);
+        }
     }
 
     const reactions = useMemo(
@@ -144,7 +150,7 @@ const GameRating = () => {
                             {currentGameData?.map(currentMeme => {
                                 return (
 
-                                    <Carousel.Item>
+                                    <Carousel.Item key={currentMeme?.id}>
                                         <div className="meme-content">
                                         <img src={currentMeme?.imageUrl} alt={"Meme"}/>
                                         {currentMeme?.textBoxes?.map((item, i) => (
@@ -173,19 +179,20 @@ const GameRating = () => {
                         </Carousel>
                         ) : (<Spinner />)
                         }
-                        <div className="reactions-container">
-                            {reactions.map(({name, icon}, i) => (
-                                <span
-                                    key={i}
-                                    onClick={() => handleReaction(name)}
-                                    className={`icon-container ${
-                                        currentGameData[index]?.vote === name && "selected"
-                                    }`}
-                                >{icon}
-
-                                    <p className="text-start text-black">{i}</p></span>
-                            ))}
-                        </div>
+                        {(currentGameData !== null && currentGameData?.length > 0 && currentGameData !== undefined) ? (
+                            <div className="reactions-container">
+                                {reactions.map(({name, icon}, i) => (
+                                    <span
+                                        key={i}
+                                        onClick={() => handleReaction(i)}
+                                        className={`icon-container ${
+                                            currentGameData[index]?.vote === i && "selected"
+                                        }`}
+                                    >{icon}
+                                    </span>
+                                ))}
+                            </div>
+                        ) : (<></>)}
                     </Stack>
                     <Chat currentLobby={loadedGameData}/>
                 </BaseContainer>
