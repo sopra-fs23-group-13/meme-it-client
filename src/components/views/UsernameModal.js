@@ -39,8 +39,11 @@ const UsernameModal = props => {
                 sessionStorage.setItem("alert", "Lobby Not Found")
             }
             //409 can also be caused by Full Lobby, so need to add possibility to differentiate in backend
-            else if (error.response !== undefined && error.response.status === 409 ){
+            else if (error.response !== undefined && error.response.status === 423 ){
                 sessionStorage.setItem("alert", "Game has already started")
+            }
+            else if (error.response !== undefined && error.response.status === 409 ){
+                sessionStorage.setItem("alert", "Lobby is full")
             }
             else {
                 sessionStorage.setItem("alert", "Something went wrong")
