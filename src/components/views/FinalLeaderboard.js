@@ -11,11 +11,20 @@ const FinalLeaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
   const delay = 1000;
   const timer_duration = 15000;
+  const gameId = 1;
 
   const getLeaderboardData = async () => {
     try {
-      const response = await api.get('/ratings');
-      const ratings = response.data;
+      const memesResponse = await api.get('/games/{gameId}/meme'); // Schritt 1: get Memes
+      const memes = memesResponse.data;
+      const ratings = [];
+      for (let meme of memes) {
+        const ratingsResponse = await api.get(`/games/{gameId}/meme/${meme.id}/rating`); // Schritt 2: get rating for each meme
+        ratings.push(...ratingsResponse.data);
+      }
+      for (let rating of ratings) { // Schritt 3: set the ratings as console output
+        console.log(`${rating.user.username} gave ${rating.rating} points for meme ${rating.meme.id}`);
+      }
       const users = {};
       for (let rating of ratings) {
         const userId = rating.user.id;
@@ -30,13 +39,14 @@ const FinalLeaderboard = () => {
         .slice(0, 3);
       setLeaderboardData(leaderboardData);
     } catch {
-      alert("Couldn't fetch ratings");
+      alert("Couldn't fetch leaderboard data");
     }
   };
 
   useEffect(() => {
     fetchLeaderboardData();
   }, []);
+
 
   const firstPlace = leaderboardData[0];
   const secondPlace = leaderboardData[1];
