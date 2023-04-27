@@ -12,6 +12,7 @@ body {
   font-family: $fontDefault;
   background-image: url("images/homepage_animated.svg");
   background-size: cover;
+  overflow-x: hidden;
 }
 
 
