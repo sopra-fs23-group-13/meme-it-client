@@ -4,6 +4,8 @@ import { ListGroup, Badge } from "react-bootstrap";
 import "styles/views/FinalLeaderboard.scss";
 import { FaMedal } from 'react-icons/fa';
 import { api, handleError } from "../../helpers/api";
+import TimerProgressBar from "components/ui/TimerProgressBar";
+
 
 const FinalLeaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
@@ -45,6 +47,16 @@ const FinalLeaderboard = () => {
 
   return (
     <div className="final-leaderboard-container">
+
+      <TimerProgressBar
+          delay={delay}
+          now={now}
+          max={loadedGameData?.roundDuration * 1000}
+          callbackFunc={() => handleNextRound()}
+          isPlaying={isPlaying}
+          />
+
+
       <div className="podium">
         <div className="second-place">
           <span className="rank">2nd</span>

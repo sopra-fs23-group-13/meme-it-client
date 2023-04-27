@@ -3,6 +3,8 @@ import { ListGroup, Badge } from "react-bootstrap";
 import "styles/views/Leaderboard.scss";
 import { FaMedal } from 'react-icons/fa';
 import MockData from '../../mockData/leaderboardScreenDataMock.json'
+import TimerProgressBar from "components/ui/TimerProgressBar";
+
 
 const Leaderboard = ({ leaderboardData }) => {
   const [leaderboard, setLeaderboard] = useState(null);
@@ -21,6 +23,14 @@ const Leaderboard = ({ leaderboardData }) => {
           <div className="leaderboard-score">Points</div>
           <div className="leaderboard-meme">Meme</div>
         </ListGroup.Item>
+
+        <TimerProgressBar
+          delay={delay}
+          now={now}
+          max={loadedGameData?.roundDuration * 1000}
+          callbackFunc={() => handleNextRound()}
+          isPlaying={isPlaying}
+          />
 
         {/* Spielerliste */}
         {leaderboardData.map((player, index) => (
