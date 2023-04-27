@@ -77,7 +77,7 @@ const LobbyList = props => {
                 <div>
                     <div className="lobbyList playerCount">Players</div>
                 </div>
-                <Button className="home lobbyList refresh-btn" onClick={()=>refreshLobbies()}>
+                <Button variant={"warning"} style={{marginRight:"1em"}} onClick={()=>refreshLobbies()}>
                     <TfiReload/>
                 </Button>
             </ListGroup.Item>

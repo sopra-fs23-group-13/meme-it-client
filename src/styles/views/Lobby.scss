@@ -19,6 +19,7 @@
     &.code {
       margin-top:13px;
     }
+
   }
   &.alert{
     position: absolute;
@@ -78,8 +79,13 @@
       margin-top:5px;
     }
     &.start {
+      &:active {
+        color: white !important;
+        border: solid $buttonColorHover;
+        background: $buttonColorHover;
+      }
       width: 90%;
-      margin-top: 1rem;
+      margin-top: 0.5rem;
     }
     &.kick-btn{
       &:hover {
@@ -88,27 +94,31 @@
       }
       &:active {
         color: white !important;
-        border: solid #da0000;
-        background: #da0000;
+        border: solid #af0000;
+        background: #af0000;
       }
       width:auto;
       background: #da0000;
       border: solid #af0000;
+      margin-right:0.5em;
+      margin-left:1em;
     }
-  }
-  &.leave-btn{
-    &:hover {
-      background-color: #af0000;
-      border: solid #af0000;
-    }
-    &:active {
-      color: white !important;
-      border: solid #da0000;
+    &.leave-btn{
+      &:hover {
+        background-color: #af0000;
+        border: solid #af0000;
+      }
+      &:active {
+        color: white !important;
+        border: solid #af0000;
+        background: #af0000;
+      }
       background: #da0000;
+      border: solid #af0000;
+      width: 90%;
+      margin:auto;
     }
-    background: #da0000;
-    border: solid #af0000;
-    width: 90%;
-    margin:auto;
+
   }
+
 }

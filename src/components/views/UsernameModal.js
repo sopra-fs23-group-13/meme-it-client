@@ -101,7 +101,7 @@ const UsernameModal = props => {
                     {props.title === LOBBY_CREATION &&
                         <LoadingButton onClick={createLobby} loadingText={"Creating Lobby..."} buttonText={"Create Lobby"} disabledIf={username === ""}/>}
                     {props.title === LOBBY_JOIN &&
-                        <LoadingButton onClick={submitAndJoin} loadingText={"Joining..."} buttonText={"Join Game"} disabledIf={username === ""}/>
+                        <LoadingButton onClick={submitAndJoin} loadingText={"Joining..."} buttonText={"Join Game"} c_name={"home join-btn"} disabledIf={username === ""}/>
                     }
                 </Modal.Footer>
             </Modal>

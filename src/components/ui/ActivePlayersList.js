@@ -49,7 +49,6 @@ const ActivePlayersList = ({lobby, players, isEditable}) => {
   const cookies = new Cookies();
   let playerItems;
 
-  //Temporary Kick Solution
   const kickPlayer = async (uuid) => {
     try {
       sessionStorage.setItem("alert", "You were removed from the lobby")

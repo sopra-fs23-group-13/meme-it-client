@@ -1,0 +1,12 @@
+@import 'styles/theme';
+
+.lobbySettings {
+  &.label {
+    font-size:18px;
+    font-weight:600;
+  }
+  &.special-icon{
+    font-size:40px;
+    margin-top:0.35em;
+  }
+}

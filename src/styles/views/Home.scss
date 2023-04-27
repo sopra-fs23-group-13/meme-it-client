@@ -50,36 +50,49 @@
   &.tutorial-text {
     color: #494949;
   }
-  &.buttons {
-    &:active {
-      color: white !important;
+  &.btn{
+    &.buttons {
+      &:active {
+        color: white !important;
+        border: none;
+        background: $buttonColorHover;
+      }
+
+      &:hover {
+        background-color: $buttonColorHover;
+      }
+
+      background: $buttonColor;
+      transition: all 0.3s ease;
+      margin-top: -1em;
+      margin-bottom: 1em;
       border: none;
-      background: $buttonColorHover;
+
+      &.join {
+        width: 100%;
+      }
     }
-    &:hover {
-      background-color:$buttonColorHover;
-    }
-    width: 100%;
-    background:$buttonColor;
-    transition: all 0.3s ease;
-    margin-top:-1em;
-    margin-bottom:1em;
-    border: none;
-  }
-  &.join-btn{
-    &:active {
-      color: white !important;
+    &.join-btn{
+      &:active {
+        color: white !important;
+        border: solid $buttonColorHover;;
+        background: $buttonColorHover;
+      }
+      &:disabled {
+        background-color: #7260E3FF;
+        border:solid #7260E3FF;
+      }
+      &:hover {
+        color: white !important;
+        background: $buttonColorHover;
+        border: solid $buttonColorHover;
+      }
+      background:$buttonColor;
+      font-size:16px;
+      width:auto;
+      transition: all 0.3s ease;
       border: solid $buttonColorHover;
-      background: $buttonColorHover;
     }
-    &:hover {
-      background-color:$buttonColorHover;
-    }
-    background:$buttonColor;
-    font-size:16px;
-    width:auto;
-    transition: all 0.3s ease;
-    border: solid $buttonColorHover;
   }
   &.alert{
     position: absolute;

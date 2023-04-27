@@ -139,7 +139,6 @@ const Lobby = () => {
               <p className="lobby subtitle"> The Meme Creation Game</p>
             </Row>
           }
-
           <Stack gap={3}>
             <div className={"lobby card"}>
               {currentLobby.lobbySetting ?
@@ -151,15 +150,15 @@ const Lobby = () => {
                       <hr className={"lobby line"}/>
                     </Row>
                     <Row>
-                      <Col>
+                      <Col md={"auto"}>
                         <h3 className="lobby player-title">Players</h3>
                         <ActivePlayersList lobby={currentLobby} players={currentLobby.players} isEditable={isSynchronizing}/>
                       </Col>
-                      <Col>
+                      <Col >
                         <h3 className="lobby player-title">Settings</h3>
                         <LobbySettings Lobby={currentLobby} isAdmin={isAdmin} isEditable={isSynchronizing}/>
                       </Col>
-                      <Col>
+                      <Col md={"auto"}>
                         <Row>
                           <LoadingButton
                               buttonText={"Leave Lobby"}

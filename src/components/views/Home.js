@@ -83,13 +83,13 @@ const Home = () => {
                                             </Row>
                                             <Row>
                                                 <Col>
-                                                    <UsernameModal c_names={"home buttons"} title={"Create Lobby"}
+                                                    <UsernameModal c_names={"home buttons join"} title={"Create Lobby"}
                                                                    submit={createNewGame}/>
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col>
-                                                    <Button className={"home buttons"}
+                                                    <Button className={"home buttons join"}
                                                             onClick={() => setShow(!show)}>{show ? "Close List" : "Show Games"}</Button>
                                                 </Col>
                                             </Row>
