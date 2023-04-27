@@ -153,9 +153,11 @@ const Game = () => {
 
     const leaveGame = async () => {
         //const leaveResponse = await api.delete('/' + localStorage.getItem("code") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
-        sessionStorage.clear();
-        localStorage.clear();
-        history.push("/");
+        localStorage.clear()
+        sessionStorage.clear()
+        sessionStorage.setItem("alert", "Disconnected")
+        cookies.remove("token")
+        history.push("/")
     }
     const handleFontSizeChange = (event) => {
         setFontSize(event.target.value);

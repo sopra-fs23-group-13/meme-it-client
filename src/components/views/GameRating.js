@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useMemo, useState} from "react";
 import Draggable from "react-draggable";
-import {Carousel, Stack} from "react-bootstrap";
+import {Button, Carousel, Stack} from "react-bootstrap";
 import {MdHeartBroken} from "react-icons/md";
 import {TbHeartFilled} from "react-icons/tb";
 import {AiFillDislike, AiFillLike} from "react-icons/ai";
@@ -90,6 +90,15 @@ const GameRating = () => {
         }
     };
 
+    const leaveGame = async () => {
+        //const leaveResponse = await api.delete('/' + localStorage.getItem("code") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
+        localStorage.clear()
+        sessionStorage.clear()
+        sessionStorage.setItem("alert", "Disconnected")
+        cookies.remove("token")
+        history.push("/")
+    }
+
     const [index, setIndex] = useState(0);
 
     const handleSelect = (selectedIndex, e) => {
@@ -131,6 +140,13 @@ const GameRating = () => {
         <div className={"game content"}>
             <div className={"game card"}>
                 <BaseContainer className="game">
+                    <Button
+                        width="200px"
+                        onClick={leaveGame}
+                        className="lobby leave-btn game"
+                    >
+                        Leave Game
+                    </Button>
                     <Stack gap={3} className="pt-5 container ">
                         <Stack gap={3} className={`pt-5  `}>
                             <h1 className="fw-bolder fs-3 text-start text-black">
