@@ -8,6 +8,8 @@ import TimerProgressBar from "components/ui/TimerProgressBar";
 
 const Leaderboard = ({ leaderboardData }) => {
   const [leaderboard, setLeaderboard] = useState(null);
+  const delay = 1000;
+  const timer_duration = 15000;
 
   useEffect(() => {
     setLeaderboard(leaderboardData);
@@ -27,10 +29,11 @@ const Leaderboard = ({ leaderboardData }) => {
         <TimerProgressBar
           delay={delay}
           now={now}
-          max={loadedGameData?.roundDuration * 1000}
+          max={timer_duration}
           callbackFunc={() => handleNextRound()}
           isPlaying={isPlaying}
           />
+
 
         {/* Spielerliste */}
         {leaderboardData.map((player, index) => (

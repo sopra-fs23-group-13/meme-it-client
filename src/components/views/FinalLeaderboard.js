@@ -9,6 +9,8 @@ import TimerProgressBar from "components/ui/TimerProgressBar";
 
 const FinalLeaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
+  const delay = 1000;
+  const timer_duration = 15000;
 
   const getLeaderboardData = async () => {
     try {
@@ -49,13 +51,12 @@ const FinalLeaderboard = () => {
     <div className="final-leaderboard-container">
 
       <TimerProgressBar
-          delay={delay}
-          now={now}
-          max={loadedGameData?.roundDuration * 1000}
-          callbackFunc={() => handleNextRound()}
-          isPlaying={isPlaying}
-          />
-
+      delay={delay}
+      now={now}
+      max={timer_duration}
+      callbackFunc={() => handleNextRound()}
+      isPlaying={isPlaying}
+      />  
 
       <div className="podium">
         <div className="second-place">
