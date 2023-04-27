@@ -93,18 +93,18 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
                     <MdModeEdit/> Lobby Name
                 </Col>
                 <Col>
-                    <FormField
+                    <Form.Control
                         type={"text"}
                         placeholder={"Enter lobby name..."}
                         name={"name"}
+                        className={"lobbySettings input"}
                         onChange={handleChange}
                         disabled={isEditable || !isAdmin}
-                    >
-                    </FormField>
+                    />
                 </Col>
                 {isAdmin ?
                     (
-                        <Col style={{marginLeft:'-1em'}} md={"auto"}>
+                        <Col style={{alignContent:"right"}} md={"auto"}>
                             <Button variant={"dark"} onClick={updateSettings} disabled={lobbyValues.name === '' || lobbyValues.name === Lobby.name}>
                                 Set
                             </Button>
@@ -137,7 +137,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
                 </Col>
             </Row>
             <Row>
-                <Col xs={6} className={"lobbySettings label"}>
+                <Col style={{marginBottom:"0.5em"}} xs={6} className={"lobbySettings label"}>
                     <FaExchangeAlt/> Meme Changes
                 </Col>
                 <Col>
@@ -157,7 +157,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
                     <RangeSlider value={lobbyValues.roundDuration} min={15} max={180} name="roundDuration" onChange={handleChange} onAfterChange={handleChange} tooltipPlacement={"top"} tooltip={"auto"} variant={"dark"} disabled={isEditable || !isAdmin}/>
                 </Col>
             </Row>
-            <Row>
+            <Row style={{marginBottom:"1em"}}>
                 <Col xs={6} className={"lobbySettings label"}>
                     <AiOutlineClockCircle/> Voting Time
                 </Col>
@@ -174,7 +174,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
                 </Col>
                 <Col>
                     <Row>
-                        <Col xs={4} className={"lobbySettings label"}>
+                        <Col xs={5} className={"lobbySettings label"}>
                             Super Likes
                         </Col>
                         <Col>
@@ -187,7 +187,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={4} className={"lobbySettings label"}>
+                        <Col xs={5} className={"lobbySettings label"}>
                             Super Dislikes
                         </Col>
                         <Col>
