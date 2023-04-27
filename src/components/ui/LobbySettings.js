@@ -2,12 +2,20 @@ import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import {FormField} from "../../helpers/formField";
 import "styles/views/Home.scss";
-import {Button, Container} from "react-bootstrap";
+import "styles/views/LobbySettings.scss";
+import {Button, Col, Container, Dropdown, DropdownButton, Row} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
 import {lobby} from "../../helpers/endpoints";
 import {LoadingButton} from "./LoadingButton";
+import {BsFillPersonFill, BsArrowRepeat} from "react-icons/bs";
+import {FaExchangeAlt} from "react-icons/fa";
+import {AiOutlineClockCircle, AiFillLock} from "react-icons/ai";
+import {MdModeEdit} from "react-icons/md";
+import {GiCardJoker} from "react-icons/gi";
+import RangeSlider from 'react-bootstrap-range-slider';
+
 
 /**
  * TODO: start game -> remove it from public lobby list (as it is in progress)
@@ -48,8 +56,9 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
         if(name === "isPublic"){
             setLobbyValues({
                 ...lobbyValues,
-                [name]: !lobbyValues.isPublic,
+                [name]: value,
             });
+            updateSettings();
         }
         else if(name === "name"){
             setLobbyValues({
@@ -62,86 +71,138 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
                 ...lobbyValues,
                 [name]: Number(value),
             });
+            updateSettings();
         }
-
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault(); //noch anpassen
-        console.log("Form submitted with values:", lobbyValues);
-    };
-
-    if(isAdmin){
-        return (
-            <Container className={"lobby card"}>
-                <Form.Check
-                    type="switch"
-                    id="custom-switch"
-                    label="Private"
-                    reverse={true}
-                    name="isPublic"
-                    defaultChecked={!lobbyValues.isPublic}
-                    onChange={handleChange}
-                    disabled={isEditable}
-                />
-
-
-                <Form onSubmit={handleSubmit}>
-                    <Form.Label><b>Lobby Name</b></Form.Label>
-                    <FormField
-                        label="Lobby Name"
-                        type="text"
-                        placeholder={Lobby.name}
-                        name="name"
-                        value={lobbyValues.name}
-                        onChange={handleChange}
-                        disabled={isEditable}
-                    />
-
-                    <Form.Label><b>Player Limit:</b> {lobbyValues.maxPlayers === "" ? Lobby.lobbySetting.maxPlayers : lobbyValues.maxPlayers} </Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.maxPlayers} min={2} max={8} name="maxPlayers" onChange={handleChange} disabled={isEditable}/>
-
-                    <Form.Label><b>Number of Rounds:</b> {lobbyValues.maxRounds === "" ? Lobby.lobbySetting.maxRounds : lobbyValues.maxRounds} </Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.maxRounds} min={1} max={6} name="maxRounds" onChange={handleChange} disabled={isEditable}/>
-
-                    <Form.Label><b>Meme Change Limit</b></Form.Label>
-                    <Form.Select style={{marginBottom:'1em'}} value={lobbyValues.memeChangeLimit} name="memeChangeLimit" onChange={handleChange} disabled={isEditable}>
-                        <option>0</option>
-                        <option>3</option>
-                        <option>5</option>
-                        <option>10</option>
+    return (
+        <Container className={"lobby card settings"}>
+            <Row>
+                <Col xs={6} className={"lobbySettings label"}>
+                    <AiFillLock/> Visibility
+                </Col>
+                <Col>
+                    <Form.Select style={{marginBottom:'1em'}} value={lobbyValues.isPublic} onClick={handleChange} name="isPublic" onChange={handleChange} disabled={isEditable || !isAdmin}>
+                        <option value={true}>Public</option>
+                        <option value={false}>Private</option>
                     </Form.Select>
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={6} className={"lobbySettings label"}>
+                    <MdModeEdit/> Lobby Name
+                </Col>
+                <Col>
+                    <Form.Control
+                        type={"text"}
+                        placeholder={"Enter lobby name..."}
+                        name={"name"}
+                        className={"lobbySettings input"}
+                        onChange={handleChange}
+                        disabled={isEditable || !isAdmin}
+                    />
+                </Col>
+                {isAdmin ?
+                    (
+                        <Col style={{alignContent:"right"}} md={"auto"}>
+                            <Button variant={"dark"} onClick={updateSettings} disabled={lobbyValues.name === '' || lobbyValues.name === Lobby.name}>
+                                Set
+                            </Button>
+                        </Col>
+                    )
+                    : (<></>)
+                }
 
-                    <Form.Label><b>Meme Creation Time Limit:</b> {lobbyValues.roundDuration === '' ? Lobby.lobbySetting.roundDuration : lobbyValues.roundDuration} seconds</Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.roundDuration} min={15} max={180} name="roundDuration" onChange={handleChange} disabled={isEditable}/>
+            </Row>
+            <Row>
+                <Col xs={6} className={"lobbySettings label"}>
+                    <BsFillPersonFill/> Players
+                </Col>
+                <Col>
 
-                    <Form.Label><b>Voting Phase Time Limit:</b> {lobbyValues.ratingDuration === '' ? Lobby.lobbySetting.ratingDuration : lobbyValues.ratingDuration} seconds</Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.ratingDuration} min={15} max={180} name="ratingDuration" onChange={handleChange} disabled={isEditable}/>
-
-                    <Form.Label><b>Super Likes:</b> {lobbyValues.superLikeLimit === '' ? Lobby.lobbySetting.superLikeLimit : lobbyValues.superLikeLimit}</Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.superLikeLimit} min={0} max={10} name="superLikeLimit" onChange={handleChange} disabled={isEditable}/>
-                    <Form.Label><b>Super Dislikes:</b> {lobbyValues.superDislikeLimit === '' ? Lobby.lobbySetting.superDislikeLimit : lobbyValues.superDislikeLimit}</Form.Label>
-                    <Form.Range defaultValue={Lobby.lobbySetting.superDislikeLimit} min={0} max={10} name="superDislikeLimit" onChange={handleChange} disabled={isEditable}/>
-
-                </Form>
-                <LoadingButton onClick={updateSettings} buttonText={"Update Settings"} loadingText={"Updating..."} c_name={"primary"} disabledIf={isEditable}/>
-            </Container>
-        );
-    }
-    else {
-        return (
-            <Container className={"lobby card"}>
-                <p className={"lobby settings-text"}><b>Lobby Name:</b> {Lobby.name}</p>
-                <p className={"lobby settings-text"}><b>Player Limit:</b> {Lobby.lobbySetting.maxPlayers}</p>
-                <p className={"lobby settings-text"}><b>Number of Rounds:</b> {Lobby.lobbySetting.maxRounds}</p>
-                <p className={"lobby settings-text"}><b>Meme Creation Time Limit:</b> {Lobby.lobbySetting.roundDuration}s</p>
-                <p className={"lobby settings-text"}><b>Voting Phase Time Limit:</b> {Lobby.lobbySetting.ratingDuration}s</p>
-                <p className={"lobby settings-text"}><b>Meme Change Limit:</b> {Lobby.lobbySetting.memeChangeLimit}</p>
-                <p className={"lobby settings-text"}><b>Super Likes:</b> {Lobby.lobbySetting.superLikeLimit}</p>
-                <p className={"lobby settings-text"}><b>Super Dislikes:</b> {Lobby.lobbySetting.superDislikeLimit}</p>
-            </Container>
-        )
-    }
+                    <RangeSlider value={lobbyValues.maxPlayers} min={2} max={8} name="maxPlayers" onChange={handleChange} onAfterChange={handleChange} tooltipPlacement={"top"} tooltip={"auto"} variant={"dark"} disabled={isEditable || !isAdmin}/>
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={6} className={"lobbySettings label"}>
+                    <BsArrowRepeat/> Rounds
+                </Col>
+                <Col>
+                    <Form.Select style={{marginBottom:'1em'}} value={lobbyValues.maxRounds} onClick={handleChange} name="maxRounds" onChange={handleChange} disabled={isEditable || !isAdmin}>
+                        <option value={1}>1</option>
+                        <option value={2}>2</option>
+                        <option value={3}>3</option>
+                        <option value={5}>5</option>
+                    </Form.Select>
+                </Col>
+            </Row>
+            <Row>
+                <Col style={{marginBottom:"0.5em"}} xs={6} className={"lobbySettings label"}>
+                    <FaExchangeAlt/> Meme Changes
+                </Col>
+                <Col>
+                    <Form.Select style={{marginBottom:'0.25em'}} value={lobbyValues.memeChangeLimit} onClick={handleChange} name="memeChangeLimit" onChange={handleChange} disabled={isEditable || !isAdmin}>
+                        <option value={0}>0</option>
+                        <option value={3}>3</option>
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                    </Form.Select>
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={6} className={"lobbySettings label"}>
+                    <AiOutlineClockCircle/> Creation Time
+                </Col>
+                <Col>
+                    <RangeSlider value={lobbyValues.roundDuration} min={15} max={180} name="roundDuration" onChange={handleChange} onAfterChange={handleChange} tooltipPlacement={"top"} tooltipLabel={currentValue => `${currentValue} seconds`} tooltip={"auto"} variant={"dark"} disabled={isEditable || !isAdmin}/>
+                </Col>
+            </Row>
+            <Row style={{marginBottom:"1em"}}>
+                <Col xs={6} className={"lobbySettings label"}>
+                    <AiOutlineClockCircle/> Voting Time
+                </Col>
+                <Col>
+                    <RangeSlider value={lobbyValues.ratingDuration} min={15} max={180} name="ratingDuration" onChange={handleChange} onAfterChange={handleChange} tooltip={"auto"} tooltipLabel={currentValue => `${currentValue} seconds`} variant={"dark"} disabled={isEditable || !isAdmin}/>
+                </Col>
+            </Row>
+            <Row>
+                <hr className={"lobby line"}/>
+            </Row>
+            <Row>
+                <Col md={"auto"}>
+                    <GiCardJoker className={"lobbySettings special-icon"}/>
+                </Col>
+                <Col>
+                    <Row>
+                        <Col xs={5} className={"lobbySettings label"}>
+                            Super Likes
+                        </Col>
+                        <Col>
+                            <Form.Select style={{marginBottom:'0.25em'}} value={lobbyValues.superLikeLimit} onClick={handleChange} name="superLikeLimit" onChange={handleChange} disabled={isEditable || !isAdmin}>
+                                <option value={0}>Disabled</option>
+                                <option value={1}>1</option>
+                                <option value={2}>2</option>
+                                <option value={3}>3</option>
+                            </Form.Select>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={5} className={"lobbySettings label"}>
+                            Super Dislikes
+                        </Col>
+                        <Col>
+                            <Form.Select style={{marginTop:'0.25em'}} value={lobbyValues.superDislikeLimit} onClick={handleChange} name="superDislikeLimit" onChange={handleChange} disabled={isEditable || !isAdmin}>
+                                <option value={0}>Disabled</option>
+                                <option value={1}>1</option>
+                                <option value={2}>2</option>
+                                <option value={3}>3</option>
+                            </Form.Select>
+                        </Col>
+                    </Row>
+                </Col>
+            </Row>
+        </Container>
+    )
 
 }
 

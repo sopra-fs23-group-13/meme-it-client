@@ -1,6 +1,11 @@
 @import 'styles/theme';
 
 .primary-button {
+  &:active {
+    color: white !important;
+    border: none;
+    background: $buttonColorHover;
+  }
   &:hover {
     background-color:$buttonColorHover;
   }
