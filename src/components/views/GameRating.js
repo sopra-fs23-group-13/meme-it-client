@@ -78,7 +78,7 @@ const GameRating = () => {
         await cgd.forEach(memeWithVote => api.post(`${gameEndpoint}/${id}/rating/${memeWithVote.id}`, {rating: memeWithVote.vote}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}}));
     }
     const pushToLeaderboard = async () => {
-        //TODO: history.push("/game-rating/" + id); push result page
+        history.push("/leaderboard");
     }
 
     const executeForAllPlayersAtSameTime = async (time, callback) => {
