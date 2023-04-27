@@ -202,9 +202,9 @@ const Game = () => {
     const preloadVotingRound = async (response) => {
         // get all memes from this round
         const preLoadedMemesForVoting = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-        setPreLoadedMemesForVoting(preLoadedMemesForVoting.data);
+        //setPreLoadedMemesForVoting(preLoadedMemesForVoting.data);
         console.log(preLoadedMemesForVoting.data)
-        //setPreLoadedMemesForVoting(getMeme);
+        setPreLoadedMemesForVoting(getMeme);
     }
 
     const startVotingAtSameTime= () =>{
