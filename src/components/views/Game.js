@@ -153,6 +153,7 @@ const Game = () => {
 
     const leaveGame = async () => {
         //const leaveResponse = await api.delete('/' + localStorage.getItem("code") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
+        sessionStorage.clear();
         localStorage.clear();
         history.push("/");
     }
@@ -227,7 +228,7 @@ const Game = () => {
                 <Button
                     width="200px"
                     onClick={leaveGame}
-                    className="back-to-login-button"
+                    className="lobby leave-btn game"
                 >
                     Leave Game
                 </Button>
