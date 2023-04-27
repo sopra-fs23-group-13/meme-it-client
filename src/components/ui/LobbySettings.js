@@ -154,7 +154,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
                     <AiOutlineClockCircle/> Creation Time
                 </Col>
                 <Col>
-                    <RangeSlider value={lobbyValues.roundDuration} min={15} max={180} name="roundDuration" onChange={handleChange} onAfterChange={handleChange} tooltipPlacement={"top"} tooltip={"auto"} variant={"dark"} disabled={isEditable || !isAdmin}/>
+                    <RangeSlider value={lobbyValues.roundDuration} min={15} max={180} name="roundDuration" onChange={handleChange} onAfterChange={handleChange} tooltipPlacement={"top"} tooltipLabel={currentValue => `${currentValue} seconds`} tooltip={"auto"} variant={"dark"} disabled={isEditable || !isAdmin}/>
                 </Col>
             </Row>
             <Row style={{marginBottom:"1em"}}>
@@ -162,7 +162,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
                     <AiOutlineClockCircle/> Voting Time
                 </Col>
                 <Col>
-                    <RangeSlider value={lobbyValues.ratingDuration} min={15} max={180} name="ratingDuration" onChange={handleChange} onAfterChange={handleChange} tooltip={"auto"} variant={"dark"} disabled={isEditable || !isAdmin}/>
+                    <RangeSlider value={lobbyValues.ratingDuration} min={15} max={180} name="ratingDuration" onChange={handleChange} onAfterChange={handleChange} tooltip={"auto"} tooltipLabel={currentValue => `${currentValue} seconds`} variant={"dark"} disabled={isEditable || !isAdmin}/>
                 </Col>
             </Row>
             <Row>

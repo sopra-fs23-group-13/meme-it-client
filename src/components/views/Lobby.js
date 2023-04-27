@@ -134,12 +134,6 @@ const Lobby = () => {
               toggleShowAlert={toggleShowAlert}
           />
         </div>
-          {
-            <Row>
-              <h1 className="lobby title">Meme-It</h1>
-              <p className="lobby subtitle"> The Meme Creation Game</p>
-            </Row>
-          }
           <Stack gap={3}>
             <div className={"lobby card"}>
               {currentLobby.lobbySetting ?
@@ -160,7 +154,6 @@ const Lobby = () => {
                         <LobbySettings Lobby={currentLobby} isAdmin={isAdmin} isEditable={isSynchronizing}/>
                       </Col>
                       <Col md={"auto"}>
-                        <Row>
                           <LoadingButton
                               buttonText={"Leave Lobby"}
                               loadingText={"Leaving..."}
@@ -169,10 +162,7 @@ const Lobby = () => {
                               loadingTime={500}
                               disabledIf={isSynchronizing}
                           />
-                        </Row>
-                        <Row>
                           <LobbyCodeContainer code={currentLobby.code}/>
-                        </Row>
                       </Col>
                     </Row>
                     {isAdmin ? (

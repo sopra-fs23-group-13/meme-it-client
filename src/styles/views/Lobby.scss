@@ -25,6 +25,7 @@
     position: absolute;
     top: 0px;
     right: 0px;
+    z-index: 1;
   }
   &.title {
     &:hover {
@@ -79,6 +80,13 @@
       margin-top:5px;
     }
     &.start {
+      &:disabled {
+        border: solid $buttonColorHover;
+        background-color: $buttonColor;
+      }
+      &:hover {
+        border: solid $buttonColorHover;
+      }
       &:active {
         color: white !important;
         border: solid $buttonColorHover;
@@ -116,7 +124,13 @@
       background: #da0000;
       border: solid #af0000;
       width: 90%;
-      margin:auto;
+      margin: auto auto auto 0.5em;
+    }
+    &.game {
+      width:auto;
+      position: absolute;
+      top: 20px;
+      right: 20px;
     }
 
   }
