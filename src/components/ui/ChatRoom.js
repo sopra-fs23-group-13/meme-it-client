@@ -30,13 +30,17 @@ const ChatRoom = (props) => {
             author: cookies.get("token"),
             message: messageText,
         };
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
+        //Display dummy message (just author name) until chat gets updated to avoid token as name
+        const newTempMessage = {
+            author: localStorage.getItem("username"),
+            message: messageText,
+        }
+        setMessages((prevMessages) => [...prevMessages, newTempMessage]);
         await api.post(`${chat}/${props.code}`, newMessage, {
             headers: {Authorization: "Bearer " + cookies.get("token")},
         });
         setMessageText("");
     };
-
     return (
         <div className={"chat"}>
             <ul className="message-list">
@@ -44,9 +48,14 @@ const ChatRoom = (props) => {
 
                     <div className={"message-content-block"}>
                     <li key={index} className={`message-item ${(message.id === props?.author?.id || message.id === props?.author?.user?.id) ? "author-message" : ""}`}>
-                        <span className="message-item-time">
-                          {message.time?.split("T")[1]?.split(":")[0] + ":" + message.time?.split("T")[1]?.split(":")[1]} -{" "}
-                        </span>
+                        {
+                            message.time === undefined ? <span className="message-item-time">Now - </span> :
+                                (
+                                <span className="message-item-time">
+                                    {message.time?.split("T")[1]?.split(":")[0] + ":" + message.time?.split("T")[1]?.split(":")[1]} -{" "}
+                                </span>
+                                )
+                        }
                         <span className="message-item-author">
                           {message.author}:
                         </span>{" "}

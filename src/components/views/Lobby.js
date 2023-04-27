@@ -82,6 +82,7 @@ const Lobby = () => {
     }
     finally {
       localStorage.clear()
+      sessionStorage.clear()
       sessionStorage.setItem("alert", reason)
       cookies.remove("token")
       history.push("/")
