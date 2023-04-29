@@ -1,0 +1,61 @@
+[
+    {
+       "user":{
+          "id":"123",
+          "name":"Henrik"
+       },
+       "meme":{
+          "id":"sdfgsr",
+          "imageUrl":"some_url.com",
+          "textBoxes":[
+             {
+                "text":"Funny title",
+                "xRate":2,
+                "yRate":1
+             }
+          ],
+          "rating":1
+       }
+    },
+
+
+    {
+        "user":{
+           "id":"456",
+           "name":"Marc"
+        },
+        "meme":{
+           "id":"sssssfdfs",
+           "imageUrl":"some_url2.com",
+           "textBoxes":[
+              {
+                 "text":"This should be funny",
+                 "xRate":2,
+                 "yRate":1
+              }
+           ],
+           "rating":6
+        }
+     },
+
+
+     {
+        "user":{
+           "id":"789",
+           "name":"Pablo"
+        },
+        "meme":{
+           "id":"asdad",
+           "imageUrl":"some_url3.com",
+           "textBoxes":[
+              {
+                 "text":"No its not",
+                 "xRate":22,
+                 "yRate":11
+              }
+           ],
+           "rating":4
+        }
+     }
+
+ ]
