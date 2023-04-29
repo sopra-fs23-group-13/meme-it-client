@@ -44,10 +44,11 @@ const FinalLeaderboard = () => {
   };
 
   useEffect(() => {
-    fetchLeaderboardData();
+    getLeaderboardData();
   }, []);
 
-
+  
+  console.log(memesResponse.data)
   const firstPlace = leaderboardData[0];
   const secondPlace = leaderboardData[1];
   const thirdPlace = leaderboardData[2];
