@@ -9,11 +9,38 @@ import {Notification} from "../ui/Notification";
 import {AnimatedBackground} from "styles/images/AnimatedBackground"
 
 
+const TutorialButton = ({startTutorialMode}) => {
+    return (
+      <>
+        <Button variant="primary" className="tutorial-btn" onClick={startTutorialMode}>
+          Tutorial
+        </Button>
+  
+        <div className="tutorial-container">
+          <div className="tutorial-modal">
+            <h1 className="tutorial-title">Welcome to the Meme-It tutorial!</h1>
+            <p className="tutorial-text">In this tutorial, you will learn how to play Meme-It and create hilarious memes with your friends.</p>
+            <div className="tutorial-buttons">
+            <Button className="tutorial-next" variant="primary" onClick={showNextElement}>Next</Button>
+            <Button className="tutorial-end" variant="secondary" onClick={endTutorialMode}>End Tutorial</Button>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
+
+
 const Home = () => {
     const history = useHistory();
     const [gameCode, setGameCode] = useState("");
     const [showAlert, setShowAlert] = useState(sessionStorage.getItem("alert") === null ? false : true);
     const [show, setShow] = useState(false);
+
+    // state to keep track of tutorial mode
+    const [tutorialMode, setTutorialMode] = useState(false);
+    const [highlightIndex, setHighlightIndex] = useState(0);
+    const [showTutorial, setShowTutorial] = useState(false);
 
     const toggleShowAlert = () => setShowAlert(!showAlert);
 
@@ -44,6 +71,83 @@ const Home = () => {
         }
         history.push("/lobby");
     }
+
+    // data for tutorial mode
+    const tutorialData = [
+        {
+          element: ".home.join-btn input",
+          message: "With this field you are able to join an existing lobby."
+        },
+        {
+          element: ".home.buttons.join.username-modal-btn",
+          message: "Click here to create a new lobby."
+        }
+        // add more tutorial data as needed (coming soon)
+      ];
+
+    // function to start the tutorial mode
+    const startTutorialMode = () => {
+        setTutorialMode(true);
+        setShowTutorial(true);
+        setHighlightIndex(0);
+    };
+
+    // function to show the next highlighted element in the tutorial mode
+    const showNextElement = () => {
+        if (highlightIndex < tutorialData.length - 1) {
+            setHighlightIndex(highlightIndex + 1);
+            showTutorialElement();
+        } else {
+            endTutorialMode();
+        }
+    };
+
+
+    // function to show tutorial message and highlight element
+    const showTutorialElement = () => {
+        // get current tutorial data
+        const currentTutorialData = tutorialData[highlightIndex];
+        // get highlighted element
+        const elementToHighlight = document.querySelector(currentTutorialData.element);
+        // create highlight box
+        const highlightBox = document.createElement("div");
+        highlightBox.classList.add("tutorial-element-highlight-box");
+        // set highlight box size and position
+        const elementRect = elementToHighlight.getBoundingClientRect();
+        highlightBox.style.width = elementRect.width + "px";
+        highlightBox.style.height = elementRect.height + "px";
+        highlightBox.style.top = elementRect.top + "px";
+        highlightBox.style.left = elementRect.left + "px";
+        // create message box
+        const messageBox = document.createElement("div");
+        messageBox.classList.add("tutorial-message-box");
+        // set message box text
+        const messageText = document.createTextNode(currentTutorialData.message);
+        messageBox.appendChild(messageText);
+        // add highlight box and message box to tutorial container
+        const tutorialContainer = document.querySelector(".tutorial-container");
+        tutorialContainer.appendChild(highlightBox);
+        tutorialContainer.appendChild(messageBox);
+        // add click event listener to next button
+        const nextButton = document.querySelector(".tutorial-next");
+        nextButton.addEventListener("click", () => {
+            // remove highlight box and message box
+            highlightBox.remove();
+            messageBox.remove();
+            // show next tutorial element
+            showNextElement();
+        });
+    };
+
+
+    // function to end the tutorial mode
+    const endTutorialMode = () => {
+        setTutorialMode(false);
+        setShowTutorial(false);
+        setHighlightIndex(0);
+    };
+
+
     return (
         <div className={"animationContentProperties"}>
             <AnimatedBackground/>
@@ -93,36 +197,40 @@ const Home = () => {
                                                             onClick={() => setShow(!show)}>{show ? "Close List" : "Show Games"}</Button>
                                                 </Col>
                                             </Row>
+                                            {/* add tutorial button */}
+                                            <Row>
+                                                <Col>
+                                                <TutorialButton startTutorialMode={startTutorialMode} />
+                                                </Col>
+                                            </Row>
                                         </Stack>
                                     </Col>
-                                    <Col sm>{/*placeholder*/}</Col>
                                 </Row>
                             </Container>
                         </Row>
-                        <Row>
-                            <Col>
-                                {show && lobbyList()}
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <p className="home tutorial-title">How To Play</p>
-                                <div className="home tutorial-text">
-                                In Meme-it, players are given a random meme image and must come up with a 
-                                funny caption or text for it within a set time. After everyone shares 
-                                their memes, players vote for their favorite and the player with the 
-                                most votes wins. The game rules require that captions must be appropriate 
-                                and original, and voting should be fair. To be successful, players should keep
-                                 it funny and use current events or pop culture references to make their memes 
-                                 more relatable. Have fun and may the funniest player win!
-                                </div>
-                            </Col>
-                        </Row>
                     </Stack>
+                    {/* add lobby list */}
+                    {show ? lobbyList() : null}
                 </div>
             </Container>
+            {/* add tutorial mode */}
+            {showTutorial && (
+    <div className="tutorial-mode">
+        <div className="tutorial-overlay" onClick={() => endTutorialMode()}></div>
+        <div className="tutorial-container">
+            <div className="tutorial-message">{tutorialData[highlightIndex].message}</div>
+            <div className="tutorial-element-highlight" data-tutorial-index={highlightIndex}
+                data-tutorial-element={tutorialData[highlightIndex].element}></div>
+            <div className="tutorial-next" onClick={() => showNextElement()}>
+                {highlightIndex < tutorialData.length - 1 ? "Next..." : "End tutorial"}
+            </div>
         </div>
-    )
-}
-
-export default Home;
+    </div>
+    )}
+            
+    </div>
+    );
+    
+    };
+    
+    export default Home;
