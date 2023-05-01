@@ -108,14 +108,13 @@ const Home = () => {
                             <Col>
                                 <p className="home tutorial-title">How To Play</p>
                                 <div className="home tutorial-text">
-                                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
-                                    tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero
-                                    eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-                                    takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
-                                    consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-                                    dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
-                                    dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-                                    ipsum dolor sit amet.
+                                In Meme-it, players are given a random meme image and must come up with a 
+                                funny caption or text for it within a set time. After everyone shares 
+                                their memes, players vote for their favorite and the player with the 
+                                most votes wins. The game rules require that captions must be appropriate 
+                                and original, and voting should be fair. To be successful, players should keep
+                                 it funny and use current events or pop culture references to make their memes 
+                                 more relatable. Have fun and may the funniest player win!
                                 </div>
                             </Col>
                         </Row>
