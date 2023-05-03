@@ -21,48 +21,47 @@ const TutorialButton = ({startTutorialMode}) => {
             <h1 className="tutorial-title">Welcome to the Meme-It tutorial!</h1>
             <p className="tutorial-text">In this tutorial, you will learn how to play Meme-It and create hilarious memes with your friends.</p>
             <div className="tutorial-buttons">
-            <Button className="tutorial-next" variant="primary" onClick={showNextElement}>Next</Button>
-            <Button className="tutorial-end" variant="secondary" onClick={endTutorialMode}>End Tutorial</Button>
+              <Button className="tutorial-next" variant="primary" onClick={showNextElement}>Next</Button>
+              <Button className="tutorial-end" variant="secondary" onClick={endTutorialMode}>End Tutorial</Button>
             </div>
           </div>
         </div>
       </>
     );
   };
-
-
-const Home = () => {
+  
+  
+  const Home = () => {
     const history = useHistory();
     const [gameCode, setGameCode] = useState("");
     const [showAlert, setShowAlert] = useState(sessionStorage.getItem("alert") === null ? false : true);
     const [show, setShow] = useState(false);
-
+  
     // state to keep track of tutorial mode
-    const [tutorialMode, setTutorialMode] = useState(false);
     const [highlightIndex, setHighlightIndex] = useState(0);
     const [showTutorial, setShowTutorial] = useState(false);
-
+  
     const toggleShowAlert = () => setShowAlert(!showAlert);
-
+  
     const lobbyList = () => {
-        return (
-            <Container>
-                <Row>
-                    <Col>
-                        <LobbyList action={joinExistingGame}/>
-                    </Col>
-                </Row>
-            </Container>
-        )
-    }
-
-    const handleChange = (event) => {
-        setGameCode(event.target.value);
+      return (
+        <Container>
+          <Row>
+            <Col>
+              <LobbyList action={joinExistingGame}/>
+            </Col>
+          </Row>
+        </Container>
+      )
     };
-
+  
+    const handleChange = (event) => {
+      setGameCode(event.target.value);
+    };
+  
     const createNewGame = (lobbyValues) => {
-        console.log(lobbyValues);
-    }
+      console.log(lobbyValues);
+    };
 
     const joinExistingGame = async () => {
         if (gameCode != null) {
@@ -87,7 +86,6 @@ const Home = () => {
 
     // function to start the tutorial mode
     const startTutorialMode = () => {
-        setTutorialMode(true);
         setShowTutorial(true);
         setHighlightIndex(0);
     };
@@ -95,12 +93,12 @@ const Home = () => {
     // function to show the next highlighted element in the tutorial mode
     const showNextElement = () => {
         if (highlightIndex < tutorialData.length - 1) {
-            setHighlightIndex(highlightIndex + 1);
-            showTutorialElement();
+          setHighlightIndex(highlightIndex => highlightIndex + 1);
+          showTutorialElement();
         } else {
-            endTutorialMode();
+          endTutorialMode();
         }
-    };
+      };
 
 
     // function to show tutorial message and highlight element
@@ -116,8 +114,8 @@ const Home = () => {
         const elementRect = elementToHighlight.getBoundingClientRect();
         highlightBox.style.width = elementRect.width + "px";
         highlightBox.style.height = elementRect.height + "px";
-        highlightBox.style.top = elementRect.top + "px";
-        highlightBox.style.left = elementRect.left + "px";
+        highlightBox.style.top = elementRect.top + window.pageYOffset + "px";
+        highlightBox.style.left = elementRect.left + window.pageXOffset + "px";
         // create message box
         const messageBox = document.createElement("div");
         messageBox.classList.add("tutorial-message-box");
@@ -131,21 +129,22 @@ const Home = () => {
         // add click event listener to next button
         const nextButton = document.querySelector(".tutorial-next");
         nextButton.addEventListener("click", () => {
-            // remove highlight box and message box
-            highlightBox.remove();
-            messageBox.remove();
-            // show next tutorial element
-            showNextElement();
+          // remove highlight box and message box
+          highlightBox.remove();
+          messageBox.remove();
+          // show next tutorial element
+          showNextElement();
         });
-    };
+      };
+      
 
 
     // function to end the tutorial mode
     const endTutorialMode = () => {
-        setTutorialMode(false);
         setShowTutorial(false);
         setHighlightIndex(0);
-    };
+      };
+      
 
 
     return (
