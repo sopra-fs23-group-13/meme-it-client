@@ -1,0 +1,146 @@
+[
+  {
+    "user": {
+      "name": "Linda",
+      "id": "1"
+    },
+    "meme": {
+      "user" : {
+        "name": "Marc",
+        "id": "2"
+      },
+      "id": "MARCS_MEME_ID",
+      "imageUrl": "https://i.imgflip.com/3po4m7.jpg",
+      "textBoxes": [
+        {"xRate": 0, "yRate": 50, "text": "how's it going"},
+        {"xRate": -44, "yRate": 165, "text": "general kenobi"},
+        {"xRate": 110, "yRate": 199, "text": "peep poop"}]
+    },
+    "rating": 6
+  },
+  {
+    "user": {
+      "name": "Linda",
+      "id": "1"
+    },
+    "meme": {
+      "user" : {
+        "name": "Pablo",
+        "id": "3"
+      },
+      "id": "PABLOS_MEME_ID_PREVIOUS",
+      "imageUrl": "https://i.imgflip.com/3po4m7.jpg",
+      "textBoxes": [
+        {"xRate": 0, "yRate": 50, "text": "how's it going"}]
+    },
+    "rating": 3
+  },
+  {
+    "user": {
+      "name": "Marc",
+      "id": "2"
+    },
+    "meme": {
+      "user": {
+        "name": "Linda",
+        "id": "1"
+      },
+      "id": "LINDAS_MEME_ID",
+      "imageUrl": "https://i.imgflip.com/1bij.jpg",
+      "textBoxes": [
+        {"xRate": -44, "yRate": 165, "text": "linda's meme"}
+      ]
+    },
+    "rating": 5
+  },
+  {
+    "user": {
+      "name": "Marc",
+      "id": "2"
+    },
+    "meme": {
+      "user" : {
+        "name": "Pablo",
+        "id": "3"
+      },
+      "id": "PABLOS_MEME_ID_PREVIOUS",
+      "imageUrl": "https://i.imgflip.com/3po4m7.jpg",
+      "textBoxes": [
+        {"xRate": 0, "yRate": 50, "text": "how's it going"}]
+    },
+    "rating": 5
+  },
+  {
+    "user": {
+      "name": "Pablo",
+      "id": "3"
+    },
+    "meme": {
+      "user": {
+        "name": "Marc",
+        "id": "2"
+      },
+      "id": "MARCS_MEME_ID",
+      "imageUrl": "https://i.imgflip.com/3po4m7.jpg",
+      "textBoxes": [
+        {"xRate": 0, "yRate": 50, "text": "how's it going"},
+        {"xRate": -44, "yRate": 165, "text": "general kenobi"},
+        {"xRate": 110, "yRate": 199, "text": "peep poop"}]
+    },
+    "rating": 5
+  },
+  {
+    "user": {
+      "name": "Pablo",
+      "id": "3"
+    },
+    "meme": {
+      "user": {
+        "name": "Linda",
+        "id": "1"
+      },
+      "id": "LINDAS_MEME_ID_PREVIOUS",
+      "imageUrl": "https://i.imgflip.com/3po4m7.jpg",
+      "textBoxes": [
+        {"xRate": 110, "yRate": 199, "text": "peep poop"}]
+    },
+    "rating": 4
+  },
+  {
+    "user": {
+      "name": "OtherUser",
+      "id": "4"
+    },
+    "meme": {
+      "user" : {
+        "name": "Pablo",
+        "id": "3"
+      },
+      "id": "PABLOS_MEME_ID",
+      "imageUrl": "https://i.imgflip.com/3po4m7.jpg",
+      "textBoxes": [
+        {"xRate": 0, "yRate": 50, "text": "how's it going"},
+        {"xRate": -44, "yRate": 165, "text": "general kenobi"},
+        {"xRate": 110, "yRate": 199, "text": "peep poop"}]
+    },
+    "rating": -3
+  },
+  {
+    "user": {
+      "name": "OtherUser",
+      "id": "4"
+    },
+    "meme": {
+      "user" : {
+        "name": "Pablo",
+        "id": "3"
+      },
+      "id": "PABLOS_MEME_ID_PREVIOUS",
+      "imageUrl": "https://i.imgflip.com/3po4m7.jpg",
+      "textBoxes": [
+        {"xRate": 0, "yRate": 50, "text": "how's it going"}]
+    },
+    "rating": 2
+  }
+]
+  

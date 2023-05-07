@@ -1,56 +1,51 @@
 @import 'styles/theme';
-
-.leaderboard-container {
-  width: 700px; /* set the width of the container element */
-  margin: 0 auto; /* center the container element */
-  margin-top: 200px;
-
-  .leaderboard-header {
-    display: flex;
-    justify-content: space-between;
-    background-color: $themeColor;
-    color: #80b9ee;
-    font-weight: bold;
-    padding: 0.5rem;
-    border-radius: 10px 10px 0 0;
-
-    .leaderboard-header-column {
-      width: 33.33%;
-      text-align: center;
-    }
-  }
-}
-
 .leaderboard {
-  &.item {
-    background-color: $buttonColorHover;
-    color: $textColor;
-    padding: 1rem;
-    margin-bottom: 0.5rem;
-    border-radius: 10px;
+  &.content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
+    min-height: 100vh;
   }
-  &-gold {
-    color: #d7b912;
-  }
-  &-silver {
-    color: #a1a1a1;
-  }
-  &-bronze {
-    color: #cd7f32;
-  }
-  &-rank-number {
-    color: $themeColor;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  &-score-badge {
-    background-color: $themeColor;
-    color: #ffffff;
+
+  &.card {
+    background-color: rgba(255, 255, 255, 0.4);
     border-radius: 10px;
-    font-size: 1.2rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 1em;
   }
+
+  &.table {
+    border: black;
+    table-layout:auto;
+    overflow: auto;
+  }
+
+  &.best-meme-container {
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2em;
+  }
+
+
+  &.best-meme-image {
+    width: 50%;
+    height: 50%;
+    margin: auto;
+  }
+
+  &.podium-content {
+    width: 80%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .podium {
+    display: flex;
+    justify-content: center;
+    align-items: self-end;
+    width: 50%;
+  }
+
 }
