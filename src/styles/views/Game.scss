@@ -56,6 +56,34 @@
       width: fit-content;
     }
 
+    .game-options {
+      width: 400px;
+
+      &.options-multirow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        align-items: baseline;
+      }
+
+      &.options-row {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .game-options-btn{
+      background: $buttonColor;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+      width: 100%;
+      border: none;
+      &:hover {
+        background-color: $buttonColorHover;
+      }
+
+    }
+
     .reactions-container {
       width: 100%;
       display: flex;

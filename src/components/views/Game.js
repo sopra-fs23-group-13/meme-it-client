@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useMemo, useState} from "react";
 import Draggable from "react-draggable";
-import {Stack, Button} from "react-bootstrap";
+import {Stack, Button, Row, Col, InputGroup} from "react-bootstrap";
 import {v4 as uuid} from "uuid";
 import {useParams, useHistory} from "react-router-dom";
 import {Spinner} from "components/ui/Spinner";
@@ -15,6 +15,7 @@ import {game as gameEndpoint} from "../../helpers/endpoints"
 import Chat from "../ui/Chat";
 import Cookies from "universal-cookie";
 import getMeme from "../../mockData/getMeme.json"
+import Form from "react-bootstrap/Form";
 
 const Game = () => {
     const delay = 1000;
@@ -124,7 +125,7 @@ const Game = () => {
             setNow(null);
             setCurrentRound(null);
             setIsPlaying(false);
-            history.push("/game-rating/" + id);
+            /*history.push("/game-rating/" + id);*/
         }
     };
     const onTextNodeDrag = (e, data, i) => {
@@ -208,7 +209,7 @@ const Game = () => {
         // reset time and push next page
         // load page from context
         setNow(null);
-        history.push("/game-rating/" + id);
+        /*history.push("/game-rating/" + id);*/
     }
 
     const executeForAllPlayersAtSameTime = async (time, callback) => {
@@ -273,41 +274,48 @@ const Game = () => {
                                     </Draggable>
                                 ))}
                             </div>
-                            <div>
-                                <label htmlFor="fontSize">Font size: </label>
-                                <input
-                                    type="number"
-                                    value={fontSize}
-                                    min="10"
-                                    max="48"
-                                    step="1"
-                                    onChange={handleFontSizeChange}
-                                    style={{marginRight: "10px"}}
-                                    disabled={isSynchronizing}
-                                />
-                                <label htmlFor="color">Color: </label>
-                                <input
-                                    type="color"
-                                    value={color}
-                                    onChange={handleColorChange}
-                                    style={{marginRight: "10px"}}
-                                    disabled={isSynchronizing}
-                                />
+                            <div className={"game game-options"}>
+                                <div className={"game game-options options-multirow"}>
+                                    <InputGroup>
+                                        <InputGroup.Text>Font size</InputGroup.Text>
+                                        <Form.Control
+                                            type={"number"}
+                                            value={fontSize}
+                                            min="10"
+                                            max="48"
+                                            step="1"
+                                            onChange={handleFontSizeChange}
+                                            disabled={isSynchronizing}
+                                        />
+                                    </InputGroup>
+                                    <Button onClick={addMemeTextNode} disabled={isSynchronizing} className="game game-options-btn">
+                                        Add new Text Node
+                                    </Button>
+                                </div>
+                                <div className={"game game-options options-multirow"}>
+                                    <InputGroup>
+                                        <InputGroup.Text>Font color</InputGroup.Text>
+                                        <Form.Control
+                                            type="color"
+                                            value={color}
+                                            onChange={handleColorChange}
+                                            disabled={isSynchronizing}
+                                        />
+                                    </InputGroup>
+                                    <Button onClick={removeMemeTextNode} disabled={isSynchronizing} className="game game-options-btn" >
+                                        Remove a Text Node
+                                    </Button>
+                                </div>
+                                <div className={"game game-options options-row"}>
+                                    <Button
+                                        className="game game-options-btn"
+                                        onClick={handleGetDifferentTemplate}
+                                        disabled={isSynchronizing}
+                                    >
+                                        Get different template
+                                    </Button>
+                                </div>
                             </div>
-                            <Button
-                                className="home join-btn"
-                                onClick={handleGetDifferentTemplate}
-                                disabled={isSynchronizing}
-                            >
-                                Get different template
-                            </Button>
-
-                            <Button onClick={addMemeTextNode} disabled={isSynchronizing}>
-                                Add new Text Node
-                            </Button>
-                            <Button onClick={removeMemeTextNode} disabled={isSynchronizing}>
-                                Remove the most recent Text Node
-                            </Button>
                         </>
                     ) : (
                         <Spinner/>
