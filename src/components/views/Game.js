@@ -140,11 +140,6 @@ const Game = () => {
         setCurrentTextNodeValues(prevValues);
     };
 
-    const currentMemeIndex = useMemo(
-        () => currentMemes?.findIndex(({id}) => id === currentMeme?.id),
-        [currentMeme]
-    );
-
     const handleGetDifferentTemplate = async () => {
         console.log(`${gameEndpoint}/${id}/template`);
         const response = await api.get(`${gameEndpoint}/${id}/template`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
