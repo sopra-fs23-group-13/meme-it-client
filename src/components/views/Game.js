@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useMemo, useState} from "react";
 import Draggable from "react-draggable";
-import {Stack, Button, Row, Col, InputGroup} from "react-bootstrap";
+import {Stack, Button, InputGroup} from "react-bootstrap";
 import {v4 as uuid} from "uuid";
 import {useParams, useHistory} from "react-router-dom";
 import {Spinner} from "components/ui/Spinner";
@@ -119,13 +119,13 @@ const Game = () => {
                 startVotingAtSameTime();
             });
             setIsSynchronizing(!isSynchronizing);
-            //history.push("/game-rating/" + id);
+            history.push("/game-rating/" + id);
         }
         if (currentRound < 0 && isPlaying) {
             setNow(null);
             setCurrentRound(null);
             setIsPlaying(false);
-            /*history.push("/game-rating/" + id);*/
+            history.push("/game-rating/" + id);
         }
     };
     const onTextNodeDrag = (e, data, i) => {
@@ -209,7 +209,7 @@ const Game = () => {
         // reset time and push next page
         // load page from context
         setNow(null);
-        /*history.push("/game-rating/" + id);*/
+        history.push("/game-rating/" + id);
     }
 
     const executeForAllPlayersAtSameTime = async (time, callback) => {
