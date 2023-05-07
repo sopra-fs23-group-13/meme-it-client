@@ -15,10 +15,6 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     color: black;
     margin-bottom:1em;
-    &.code {
-      margin-top:13px;
-    }
-
   }
   &.alert{
     position: absolute;
@@ -47,6 +43,7 @@
     text-align:center;
     color: $themeColor;
     padding-top:10px;
+    max-height: 43.5px;
   }
   &.settings-title{
     text-align:center;
@@ -122,8 +119,9 @@
       }
       background: #da0000;
       border: solid #af0000;
-      width: 90%;
-      margin: auto auto auto 0.5em;
+      width: 100%;
+      margin: auto auto 0.5em auto;
+      max-height: 43.5px;
     }
     &.game {
       width:auto;
