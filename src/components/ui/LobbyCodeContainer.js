@@ -11,7 +11,7 @@ export const LobbyCodeContainer = ({code}) => {
         </Tooltip>
     );
     return (
-        <div className="lobby card code">
+        <div className="lobby card">
             <h2 className="lobby-code-heading">Lobby Code:</h2>
             <div className="lobby-code">
                 <span className="lobby-code-text">{code}</span>
