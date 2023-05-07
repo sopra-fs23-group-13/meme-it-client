@@ -76,7 +76,6 @@ const Game = () => {
         return memeTextNodes.map(() => "");
     }, [memeTextNodes]);
 
-    const currentMemes = useMemo(() => currentRound?.memes, [currentRound]);
     useEffect(() => {
         setCurrentMeme(loadedGameData?.meme);
     }, [currentRound]);
