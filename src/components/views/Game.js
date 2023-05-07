@@ -14,7 +14,6 @@ import {api} from "../../helpers/api";
 import {game as gameEndpoint} from "../../helpers/endpoints"
 import Chat from "../ui/Chat";
 import Cookies from "universal-cookie";
-import getMeme from "../../mockData/getMeme.json"
 import Form from "react-bootstrap/Form";
 
 const Game = () => {
@@ -53,7 +52,6 @@ const Game = () => {
             console.log(memeData);
             setLoadedGameData(memeData);
         }*/
-        console.log(loadedGameData)
         setGameData([]);
         setCurrentRound(loadedGameData?.currentRound);
         setCurrentMeme(loadedGameData?.meme?.imageUrl);
@@ -107,25 +105,24 @@ const Game = () => {
         } else if (!isSynchronizing){
             const started = new Date(loadedGameData.startedAt);
             const ended = new Date(started.getTime() + loadedGameData?.roundDuration * 1000);
+            const loadDelay = new Date(ended.getTime() + (5 + Math.random()) * 1000);
             const loadDataAfterSubmitting = new Date(ended.getTime() + 5 * 1000);
             const pushNextPage = new Date(loadDataAfterSubmitting.getTime() + 5 * 1000);
             executeForAllPlayersAtSameTime(ended, () => {
                 submitMemesAtSameTime();
             });
-            executeForAllPlayersAtSameTime(loadDataAfterSubmitting, () => {
+            executeForAllPlayersAtSameTime(loadDelay, () => {
                 preloadVotingRound();
             });
             executeForAllPlayersAtSameTime(pushNextPage, () => {
                 startVotingAtSameTime();
             });
             setIsSynchronizing(!isSynchronizing);
-            history.push("/game-rating/" + id);
         }
         if (currentRound < 0 && isPlaying) {
             setNow(null);
             setCurrentRound(null);
             setIsPlaying(false);
-            history.push("/game-rating/" + id);
         }
     };
     const onTextNodeDrag = (e, data, i) => {
@@ -141,7 +138,6 @@ const Game = () => {
     };
 
     const handleGetDifferentTemplate = async () => {
-        console.log(`${gameEndpoint}/${id}/template`);
         const response = await api.get(`${gameEndpoint}/${id}/template`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         const copyObject = {...loadedGameData};
         copyObject.meme = response.data;
@@ -166,7 +162,6 @@ const Game = () => {
     };
 
     const submitMemesAtSameTime = () => {
-        console.log("submitting memes")
         //setIsSynchronizing(!isSynchronizing);
         // freeze all elements, no edits possible
         // submit all elements via api
@@ -193,16 +188,14 @@ const Game = () => {
             color,
             fontSize,
         };
-        console.log(meme)
         api.post(`${gameEndpoint}/${id}/meme/${loadedGameData?.meme?.id}`, meme, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
     }
 
     const preloadVotingRound = async () => {
         // get all memes from this round
         const preLoadedMemesForVoting = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-        //setPreLoadedMemesForVoting(preLoadedMemesForVoting.data);
-        console.log(preLoadedMemesForVoting.data)
-        setPreLoadedMemesForVoting(getMeme);
+        setPreLoadedMemesForVoting(preLoadedMemesForVoting.data);
+        console.log(preLoadedMemesForVoting.data);
     }
 
     const startVotingAtSameTime= () =>{
