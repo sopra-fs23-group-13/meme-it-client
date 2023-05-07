@@ -51,7 +51,7 @@ const ActivePlayersList = ({lobby, players, isEditable}) => {
 
   const kickPlayer = async (uuid) => {
     try {
-      sessionStorage.setItem("alert", "You were removed from the lobby")
+      localStorage.setItem("alert", "You were removed from the lobby")
       await api.delete(`${lobbyEndpoint}/${lobby.code}/players`, {headers: {'Authorization': 'Bearer ' + uuid}});
     }
     catch (error) {
