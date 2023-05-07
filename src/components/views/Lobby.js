@@ -76,12 +76,12 @@ const Lobby = () => {
       await api.delete(`${lobby}/${currentLobby.code}/players`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
     }
     catch {
-      //Do nothing, alert is handled in Home using sessionStorage alert.
+      //Do nothing, alert is handled in Home using localStorage alert.
     }
     finally {
       localStorage.clear()
-      sessionStorage.clear()
-      sessionStorage.setItem("alert", reason)
+      localStorage.clear()
+      localStorage.setItem("alert", reason)
       cookies.remove("token")
       history.push("/")
     }

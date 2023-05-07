@@ -92,8 +92,8 @@ const GameRating = () => {
     const leaveGame = async () => {
         //const leaveResponse = await api.delete('/' + localStorage.getItem("code") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
         localStorage.clear();
-        sessionStorage.clear();
-        sessionStorage.setItem("alert", "Disconnected");
+        localStorage.clear();
+        localStorage.setItem("alert", "Disconnected");
         cookies.remove("token");
         history.push("/");
     }

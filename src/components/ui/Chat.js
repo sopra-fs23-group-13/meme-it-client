@@ -18,25 +18,25 @@ const Chat = (props) => {
 
     const toggleCollapsed = () => {
         if(props.currentLobby !== undefined && totalMessages > 0){
-            sessionStorage.setItem("lastOpenedAt", totalMessages);
-            sessionStorage.setItem("newMessages", 0);
+            localStorage.setItem("lastOpenedAt", totalMessages);
+            localStorage.setItem("newMessages", 0);
         }
         setCollapsed(!collapsed);
     };
     const newMessageText = () => {
-        if(sessionStorage.getItem("newMessages") > 0) return (<><span style={{ textAlign: 'center', width: '100%', marginLeft: '22px'}}>Open Chat</span> <Badge pill bg="danger" style={{ marginLeft: 'auto' }}>{sessionStorage.getItem("newMessages")}</Badge></>);
+        if(localStorage.getItem("newMessages") > 0) return (<><span style={{ textAlign: 'center', width: '100%', marginLeft: '22px'}}>Open Chat</span> <Badge pill bg="danger" style={{ marginLeft: 'auto' }}>{localStorage.getItem("newMessages")}</Badge></>);
         return ("Open Chat");
     }
-    if(sessionStorage.getItem("lastOpenedAt") === null) sessionStorage.setItem("lastOpenedAt", 0);
-    if(sessionStorage.getItem("newMessages") === null) sessionStorage.setItem("newMessages", 0);
+    if(localStorage.getItem("lastOpenedAt") === null) localStorage.setItem("lastOpenedAt", 0);
+    if(localStorage.getItem("newMessages") === null) localStorage.setItem("newMessages", 0);
     const getChatData = async () => {
-        if(props.currentLobby.code === undefined) return;
+        const code = props.currentLobby.code ? props.currentLobby.code : localStorage.getItem("code");
         try {
-            const response = await api.get(`${chat}/${props.currentLobby.code}`, {
+            const response = await api.get(`${chat}/${code}`, {
                 headers: {Authorization: "Bearer " + cookies.get("token")},
             });
             if(totalMessages != response.data.length ) {
-                sessionStorage.setItem("newMessages", response.data.length - sessionStorage.getItem("lastOpenedAt"));
+                localStorage.setItem("newMessages", response.data.length - localStorage.getItem("lastOpenedAt"));
             }
             setTotalMessages(response.data.length);
         } catch (error) {
