@@ -17,7 +17,7 @@ const Chat = (props) => {
     const [totalMessages, setTotalMessages] = useState(0);
 
     const toggleCollapsed = () => {
-        if(props.currentLobby.code !== undefined && totalMessages > 0){
+        if(props.currentLobby !== undefined && totalMessages > 0){
             sessionStorage.setItem("lastOpenedAt", totalMessages);
             sessionStorage.setItem("newMessages", 0);
         }
