@@ -43,9 +43,22 @@
   border-top: 1px solid #e5e5e5;
   max-height: 400px;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
+}
+
+.chat-room-wrapper {
+  position: relative;
+  background-color: #f7f7f7;
+  z-index: 1;
+}
+
+.chat-room-content {
+  position: relative;
+  z-index: 2;
 }
 
 .message-list {
@@ -92,7 +105,7 @@
 
 .chat-input {
   flex-grow: 1;
-  padding: 5px 10px;
+  padding: 5px 5px;
   border: 1px solid #e5e5e5;
   border-radius: 4px;
   outline: none;
@@ -100,7 +113,7 @@
 
 .chat-send-button {
   margin-left: 10px;
-  padding: 5px 10px;
+  padding: 5px 5px;
   background-color: #7260e3;
   color: #ffffff;
   border: none;
