@@ -11,7 +11,7 @@ import {findGame} from "helpers/functions";
 import {AppContext} from "context";
 import TimerProgressBar from "components/ui/TimerProgressBar";
 import {api} from "../../helpers/api";
-import {game, game as gameEndpoint} from "../../helpers/endpoints"
+import {game as gameEndpoint} from "../../helpers/endpoints"
 import Chat from "../ui/Chat";
 import Cookies from "universal-cookie";
 import getMeme from "../../mockData/getMeme.json"
@@ -20,7 +20,7 @@ const Game = () => {
     const delay = 1000;
     const history = useHistory();
     const {id} = useParams();
-    const {setGameData, loadedGameData,  setPreLoadedMemesForVoting} = useContext(AppContext);
+    const {setGameData, loadedGameData, setLoadedGameData,  setPreLoadedMemesForVoting} = useContext(AppContext);
     const game = findGame(MockData, id);
     const gameRounds = useMemo(() => game?.rounds, [game]);
     const cookies = new Cookies();
@@ -52,6 +52,7 @@ const Game = () => {
             console.log(memeData);
             setLoadedGameData(memeData);
         }*/
+        console.log(loadedGameData)
         setGameData([]);
         setCurrentRound(loadedGameData?.currentRound);
         setCurrentMeme(loadedGameData?.meme?.imageUrl);
@@ -75,7 +76,6 @@ const Game = () => {
         return memeTextNodes.map(() => "");
     }, [memeTextNodes]);
 
-    const currentMemes = useMemo(() => currentRound?.memes, [currentRound]);
     useEffect(() => {
         setCurrentMeme(loadedGameData?.meme);
     }, [currentRound]);
@@ -139,16 +139,13 @@ const Game = () => {
         setCurrentTextNodeValues(prevValues);
     };
 
-    const currentMemeIndex = useMemo(
-        () => currentMemes?.findIndex(({id}) => id === currentMeme?.id),
-        [currentMeme]
-    );
-
-    const handleGetDifferentTemplate = () => {
-        const newMemeIndex = currentMemeIndex + 1;
-        setCurrentMeme(
-            currentMemes[newMemeIndex === currentMemes?.length ? 0 : newMemeIndex]
-        );
+    const handleGetDifferentTemplate = async () => {
+        console.log(`${gameEndpoint}/${id}/template`);
+        const response = await api.get(`${gameEndpoint}/${id}/template`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+        const copyObject = {...loadedGameData};
+        copyObject.meme = response.data;
+        setLoadedGameData(copyObject);
+        setCurrentMeme(response.data);
     };
 
     const leaveGame = async () => {
@@ -199,7 +196,7 @@ const Game = () => {
         api.post(`${gameEndpoint}/${id}/meme/${loadedGameData?.meme?.id}`, meme, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
     }
 
-    const preloadVotingRound = async (response) => {
+    const preloadVotingRound = async () => {
         // get all memes from this round
         const preLoadedMemesForVoting = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         //setPreLoadedMemesForVoting(preLoadedMemesForVoting.data);
