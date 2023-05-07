@@ -23,7 +23,7 @@ const GameRating = () => {
     const {id} = useParams();
     const cookies = new Cookies();
     const history = useHistory();
-    const {gameData, loadedGameData, preLoadedMemesForVoting} = useContext(AppContext);
+    const {loadedGameData, preLoadedMemesForVoting} = useContext(AppContext);
 
     const [reaction, setReaction] = useState("");
     const [currentGameData, setCurrentGameData] = useState(preLoadedMemesForVoting);
@@ -73,7 +73,6 @@ const GameRating = () => {
     };
 
     const submitVotesAtSameTime = async () => {
-        //TODO: freeze voting.
         const cgd = currentGameData.filter(meme => meme?.vote);
         await cgd.forEach(memeWithVote => api.post(`${gameEndpoint}/${id}/rating/${memeWithVote.id}`, {rating: memeWithVote.vote}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}}));
     }
@@ -92,16 +91,16 @@ const GameRating = () => {
 
     const leaveGame = async () => {
         //const leaveResponse = await api.delete('/' + localStorage.getItem("code") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
-        localStorage.clear()
-        sessionStorage.clear()
-        sessionStorage.setItem("alert", "Disconnected")
-        cookies.remove("token")
-        history.push("/")
+        localStorage.clear();
+        sessionStorage.clear();
+        sessionStorage.setItem("alert", "Disconnected");
+        cookies.remove("token");
+        history.push("/");
     }
 
     const [index, setIndex] = useState(0);
 
-    const handleSelect = (selectedIndex, e) => {
+    const handleSelect = (selectedIndex) => {
         setIndex(selectedIndex);
     };
 
