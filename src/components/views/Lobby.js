@@ -1,14 +1,12 @@
 import { Col, Container, Row, Stack } from "react-bootstrap";
 import "styles/views/Lobby.scss";
-import "styles/ui/LobbyCode.scss"; //Copyfield of LobbyCode
+import "styles/ui/LobbyCode.scss";
 import "styles/ui/Button.scss";
-import BaseContainer from "../ui/BaseContainer";
-import {Button, OverlayTrigger, Tooltip} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import React, {useContext, useEffect, useState} from "react";
 import ActivePlayersList from "../ui/ActivePlayersList";
 import LobbySettings from "../ui/LobbySettings";
-import { FaCopy } from "react-icons/fa";
 
 import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
@@ -182,7 +180,8 @@ const Lobby = () => {
               }
             </div>
           </Stack>
-        <Chat currentLobby={currentLobby} />
+        {currentLobby.lobbySetting ?
+        <Chat currentLobby={currentLobby} /> : <></> }
       </Container>
       </div>
   )
