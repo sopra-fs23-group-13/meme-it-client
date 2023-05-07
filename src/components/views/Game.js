@@ -105,12 +105,13 @@ const Game = () => {
         } else if (!isSynchronizing){
             const started = new Date(loadedGameData.startedAt);
             const ended = new Date(started.getTime() + loadedGameData?.roundDuration * 1000);
+            const loadDelay = new Date(ended.getTime() + (5 + Math.random()) * 1000);
             const loadDataAfterSubmitting = new Date(ended.getTime() + 5 * 1000);
             const pushNextPage = new Date(loadDataAfterSubmitting.getTime() + 5 * 1000);
             executeForAllPlayersAtSameTime(ended, () => {
                 submitMemesAtSameTime();
             });
-            executeForAllPlayersAtSameTime(loadDataAfterSubmitting, () => {
+            executeForAllPlayersAtSameTime(loadDelay, () => {
                 preloadVotingRound();
             });
             executeForAllPlayersAtSameTime(pushNextPage, () => {

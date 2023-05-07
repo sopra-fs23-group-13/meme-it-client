@@ -25,7 +25,7 @@ const GameRating = () => {
     const history = useHistory();
     const {loadedGameData, preLoadedMemesForVoting} = useContext(AppContext);
 
-    const [reaction, setReaction] = useState("");
+    const [reaction] = useState("");
     const [currentGameData, setCurrentGameData] = useState(preLoadedMemesForVoting);
 
     const [currentRound, setCurrentRound] = useState(null);
@@ -107,8 +107,7 @@ const GameRating = () => {
     const handleReaction = (userReaction) => {
         if(!isSynchronizing){
             const cgd = [...currentGameData];
-            const voted = {...currentGameData[index], vote: userReaction};
-            cgd[index] = voted;
+            cgd[index] = {...currentGameData[index], vote: userReaction};
             setCurrentGameData(cgd);
         }
     }
