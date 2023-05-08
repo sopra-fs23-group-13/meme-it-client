@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {ListGroup, Images, Col, Row, Stack, Table, Button, Badge} from "react-bootstrap";
+import {ListGroup, Images, Col, Row, Stack, Table, Button, Badge, Container} from "react-bootstrap";
 import "styles/views/Leaderboard.scss";
 import { FaMedal } from 'react-icons/fa';
 import PropTypes from "prop-types";
@@ -11,8 +11,10 @@ import {Spinner} from "../ui/Spinner";
 import TimerProgressBar from "../ui/TimerProgressBar";
 import Modal from "react-bootstrap/Modal";
 import Cookies from "universal-cookie";
+import {useHistory} from "react-router-dom";
 
 const Leaderboard = ({ roundMemes, roundRatings, gameRatings}) => {
+    const history = useHistory();
     const cookies = new Cookies();
     const [roundPlayers, setRoundPlayers] = useState([]); //All players and their score throughout all rounds
     const [memes, setMemes] = useState([]); // All memes of this round and their rating
@@ -60,7 +62,7 @@ const Leaderboard = ({ roundMemes, roundRatings, gameRatings}) => {
     const clickableMeme = (meme) => {
         return (
             <div>
-                <img  style={{width:60, cursor:"pointer"}} src={meme.imageUrl} onClick={()=> {
+                <img  style={{width:100, cursor:"pointer"}} src={meme.imageUrl} onClick={()=> {
                     setEnlargedMeme(meme)
                     setShowMeme(true)
                 }}/>
@@ -89,37 +91,37 @@ const Leaderboard = ({ roundMemes, roundRatings, gameRatings}) => {
     const pointDifference = (player) => {
         const meme = getPlayerMeme(player);
         if(meme.rating>0) {
-            return <Badge pill bg={"success"}>
+            return <Badge pill bg={"success"} style={{fontSize:"14px"}}>
                 + {meme.rating}
             </Badge>
         }
         else if (meme.rating<0) {
-            return <Badge pill bg={"danger"}>
+            return <Badge pill bg={"danger"} style={{fontSize:"14px"}}>
                - {-1*meme.rating}
             </Badge>
         }
         else {
-            return <Badge pill bg={"secondary"}>
+            return <Badge pill bg={"secondary"} style={{fontSize:"14px"}}>
                 + 0
             </Badge>
         }
 
     }
-    const leaderboard = () => {
+    const Leaderboard = () => {
         return (
-            <Table className={"leaderboard table"}>
+            <Table responsive className={"leaderboard table"}>
                 <thead>
-                <tr>
+                <tr style={{fontSize:'16px'}}>
                     <th>Place</th>
                     <th>Name</th>
                     <th>Score</th>
-                    <th>Meme</th>
+                    <th width={1}>Meme</th>
                 </tr>
                 </thead>
                 <tbody>
                 {roundPlayers.map((player, index) => {
                     return (
-                        <tr key={index}>
+                        <tr style={{fontSize:'18px'}} key={index}>
                             <td>{getRankSymbol(index)}</td>
                             <td>{player.name}</td>
                             <td>{player.score} Points {pointDifference(player)} </td>
@@ -182,43 +184,62 @@ const Leaderboard = ({ roundMemes, roundRatings, gameRatings}) => {
     if (memes.length > 0 && roundPlayers.length > 0) {
         return (
             <div className="leaderboard content">
-                <div className={"leaderboard card"}>
-                    <Button
-                        width="200px"
-                        onClick={leaveGame}
-                        className="lobby leave-btn game">
-                        Leave Game
-                    </Button>
-                    <Stack gap={2}>
-                        <h1 className="fw-bolder fs-3 text-start text-black">
-                            {`Round 1/3 `}
-                        </h1>
-                        <TimerProgressBar
-                            delay={1}
-                            now={50}
-                            max={100}
-                            callbackFunc={() => {}}
-                            isPlaying={true}
-                        />
-                    </Stack>
+                <Container>
                     <div className={"leaderboard card"}>
-                        <h2 style={{textAlign:"center"}}> Meme of the Round </h2>
-                        <img src={memes[0].imageUrl} style={{cursor:"pointer"}} className={"leaderboard best-meme-image"} onClick={() => {
-                            setEnlargedMeme(memes[0])
-                            setShowMeme(true)}}>
-                        </img>
-                        <h5 style={{textAlign:"center"}}>
-                            by {memes[0].user.name} with {memes[0].rating} points
-                        </h5>
+                        <Button
+                            width="200px"
+                            onClick={leaveGame}
+                            className="lobby leave-btn game">
+                            Leave Game
+                        </Button>
+                        <Stack gap={1}>
+                            <h1 className="fw-bolder fs-3 text-start text-black">
+                                {`Round 1/3 `}
+                            </h1>
+                            <TimerProgressBar
+                                delay={1}
+                                now={50}
+                                max={100}
+                                callbackFunc={() => {}}
+                                isPlaying={true}
+                            />
+                            <Row style={{marginBottom:"1em"}}>
+                                <Col >
+                                    <div className={"leaderboard card"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+                                        <h2 style={{textAlign:"center"}}> Best Meme </h2>
+                                        <img src={memes[0].imageUrl} style={{cursor:"pointer"}} className={"leaderboard best-meme-image"} onClick={() => {
+                                            setEnlargedMeme(memes[0])
+                                            setShowMeme(true)}}>
+                                        </img>
+                                        <h5 style={{textAlign:"center"}}>
+                                            by {memes[0].user.name} with {memes[0].rating} points
+                                        </h5>
+                                    </div>
+                                </Col>
+                                <Col md={"auto"} style={{marginBottom:"0.5em",marginTop:"0.5em"}}>
+                                </Col>
+                                <Col >
+                                    <div className={"leaderboard card"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+                                        <h2 style={{textAlign:"center"}}> Worst Meme </h2>
+                                        <img src={memes[memes.length-1].imageUrl} style={{cursor:"pointer"}} className={"leaderboard best-meme-image"} onClick={() => {
+                                            setEnlargedMeme(memes[memes.length-1])
+                                            setShowMeme(true)}}>
+                                        </img>
+                                        <h5 style={{textAlign:"center"}}>
+                                            by {memes[memes.length-1].user.name} with {memes[memes.length-1].rating} points
+                                        </h5>
+                                    </div>
+                                </Col>
+                            </Row>
+                            <div className={"leaderboard card"}>
+                                <h2 style={{textAlign:"center"}}> Leaderboard </h2>
+                                <Leaderboard/>
+                            </div>
+                            {enlargedMeme && showMeme && <EnlargedMeme/>}
+                        </Stack>
                     </div>
-                    <Row style={{marginTop:"1em"}}>
-                        <div className={"leaderboard card"}>
-                            <h2 style={{textAlign:"center"}}> Leaderboard </h2>
-                            {leaderboard()}
-                        </div>
-                    </Row>
-                    {enlargedMeme && showMeme && <EnlargedMeme/>}
-                </div>
+                </Container>
+
             </div>
         )
     }
