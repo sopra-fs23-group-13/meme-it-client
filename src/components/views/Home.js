@@ -9,26 +9,7 @@ import {Notification} from "../ui/Notification";
 import {AnimatedBackground} from "styles/images/AnimatedBackground"
 
 
-const TutorialButton = ({startTutorialMode}) => {
-    return (
-      <>
-        <Button variant="primary" className="tutorial-btn" onClick={startTutorialMode}>
-          Tutorial
-        </Button>
-  
-        <div className="tutorial-container">
-          <div className="tutorial-modal">
-            <h1 className="tutorial-title">Welcome to the Meme-It tutorial!</h1>
-            <p className="tutorial-text">In this tutorial, you will learn how to play Meme-It and create hilarious memes with your friends.</p>
-            <div className="tutorial-buttons">
-              <Button className="tutorial-next" variant="primary" onClick={showNextElement}>Next</Button>
-              <Button className="tutorial-end" variant="secondary" onClick={endTutorialMode}>End Tutorial</Button>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  };
+
   
   
   const Home = () => {
@@ -70,6 +51,27 @@ const TutorialButton = ({startTutorialMode}) => {
         }
         history.push("/lobby");
     }
+
+    const TutorialButton = ({startTutorialMode}) => {
+      return (
+        <>
+          <Button variant="primary" className="tutorial-btn" onClick={startTutorialMode}>
+            Tutorial
+          </Button>
+    
+          <div className="tutorial-container">
+            <div className="tutorial-modal">
+              <h1 className="tutorial-title">Welcome to the Meme-It tutorial!</h1>
+              <p className="tutorial-text">In this tutorial, you will learn how to play Meme-It and create hilarious memes with your friends.</p>
+              <div className="tutorial-buttons">
+                <Button className="tutorial-next" variant="primary" onClick={showNextElement}>Next</Button>
+                <Button className="tutorial-end" variant="secondary" onClick={endTutorialMode}>End Tutorial</Button>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    };
 
     // data for tutorial mode
     const tutorialData = [
@@ -183,6 +185,22 @@ const TutorialButton = ({startTutorialMode}) => {
                                                         c_names="home join-btn"
                                                     />
                                                 </Col>
+                                                {/* add tutorial mode */}
+            {showTutorial && (
+    <div className="tutorial-mode">
+        <div className="tutorial-overlay" onClick={() => endTutorialMode()}></div>
+        <div className="tutorial-container">
+            <div className="tutorial-message">{tutorialData[highlightIndex].message}</div>
+            <div className="tutorial-element-highlight" data-tutorial-index={highlightIndex}
+                data-tutorial-element={tutorialData[highlightIndex].element}></div>
+            <div className="tutorial-next" onClick={() => showNextElement()}>
+                {highlightIndex < tutorialData.length - 1 ? "Next..." : "End tutorial"}
+            </div>
+        </div>
+    </div>
+    )}
+
+
                                             </Row>
                                             <Row>
                                                 <Col>
@@ -212,20 +230,7 @@ const TutorialButton = ({startTutorialMode}) => {
                     {show ? lobbyList() : null}
                 </div>
             </Container>
-            {/* add tutorial mode */}
-            {showTutorial && (
-    <div className="tutorial-mode">
-        <div className="tutorial-overlay" onClick={() => endTutorialMode()}></div>
-        <div className="tutorial-container">
-            <div className="tutorial-message">{tutorialData[highlightIndex].message}</div>
-            <div className="tutorial-element-highlight" data-tutorial-index={highlightIndex}
-                data-tutorial-element={tutorialData[highlightIndex].element}></div>
-            <div className="tutorial-next" onClick={() => showNextElement()}>
-                {highlightIndex < tutorialData.length - 1 ? "Next..." : "End tutorial"}
-            </div>
-        </div>
-    </div>
-    )}
+            
             
     </div>
     );
