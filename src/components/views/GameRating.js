@@ -56,11 +56,11 @@ const GameRating = () => {
             const started = new Date(loadedGameData?.startedAt);
             const ended = new Date(started.getTime() + loadedGameData?.votingDuration * 1000);
             const pushNextPage = new Date(ended.getTime() + 5 * 1000);
-            await executeForAllPlayersAtSameTime(ended, () => {
-                submitVotesAtSameTime();
+            await executeForAllPlayersAtSameTime(ended, async () => {
+                await submitVotesAtSameTime();
             });
-            await executeForAllPlayersAtSameTime(pushNextPage, () => {
-                pushToLeaderboard();
+            await executeForAllPlayersAtSameTime(pushNextPage, async () => {
+                await pushToLeaderboard();
             });
             setIsSynchronizing(!isSynchronizing);
         }
