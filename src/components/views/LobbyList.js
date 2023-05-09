@@ -8,7 +8,7 @@ import {lobby} from "../../helpers/endpoints";
 
 const LobbyList = props => {
     const [lobbies, setLobbies] = useState([]);
-    useEffect(() => {
+    useEffect(async () => {
         // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
         async function fetchData() {
             try{
@@ -18,7 +18,7 @@ const LobbyList = props => {
                 alert("Couldn't fetch lobbies")
             }
         }
-        fetchData();
+        await fetchData();
     }, []);
 
     const refreshLobbies = async () => {

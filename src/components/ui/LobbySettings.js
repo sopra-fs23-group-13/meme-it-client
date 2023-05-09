@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import {FormField} from "../../helpers/formField";
 import "styles/views/Home.scss";
 import "styles/views/LobbySettings.scss";
-import {Button, Col, Container, Dropdown, DropdownButton, Row} from "react-bootstrap";
+import {Button, Col, Container, Row} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
 import {lobby} from "../../helpers/endpoints";
-import {LoadingButton} from "./LoadingButton";
 import {BsFillPersonFill, BsArrowRepeat} from "react-icons/bs";
 import {FaExchangeAlt} from "react-icons/fa";
 import {AiOutlineClockCircle, AiFillLock} from "react-icons/ai";
@@ -51,14 +49,14 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
         }
     }
 
-    const handleChange = (event) => {
+    const handleChange = async (event) => {
         const { name, value } = event.target;
         if(name === "isPublic"){
             setLobbyValues({
                 ...lobbyValues,
                 [name]: value,
             });
-            updateSettings();
+            await updateSettings();
         }
         else if(name === "name"){
             setLobbyValues({
@@ -71,7 +69,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
                 ...lobbyValues,
                 [name]: Number(value),
             });
-            updateSettings();
+            await updateSettings();
         }
     };
 

@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import ChatRoom from "./ChatRoom";
 import "styles/ui/Chat.scss";
 import Cookies from "universal-cookie";
@@ -29,22 +29,21 @@ const Chat = (props) => {
     }
     if(localStorage.getItem("lastOpenedAt") === null) localStorage.setItem("lastOpenedAt", 0);
     if(localStorage.getItem("newMessages") === null) localStorage.setItem("newMessages", 0);
-    const getChatData = async () => {
+
+    useEffect(async () => {
         const code = props.currentLobby.code ? props.currentLobby.code : localStorage.getItem("code");
         try {
             const response = await api.get(`${chat}/${code}`, {
                 headers: {Authorization: "Bearer " + cookies.get("token")},
             });
-            if(totalMessages != response.data.length ) {
+            if(totalMessages !== response.data.length ) {
                 localStorage.setItem("newMessages", response.data.length - localStorage.getItem("lastOpenedAt"));
             }
             setTotalMessages(response.data.length);
         } catch (error) {
             console.log(error);
         }
-    };
-
-    getChatData();
+    });
 
     return (
         <div className={`chat-container${collapsed ? " chat-collapsed" : ""}`} >
