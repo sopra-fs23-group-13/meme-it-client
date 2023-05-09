@@ -49,17 +49,17 @@ const GameRating = () => {
         //history.push("/");
     }, [preLoadedMemesForVoting]);
 
-    const handleNextRound = () => {
+    const handleNextRound = async () => {
         if (now < loadedGameData?.votingDuration * 1000) {
             setNow(now + 1000);
         } else if (!isSynchronizing) {
             const started = new Date(loadedGameData?.startedAt);
             const ended = new Date(started.getTime() + loadedGameData?.votingDuration * 1000);
             const pushNextPage = new Date(ended.getTime() + 5 * 1000);
-            executeForAllPlayersAtSameTime(ended, () => {
+            await executeForAllPlayersAtSameTime(ended, () => {
                 submitVotesAtSameTime();
             });
-            executeForAllPlayersAtSameTime(pushNextPage, () => {
+            await executeForAllPlayersAtSameTime(pushNextPage, () => {
                 pushToLeaderboard();
             });
             setIsSynchronizing(!isSynchronizing);
