@@ -2,8 +2,8 @@ import {OverlayTrigger, Tooltip} from "react-bootstrap";
 import {FaCopy} from "react-icons/fa";
 
 export const LobbyCodeContainer = ({code}) => {
-    const copyToClipboard = () => {
-        navigator.clipboard.writeText(code);
+    const copyToClipboard = async () => {
+        await navigator.clipboard.writeText(code);
     };
     const renderTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
