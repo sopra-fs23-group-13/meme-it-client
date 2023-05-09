@@ -48,10 +48,10 @@ const Lobby = () => {
 
         if(response.data.gameStartedAt !== null){
           if(!isSynchronizing) {
-            executeForAllPlayersAtSameTime(new Date(response.data.gameStartedAt), () => {
+            await executeForAllPlayersAtSameTime(new Date(response.data.gameStartedAt), () => {
               startGameAtTheSameTime(response.data);
             });
-            preloadGame(response);
+            await preloadGame(response);
             setIsSynchronizing(!isSynchronizing);
           }
         }
@@ -65,8 +65,8 @@ const Lobby = () => {
         console.log(error);
       }
     }
-    const interval = setInterval(() => {
-      getLobbyData();
+    const interval = setInterval(async () => {
+      await getLobbyData();
     }, 1000);
     return () => clearInterval(interval);
   })
@@ -89,7 +89,7 @@ const Lobby = () => {
 
   const startGame = async () => {
     const response = await api.post(`/${game}/${currentLobby.code}`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-    preloadGame(response);
+    await preloadGame(response);
   }
 
   const preloadGame = async (response) => {
