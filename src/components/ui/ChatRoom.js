@@ -19,8 +19,8 @@ const ChatRoom = (props) => {
                 console.log(error);
             }
         };
-        const interval = setInterval(() => {
-            getChatData();
+        const interval = setInterval(async () => {
+            await getChatData();
         }, 500);
         return () => clearInterval(interval);
     }, []);
