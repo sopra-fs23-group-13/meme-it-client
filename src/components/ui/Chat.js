@@ -40,6 +40,7 @@ const Chat = (props) => {
                 localStorage.setItem("newMessages", response.data.length - localStorage.getItem("lastOpenedAt"));
             }
             setTotalMessages(response.data.length);
+            !collapsed ? localStorage.setItem("lastOpenedAt", totalMessages) : console.log(totalMessages);
         } catch (error) {
             console.log(error);
         }
