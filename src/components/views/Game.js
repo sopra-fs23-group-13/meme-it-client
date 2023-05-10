@@ -55,6 +55,11 @@ const Game = () => {
             let endTime = new Date(new Date(memeData.roundStartedAt).getTime() + memeData?.roundDuration * 1000);
             let roundedTimeLeft = Math.round((endTime-currentTime) / 1000) * 1000
             setNow((memeData?.roundDuration * 1000)-(roundedTimeLeft));
+            console.log(new Date(memeData.roundStartedAt));
+            console.log(new Date(memeData.roundStartedAt).getTime());
+            if(new Date() > new Date(endTime.getTime() + 10 * 1000)){
+                startVotingAtSameTime(true);
+            }
         } else {
             memeData = loadedGameData;
             setNow(0);
@@ -211,10 +216,11 @@ const Game = () => {
         console.log(preLoadedMemesForVoting.data);
     }
 
-    const startVotingAtSameTime= () =>{
+    const startVotingAtSameTime= (props) =>{
         // reset time and push next page
         // load page from context
         setNow(null);
+        props ? localStorage.setItem("alert", "There was an issue with your meme submission!") : localStorage.removeItem("alert");
         history.push("/game-rating/" + id);
     }
 
