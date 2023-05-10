@@ -7,13 +7,16 @@ import UsernameModal from "./UsernameModal";
 import {useHistory} from "react-router-dom";
 import {Notification} from "../ui/Notification";
 import {AnimatedBackground} from "styles/images/AnimatedBackground"
+import Cookies from "universal-cookie";
 
 
 const Home = () => {
     const history = useHistory();
     const [gameCode, setGameCode] = useState("");
-    const [showAlert, setShowAlert] = useState(localStorage.getItem("alert") === null ? false : true);
+    const [showAlert, setShowAlert] = useState(localStorage.getItem("alert") !== null);
     const [show, setShow] = useState(false);
+    const cookies = new Cookies();
+    cookies.remove("token");
 
     const toggleShowAlert = () => setShowAlert(!showAlert);
 
