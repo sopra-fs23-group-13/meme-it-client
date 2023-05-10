@@ -47,13 +47,7 @@ const Lobby = () => {
         });
 
         if(response.data.gameStartedAt !== null){
-          if(!isSynchronizing) {
-            await executeForAllPlayersAtSameTime(new Date(response.data.gameStartedAt), () => {
-              startGameAtTheSameTime(response.data);
-            });
-            await preloadGame(response);
-            setIsSynchronizing(!isSynchronizing);
-          }
+          startGameAtTheSameTime(response.data)
         }
 
         if(!playerIsInLobby){
@@ -88,40 +82,15 @@ const Lobby = () => {
   }
 
   const startGame = async () => {
-    const response = await api.post(`/${game}/${currentLobby.code}`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-    await preloadGame(response);
-  }
 
-  const preloadGame = async (response) => {
-    const preLoadedGameData = await api.get(`${game}/${response.data.gameId}`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-    const preLoadedMemeTemplate = await api.get(`${game}/${response.data.gameId}/template`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-    const memeData = {
-      ...preLoadedGameData.data,
-      meme: {...preLoadedMemeTemplate.data}
-    }
-    console.log(memeData);
-    setLoadedGameData(memeData);
+    await api.post(`/${game}/${currentLobby.code}`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
   }
 
   const startGameAtTheSameTime= (currentLobby) =>{
-    console.log(currentLobby);
     localStorage.setItem("started", "true")
     history.push(`/game/${currentLobby.gameId}`);
   }
 
-
-  const executeForAllPlayersAtSameTime = async (time, callback) => {
-    if(!isSynchronizing){
-      const delay = time - Date.now();
-      if (delay <= 0) {
-        callback();
-      } else {
-        setTimeout(callback, delay);
-      }
-      setIsSynchronizing(!isSynchronizing);
-      setShowAlert(true);
-    }
-  };
   return (
       <div className={"lobby content"}>
       <Container>
