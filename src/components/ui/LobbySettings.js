@@ -15,25 +15,11 @@ import {GiCardJoker} from "react-icons/gi";
 import RangeSlider from 'react-bootstrap-range-slider';
 
 
-/**
- * TODO: start game -> remove it from public lobby list (as it is in progress)
- *
- * TODO: leaderboard?
- */
-
 const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
     const cookies = new Cookies();
-    const [lobbyValues, setLobbyValues] = useState({
-        name: Lobby.name,
-        maxPlayers: Lobby.lobbySetting.maxPlayers,
-        maxRounds: Lobby.lobbySetting.maxRounds,
-        memeChangeLimit: Lobby.lobbySetting.memeChangeLimit,
-        roundDuration: Lobby.lobbySetting.roundDuration,
-        ratingDuration: Lobby.lobbySetting.ratingDuration,
-        superLikeLimit: Lobby.lobbySetting.superLikeLimit,
-        superDislikeLimit: Lobby.lobbySetting.superDislikeLimit,
-        isPublic: Lobby.lobbySetting.isPublic
-    });
+    const [lobbyValues, setLobbyValues] = useState(Lobby.lobbySetting);
+
+    if(!isAdmin && Lobby.lobbySetting !== lobbyValues) setLobbyValues(Lobby.lobbySetting);
 
     LobbySettings.propTypes = {
         Lobby: PropTypes.object,
