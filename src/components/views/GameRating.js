@@ -23,9 +23,9 @@ const GameRating = () => {
     const {id} = useParams();
     const cookies = new Cookies();
     const history = useHistory();
-    const {gameData, loadedGameData, preLoadedMemesForVoting} = useContext(AppContext);
+    const {loadedGameData, setLoadedGameData, preLoadedMemesForVoting} = useContext(AppContext);
 
-    const [reaction, setReaction] = useState("");
+    const [reaction] = useState("");
     const [currentGameData, setCurrentGameData] = useState(preLoadedMemesForVoting);
 
     const [currentRound, setCurrentRound] = useState(null);
@@ -36,31 +36,55 @@ const GameRating = () => {
     const [isSynchronizing, setIsSynchronizing] = useState(false)
 
     useEffect(async () => {
+        let votingData;
+        let gameData;
         if (preLoadedMemesForVoting === undefined || preLoadedMemesForVoting.length === 0) {
-            const votingMemeData = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-            setCurrentGameData(votingMemeData);
+            const votingRes = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+            const [gameRes, templateRes] = await Promise.all([
+                api.get(`${gameEndpoint}/${id}`, {
+                    headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+                }),
+                api.get(`${gameEndpoint}/${id}/template`, {
+                    headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+                }),
+            ]);
+            gameData = {
+                ...gameRes.data,
+                meme: { ...templateRes.data }
+            };
+            votingData = votingRes.data;
+            let currentTime = new Date();
+            let endTime = new Date(new Date(new Date(gameData.roundStartedAt).getTime() + gameData?.roundDuration * 1000).getTime() + 15000 + gameData?.votingDuration * 1000);
+            let roundedTimeLeft = Math.round((endTime-currentTime) / 1000) * 1000;
+            setNow((gameData?.votingDuration * 1000)-(roundedTimeLeft));
+            if(new Date() > new Date(endTime.getTime() + 10 * 1000)){
+                await pushToLeaderboard(true);
+            }
         } else {
-            setCurrentGameData(preLoadedMemesForVoting);
+            votingData = preLoadedMemesForVoting;
+            console.log(votingData)
+            gameData = loadedGameData;
+            setNow(0);
         }
-        setNow(0);
+        setLoadedGameData(gameData);
+        setCurrentGameData(votingData);
         setIsPlaying(true);
-        setCurrentRound(loadedGameData?.currentRound);
-        setMaxRound(loadedGameData?.totalRounds);
-        //history.push("/");
+        setCurrentRound(gameData?.currentRound);
+        setMaxRound(gameData?.totalRounds);
+        console.log(votingData)
     }, [preLoadedMemesForVoting]);
 
-    const handleNextRound = () => {
+    const handleNextRound = async () => {
         if (now < loadedGameData?.votingDuration * 1000) {
             setNow(now + 1000);
         } else if (!isSynchronizing) {
-            const started = new Date(loadedGameData?.startedAt);
-            const ended = new Date(started.getTime() + loadedGameData?.votingDuration * 1000);
+            const ended = new Date(new Date(new Date(loadedGameData.roundStartedAt).getTime() + loadedGameData?.roundDuration * 1000).getTime() + 15000 + loadedGameData?.votingDuration * 1000);
             const pushNextPage = new Date(ended.getTime() + 5 * 1000);
-            executeForAllPlayersAtSameTime(ended, () => {
-                submitVotesAtSameTime();
+            await executeForAllPlayersAtSameTime(ended, async () => {
+                await submitVotesAtSameTime();
             });
-            executeForAllPlayersAtSameTime(pushNextPage, () => {
-                pushToLeaderboard();
+            await executeForAllPlayersAtSameTime(pushNextPage, async () => {
+                await pushToLeaderboard();
             });
             setIsSynchronizing(!isSynchronizing);
         }
@@ -73,11 +97,11 @@ const GameRating = () => {
     };
 
     const submitVotesAtSameTime = async () => {
-        //TODO: freeze voting.
         const cgd = currentGameData.filter(meme => meme?.vote);
         await cgd.forEach(memeWithVote => api.post(`${gameEndpoint}/${id}/rating/${memeWithVote.id}`, {rating: memeWithVote.vote}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}}));
     }
-    const pushToLeaderboard = async () => {
+    const pushToLeaderboard = async (props) => {
+        props ? localStorage.setItem("alert", "There was an issue with your meme submission!") : localStorage.removeItem("alert");
         history.push("/leaderboard");
     }
 
@@ -92,24 +116,23 @@ const GameRating = () => {
 
     const leaveGame = async () => {
         //const leaveResponse = await api.delete('/' + localStorage.getItem("code") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
-        localStorage.clear()
-        sessionStorage.clear()
-        sessionStorage.setItem("alert", "Disconnected")
-        cookies.remove("token")
-        history.push("/")
+        localStorage.clear();
+        localStorage.clear();
+        localStorage.setItem("alert", "Disconnected");
+        cookies.remove("token");
+        history.push("/");
     }
 
     const [index, setIndex] = useState(0);
 
-    const handleSelect = (selectedIndex, e) => {
+    const handleSelect = (selectedIndex) => {
         setIndex(selectedIndex);
     };
 
     const handleReaction = (userReaction) => {
         if(!isSynchronizing){
             const cgd = [...currentGameData];
-            const voted = {...currentGameData[index], vote: userReaction};
-            cgd[index] = voted;
+            cgd[index] = {...currentGameData[index], vote: userReaction};
             setCurrentGameData(cgd);
         }
     }
@@ -139,6 +162,7 @@ const GameRating = () => {
     return (
         <div className={"game content"}>
             <div className={"game card"}>
+                {(currentGameData !== null && currentGameData?.length > 0 && currentGameData !== undefined) ? (
                 <BaseContainer className="game">
                     <Button
                         width="200px"
@@ -211,7 +235,7 @@ const GameRating = () => {
                         ) : (<></>)}
                     </Stack>
                     <Chat currentLobby={loadedGameData}/>
-                </BaseContainer>
+                </BaseContainer> ) : (<Spinner />)}
             </div>
         </div>
     );

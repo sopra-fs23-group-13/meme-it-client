@@ -19,8 +19,8 @@ const ChatRoom = (props) => {
                 console.log(error);
             }
         };
-        const interval = setInterval(() => {
-            getChatData();
+        const interval = setInterval(async () => {
+            await getChatData();
         }, 500);
         return () => clearInterval(interval);
     }, []);
@@ -41,6 +41,14 @@ const ChatRoom = (props) => {
         });
         setMessageText("");
     };
+
+    const handleKeyPress = async (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            await sendMessage();
+        }
+    };
+
     return (
         <div className={"chat"}>
             <ul className="message-list">
@@ -70,6 +78,7 @@ const ChatRoom = (props) => {
                     type="text"
                     value={messageText}
                     onChange={(event) => setMessageText(event.target.value)}
+                    onKeyDown={handleKeyPress}
                 />
                 <button className="chat-send-button" onClick={sendMessage}>
                     Send

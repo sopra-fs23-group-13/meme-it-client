@@ -11,7 +11,7 @@ export const Notification = ({ reason, showAlert, toggleShowAlert }) => {
             autohide
             onClose={() => {
                 toggleShowAlert();
-                sessionStorage.removeItem("alert");
+                localStorage.removeItem("alert");
             }}
         >
             <Toast.Header>

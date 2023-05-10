@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import {FormField} from "../../helpers/formField";
 import "styles/views/Home.scss";
 import "styles/views/LobbySettings.scss";
-import {Button, Col, Container, Dropdown, DropdownButton, Row} from "react-bootstrap";
+import {Button, Col, Container, Row} from "react-bootstrap";
 import PropTypes from "prop-types";
 import {api} from "../../helpers/api";
 import Cookies from "universal-cookie";
 import {lobby} from "../../helpers/endpoints";
-import {LoadingButton} from "./LoadingButton";
 import {BsFillPersonFill, BsArrowRepeat} from "react-icons/bs";
 import {FaExchangeAlt} from "react-icons/fa";
 import {AiOutlineClockCircle, AiFillLock} from "react-icons/ai";
@@ -17,25 +15,11 @@ import {GiCardJoker} from "react-icons/gi";
 import RangeSlider from 'react-bootstrap-range-slider';
 
 
-/**
- * TODO: start game -> remove it from public lobby list (as it is in progress)
- *
- * TODO: leaderboard?
- */
-
 const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
     const cookies = new Cookies();
-    const [lobbyValues, setLobbyValues] = useState({
-        name: Lobby.name,
-        maxPlayers: Lobby.lobbySetting.maxPlayers,
-        maxRounds: Lobby.lobbySetting.maxRounds,
-        memeChangeLimit: Lobby.lobbySetting.memeChangeLimit,
-        roundDuration: Lobby.lobbySetting.roundDuration,
-        ratingDuration: Lobby.lobbySetting.ratingDuration,
-        superLikeLimit: Lobby.lobbySetting.superLikeLimit,
-        superDislikeLimit: Lobby.lobbySetting.superDislikeLimit,
-        isPublic: Lobby.lobbySetting.isPublic
-    });
+    const [lobbyValues, setLobbyValues] = useState(Lobby.lobbySetting);
+
+    if(!isAdmin && Lobby.lobbySetting !== lobbyValues) setLobbyValues(Lobby.lobbySetting);
 
     LobbySettings.propTypes = {
         Lobby: PropTypes.object,
@@ -51,14 +35,14 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
         }
     }
 
-    const handleChange = (event) => {
+    const handleChange = async (event) => {
         const { name, value } = event.target;
         if(name === "isPublic"){
             setLobbyValues({
                 ...lobbyValues,
                 [name]: value,
             });
-            updateSettings();
+            await updateSettings();
         }
         else if(name === "name"){
             setLobbyValues({
@@ -71,7 +55,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
                 ...lobbyValues,
                 [name]: Number(value),
             });
-            updateSettings();
+            await updateSettings();
         }
     };
 
