@@ -18,7 +18,7 @@ const Game = () => {
     const delay = 1000;
     const history = useHistory();
     const {id} = useParams();
-    const {setGameData, loadedGameData, setLoadedGameData,  setPreLoadedMemesForVoting} = useContext(AppContext);
+    const {setGameData, loadedGameData, setLoadedGameData} = useContext(AppContext);
     const cookies = new Cookies();
 
     const [isSynchronizing, setIsSynchronizing] = useState(false)
@@ -38,32 +38,32 @@ const Game = () => {
     const [currentTextNodeValues, setCurrentTextNodeValues] = useState([]);
     useEffect(async () => {
         let memeData;
-        if (loadedGameData === undefined || loadedGameData.length === 0) {
-            const [gameRes, templateRes] = await Promise.all([
-                api.get(`${gameEndpoint}/${id}`, {
-                    headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
-                }),
-                api.get(`${gameEndpoint}/${id}/template`, {
-                    headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
-                }),
-            ]);
-            memeData = {
-                ...gameRes.data,
-                meme: { ...templateRes.data }
-            };
-            let currentTime = new Date();
-            let endTime = new Date(new Date(memeData.roundStartedAt).getTime() + memeData?.roundDuration * 1000);
-            let roundedTimeLeft = Math.round((endTime-currentTime) / 1000) * 1000
-            setNow((memeData?.roundDuration * 1000)-(roundedTimeLeft));
-            console.log(new Date(memeData.roundStartedAt));
-            console.log(new Date(memeData.roundStartedAt).getTime());
-            if(new Date() > new Date(endTime.getTime() + 10 * 1000)){
-                startVotingAtSameTime(true);
-            }
-        } else {
-            memeData = loadedGameData;
-            setNow(0);
-        }
+        const [gameRes, templateRes] = await Promise.all([
+            api.get(`${gameEndpoint}/${id}`, {
+                headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+            }),
+            api.get(`${gameEndpoint}/${id}/template`, {
+                headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+            }),
+        ]);
+        memeData = {
+            ...gameRes.data,
+            meme: { ...templateRes.data }
+        };
+
+        console.log(memeData)
+
+        let currentTime = new Date();
+        let endTime = new Date(new Date(memeData.roundStartedAt).getTime() + memeData?.roundDuration * 1000);
+        let roundedTimeLeft = Math.round((endTime-currentTime) / 1000) * 1000;
+
+        console.log(currentTime);
+        console.log(endTime);
+        console.log(roundedTimeLeft);
+
+        ((memeData?.roundDuration * 1000)-(roundedTimeLeft)) > 0 ? setNow((memeData?.roundDuration * 1000)-(roundedTimeLeft)) : setNow(memeData?.roundDuration * 1000);
+        ((memeData?.roundDuration * 1000)-(roundedTimeLeft)) >= 0 ? setIsSynchronizing(false) : setIsSynchronizing(true);
+
         setLoadedGameData(memeData);
         setGameData([]);
         setCurrentRound(memeData.currentRound);
@@ -112,35 +112,20 @@ const Game = () => {
         setCurrentTextNodePositions(currentNodePositions);
     }
     const handleNextRound = async () => {
+        const gameState = await api.get(`${gameEndpoint}/${id}`, {
+            headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+        });
         if (now < loadedGameData?.roundDuration * 1000) {
+            setIsSynchronizing(false);
             setNow(now + 1000);
-        } else if (!isSynchronizing) {
-            const started = new Date(loadedGameData.startedAt);
-            const ended = new Date(started.getTime() + loadedGameData?.roundDuration * 1000);
-
-            // due to security
-            const randomBuffer = new Uint32Array(1);
-            window.crypto.getRandomValues(randomBuffer);
-            let randomNumber = randomBuffer[0] / (0xffffffff + 1);
-            const loadDelay = new Date(ended.getTime() + (5 + randomNumber) * 1000);
-
-            const loadDataAfterSubmitting = new Date(ended.getTime() + 5 * 1000);
-            const pushNextPage = new Date(loadDataAfterSubmitting.getTime() + 5 * 1000);
-            await executeForAllPlayersAtSameTime(ended, () => {
-                submitMemesAtSameTime();
-            });
-            await executeForAllPlayersAtSameTime(loadDelay, async () => {
-                await preloadVotingRound();
-            });
-            await executeForAllPlayersAtSameTime(pushNextPage, () => {
-                startVotingAtSameTime();
-            });
-            setIsSynchronizing(!isSynchronizing);
-        }
-        if (currentRound < 0 && isPlaying) {
+        } else if(gameState.data.gameState !== "CREATION"){
             setNow(null);
             setCurrentRound(null);
             setIsPlaying(false);
+            await submitMemesAtSameTime();
+            await startVotingAtSameTime();
+        } else {
+            setIsSynchronizing(true);
         }
     };
     const onTextNodeDrag = (e, data, i) => {
@@ -179,7 +164,7 @@ const Game = () => {
         setColor(event.target.value);
     };
 
-    const submitMemesAtSameTime = () => {
+    const submitMemesAtSameTime = async () => {
         //setIsSynchronizing(!isSynchronizing);
         // freeze all elements, no edits possible
         // submit all elements via api
@@ -206,32 +191,14 @@ const Game = () => {
             color,
             fontSize,
         };
-        api.post(`${gameEndpoint}/${id}/meme/${loadedGameData?.meme?.id}`, meme, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-    }
-
-    const preloadVotingRound = async () => {
-        // get all memes from this round
-        const preLoadedMemesForVoting = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-        setPreLoadedMemesForVoting(preLoadedMemesForVoting.data);
-        console.log(preLoadedMemesForVoting.data);
+        await api.post(`${gameEndpoint}/${id}/meme/${loadedGameData?.meme?.id}`, meme, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
     }
 
     const startVotingAtSameTime= (props) =>{
-        // reset time and push next page
-        // load page from context
         setNow(null);
         props ? localStorage.setItem("alert", "There was an issue with your meme submission!") : localStorage.removeItem("alert");
         history.push("/game-rating/" + id);
     }
-
-    const executeForAllPlayersAtSameTime = async (time, callback) => {
-        const delay = time - Date.now();
-        if (delay <= 0) {
-            callback();
-        } else {
-            setTimeout(callback, delay);
-        }
-    };
 
     return (
         <div className={"game content"}>
