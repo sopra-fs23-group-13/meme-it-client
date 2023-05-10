@@ -19,7 +19,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
     const cookies = new Cookies();
     const [lobbyValues, setLobbyValues] = useState(Lobby.lobbySetting);
 
-    if(!isAdmin && Lobby.lobbySetting !== lobbyValues) setLobbyValues(Lobby.lobbySetting)
+    if(!isAdmin && Lobby.lobbySetting !== lobbyValues) setLobbyValues(Lobby.lobbySetting);
 
     LobbySettings.propTypes = {
         Lobby: PropTypes.object,
