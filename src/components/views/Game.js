@@ -5,9 +5,7 @@ import {v4 as uuid} from "uuid";
 import {useParams, useHistory} from "react-router-dom";
 import {Spinner} from "components/ui/Spinner";
 import "styles/views/Game.scss";
-import MockData from "../../mockData/menuScreenDataMock.json";
 import BaseContainer from "../ui/BaseContainer";
-import {findGame} from "helpers/functions";
 import {AppContext} from "context";
 import TimerProgressBar from "components/ui/TimerProgressBar";
 import {api} from "../../helpers/api";
@@ -21,8 +19,6 @@ const Game = () => {
     const history = useHistory();
     const {id} = useParams();
     const {setGameData, loadedGameData, setLoadedGameData,  setPreLoadedMemesForVoting} = useContext(AppContext);
-    const game = findGame(MockData, id);
-    const gameRounds = useMemo(() => game?.rounds, [game]);
     const cookies = new Cookies();
 
     const [isSynchronizing, setIsSynchronizing] = useState(false)
@@ -41,24 +37,35 @@ const Game = () => {
     ]);
     const [currentTextNodeValues, setCurrentTextNodeValues] = useState([]);
     useEffect(async () => {
-        /*
-        if(!loadedGameData === undefined || loadedGameData.length === 0){
-            const preLoadedGameData = await api.get(`${game}/${response.data.gameId}`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-            const preLoadedMemeTemplate = await api.get(`${game}/${response.data.gameId}/template`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-            const memeData = {
-                ...preLoadedGameData.data,
-                meme: {...preLoadedMemeTemplate.data}
-            }
-            console.log(memeData);
-            setLoadedGameData(memeData);
-        }*/
+        let memeData;
+        if (loadedGameData === undefined || loadedGameData.length === 0) {
+            const [gameRes, templateRes] = await Promise.all([
+                api.get(`${gameEndpoint}/${id}`, {
+                    headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+                }),
+                api.get(`${gameEndpoint}/${id}/template`, {
+                    headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+                }),
+            ]);
+            memeData = {
+                ...gameRes.data,
+                meme: { ...templateRes.data }
+            };
+            let currentTime = new Date();
+            let endTime = new Date(new Date(memeData.roundStartedAt).getTime() + memeData?.roundDuration * 1000);
+            let roundedTimeLeft = Math.round((endTime-currentTime) / 1000) * 1000
+            setNow((memeData?.roundDuration * 1000)-(roundedTimeLeft));
+        } else {
+            memeData = loadedGameData;
+            setNow(0);
+        }
+        setLoadedGameData(memeData);
         setGameData([]);
-        setCurrentRound(loadedGameData?.currentRound);
-        setCurrentMeme(loadedGameData?.meme?.imageUrl);
-        setMaxRound(loadedGameData?.totalRounds);
-        setNow(0);
+        setCurrentRound(memeData.currentRound);
+        setCurrentMeme(memeData.meme?.imageUrl);
+        setMaxRound(memeData.totalRounds);
         setIsPlaying(true);
-    }, [gameRounds]);
+    }, []);
 
     const memeTextNodes = useMemo(() => {
         return [...Array(currentMeme?.number_of_text_nodes).keys()].map(
