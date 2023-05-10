@@ -28,7 +28,6 @@ const Game = () => {
     const [maxRound, setMaxRound] = useState(null);
     const [currentMeme, setCurrentMeme] = useState(null);
     const [now, setNow] = useState(null);
-    const [isPlaying, setIsPlaying] = useState(false);
     const [currentTextNodePositions, setCurrentTextNodePositions] = useState([
         {
             xRate: 150,
@@ -51,25 +50,23 @@ const Game = () => {
             meme: { ...templateRes.data }
         };
 
-        console.log(memeData)
-
         let currentTime = new Date();
         let endTime = new Date(new Date(memeData.roundStartedAt).getTime() + memeData?.roundDuration * 1000);
         let roundedTimeLeft = Math.round((endTime-currentTime) / 1000) * 1000;
 
-        console.log(currentTime);
-        console.log(endTime);
-        console.log(roundedTimeLeft);
-
-        ((memeData?.roundDuration * 1000)-(roundedTimeLeft)) > 0 ? setNow((memeData?.roundDuration * 1000)-(roundedTimeLeft)) : setNow(memeData?.roundDuration * 1000);
-        ((memeData?.roundDuration * 1000)-(roundedTimeLeft)) >= 0 ? setIsSynchronizing(false) : setIsSynchronizing(true);
+        if((memeData?.roundDuration * 1000)-(roundedTimeLeft) >= 0){
+            setIsSynchronizing(false);
+            setNow((memeData?.roundDuration * 1000)-(roundedTimeLeft))
+        }else{
+            setIsSynchronizing(true);
+            setNow(memeData?.roundDuration * 1000)
+        }
 
         setLoadedGameData(memeData);
         setGameData([]);
         setCurrentRound(memeData.currentRound);
         setCurrentMeme(memeData.meme?.imageUrl);
         setMaxRound(memeData.totalRounds);
-        setIsPlaying(true);
     }, []);
 
     const memeTextNodes = useMemo(() => {
@@ -115,13 +112,14 @@ const Game = () => {
         const gameState = await api.get(`${gameEndpoint}/${id}`, {
             headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
         });
+        console.log(loadedGameData);
+        console.log(gameState);
         if (now < loadedGameData?.roundDuration * 1000) {
             setIsSynchronizing(false);
             setNow(now + 1000);
         } else if(gameState.data.gameState !== "CREATION"){
             setNow(null);
             setCurrentRound(null);
-            setIsPlaying(false);
             await submitMemesAtSameTime();
             await startVotingAtSameTime();
         } else {
@@ -191,6 +189,11 @@ const Game = () => {
             color,
             fontSize,
         };
+        const randomBuffer = new Uint32Array(1);
+        window.crypto.getRandomValues(randomBuffer);
+        let randomNumber = randomBuffer[0] / (0xffffffff + 1);
+        //const loadDelay = new Date(ended.getTime() + (5 + randomNumber) * 1000);
+        setTimeout(randomNumber * 100);
         await api.post(`${gameEndpoint}/${id}/meme/${loadedGameData?.meme?.id}`, meme, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
     }
 
@@ -225,7 +228,7 @@ const Game = () => {
                             now={now}
                             max={loadedGameData?.roundDuration * 1000}
                             callbackFunc={() => handleNextRound()}
-                            isPlaying={isPlaying}
+                            isPlaying={!isSynchronizing}
                         />
                     </Stack>
                     {currentMeme?.imageUrl ? (
