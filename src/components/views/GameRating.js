@@ -162,6 +162,7 @@ const GameRating = () => {
     return (
         <div className={"game content"}>
             <div className={"game card"}>
+                {(currentGameData !== null && currentGameData?.length > 0 && currentGameData !== undefined) ? (
                 <BaseContainer className="game">
                     <Button
                         width="200px"
@@ -234,7 +235,7 @@ const GameRating = () => {
                         ) : (<></>)}
                     </Stack>
                     <Chat currentLobby={loadedGameData}/>
-                </BaseContainer>
+                </BaseContainer> ) : (<Spinner />)}
             </div>
         </div>
     );

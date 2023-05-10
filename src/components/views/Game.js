@@ -236,6 +236,7 @@ const Game = () => {
     return (
         <div className={"game content"}>
           <div className={"game card"}>
+              {(loadedGameData !== null && loadedGameData !== undefined && currentRound !== null) ? (
             <BaseContainer className="game">
                 <Button
                     width="200px"
@@ -334,7 +335,7 @@ const Game = () => {
                     )}
                 </Stack>
                 <Chat currentLobby={loadedGameData} />
-            </BaseContainer>
+            </BaseContainer> ) : (<Spinner />)}
           </div>
         </div>
     );
