@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { ListGroup, Badge } from "react-bootstrap";
+import {ListGroup, Badge, Container} from "react-bootstrap";
 import "styles/views/FinalLeaderboard.scss";
 import { FaMedal } from 'react-icons/fa';
 import { api, handleError } from "../../helpers/api";
@@ -45,6 +45,7 @@ const FinalLeaderboard = ({leaderboardData}) => {
   const backToMainScreen = () => {
     history.push('/');
   };
+
 
   return (
         <div className="final-leaderboard-container">

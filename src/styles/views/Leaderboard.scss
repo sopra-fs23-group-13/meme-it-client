@@ -1,7 +1,5 @@
 @import 'styles/theme';
-body {
-  overflow-x:hidden;
-}
+
 .leaderboard {
   &.content {
     display: flex;
@@ -17,6 +15,10 @@ body {
     padding: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-top: 1em;
+    &.meme {
+      background: transparent;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
   }
 
   &.table {
@@ -32,8 +34,14 @@ body {
   }
 
   &.best-meme-image {
+    &:hover{
+      box-shadow: 0 4px 6px rgba(255, 255, 255, 0.7);
+    }
     width: 60%;
     height: 60%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    margin-bottom:0.5em;
+    transition: all 0.3s ease;
   }
 
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {ListGroup, Images, Col, Row, Stack, Table, Button, Badge, Container} from "react-bootstrap";
 import "styles/views/Leaderboard.scss";
 import { FaMedal } from 'react-icons/fa';
@@ -12,14 +12,19 @@ import TimerProgressBar from "../ui/TimerProgressBar";
 import Modal from "react-bootstrap/Modal";
 import Cookies from "universal-cookie";
 import {useHistory} from "react-router-dom";
+import AnimatedBarChart from "../ui/AnimatedBarChart";
+import Confetti from "react-confetti";
+import {useWindowSize} from "react-use";
 
-const Leaderboard = ({ roundMemes, roundRatings, gameRatings}) => {
+const Leaderboard = ({ roundMemes, roundRatings, gameRatings, isFinal}) => {
+    const { width, height } = useWindowSize()
     const history = useHistory();
     const cookies = new Cookies();
     const [roundPlayers, setRoundPlayers] = useState([]); //All players and their score throughout all rounds
     const [memes, setMemes] = useState([]); // All memes of this round and their rating
     const [showMeme, setShowMeme] = useState(false );
     const [enlargedMeme, setEnlargedMeme] = useState(null);
+    const [bestMeme, setBestMeme] = useState(null);
 
     const leaveGame = async () => {
         //const leaveResponse = await api.delete('/' + localStorage.getItem("code") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
@@ -51,8 +56,6 @@ const Leaderboard = ({ roundMemes, roundRatings, gameRatings}) => {
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
             >
-                <Modal.Header closeButton>
-                </Modal.Header>
                 {enlargedMeme ? (<img src={enlargedMeme.imageUrl}/>) : <div><Spinner/></div>}
             </Modal>
         );
@@ -67,9 +70,7 @@ const Leaderboard = ({ roundMemes, roundRatings, gameRatings}) => {
                     setShowMeme(true)
                 }}/>
             </div>
-
         )
-
     }
     console.log(enlargedMeme)
     console.log(showMeme)
@@ -169,6 +170,9 @@ const Leaderboard = ({ roundMemes, roundRatings, gameRatings}) => {
             });
             setRoundPlayers(players);
             setMemes(currentMemes);
+            if(!bestMeme || bestMeme.rating < currentMemes[0].rating) {
+                setBestMeme(currentMemes[0])
+            }
         }
         if (memes.length === 0 || roundPlayers.length === 0) {
             getRoundMemeData();
@@ -181,7 +185,73 @@ const Leaderboard = ({ roundMemes, roundRatings, gameRatings}) => {
 
 
 
-    if (memes.length > 0 && roundPlayers.length > 0) {
+    if (isFinal && roundPlayers.length && roundPlayers.length) {
+        return (
+            <div className={"leaderboard content"} style={{marginTop:"1em"}}>
+                <Container>
+                    <div className={"leaderboard card"} >
+                        <Button
+                            width="200px"
+                            onClick={leaveGame}
+                            className="lobby leave-btn game">
+                            Leave
+                        </Button>
+                        <h2 style={{textAlign:"center",marginTop:"1em"}}> The Game has ended </h2>
+                        <h5 style={{textAlign:"center", marginTop:"-0.5em"}}> {roundPlayers[0].name} wins! </h5>
+                        <Stack direction={"horizontal"} style={{alignItems:"center", justifyContent:"center"}}>
+                                <AnimatedBarChart player={roundPlayers[1]} highScore={roundPlayers[0].score} rank={2} meme={getPlayerMeme(roundPlayers[1])}/>
+                                <AnimatedBarChart player={roundPlayers[0]} highScore={roundPlayers[0].score} rank={1} meme={getPlayerMeme(roundPlayers[0])}/>
+                                {roundPlayers[2] ?
+                                    <AnimatedBarChart player={roundPlayers[2]} highScore={roundPlayers[0].score} rank={3} meme={getPlayerMeme(roundPlayers[2])}/>
+                                    : null }
+
+                        </Stack>
+                    </div>
+                    <div className={"leaderboard card"}>
+                        <Row style={{marginBottom:"1em"}}>
+                            <Col >
+                                <div className={"leaderboard card meme"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}>
+                                    <h2 style={{textAlign:"center"}}> Meme of the Game</h2>
+                                    <img src={bestMeme.imageUrl} style={{cursor:"pointer",border:"solid white 5px"}} className={"leaderboard best-meme-image"} onClick={() => {
+                                        setEnlargedMeme(bestMeme)
+                                        setShowMeme(true)}}>
+                                    </img>
+                                    <h5 style={{textAlign:"center"}}>
+                                        by {bestMeme.user.name} with {bestMeme.rating} points
+                                    </h5>
+                                </div>
+                            </Col>
+                            <Col md={"auto"} style={{marginBottom:"0.5em",marginTop:"0.5em"}}>
+                            </Col>
+                            <Col >
+                                <div className={"leaderboard card meme"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}>
+                                    <h2 style={{textAlign:"center"}}> Meme of the Round</h2>
+                                    <img src={memes[0].imageUrl} style={{cursor:"pointer",border:"solid white 5px"}} className={"leaderboard best-meme-image"} onClick={() => {
+                                        setEnlargedMeme(memes[0])
+                                        setShowMeme(true)}}>
+                                    </img>
+                                    <h5 style={{textAlign:"center"}}>
+                                        by {memes[0].user.name} with {memes[0].rating} points
+                                    </h5>
+                                </div>
+                            </Col>
+                        </Row>
+
+
+                    </div>
+                    <div className={"leaderboard card"}>
+                        <h2 style={{textAlign:"center"}}> Leaderboard </h2>
+                        <Leaderboard/>
+                    </div>
+                </Container>
+                {/*To disable it for testing, change to false*/ }
+                {true ? <Confetti width={width} height={1.4*height} numberOfPieces={100}/> : null }
+                {enlargedMeme && showMeme && <EnlargedMeme/>}
+            </div>
+        )
+    }
+
+    if (memes.length && roundPlayers.length) {
         return (
             <div className="leaderboard content">
                 <Container>
@@ -205,9 +275,9 @@ const Leaderboard = ({ roundMemes, roundRatings, gameRatings}) => {
                             />
                             <Row style={{marginBottom:"1em"}}>
                                 <Col >
-                                    <div className={"leaderboard card"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+                                    <div className={"leaderboard card"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}>
                                         <h2 style={{textAlign:"center"}}> Best Meme </h2>
-                                        <img src={memes[0].imageUrl} style={{cursor:"pointer"}} className={"leaderboard best-meme-image"} onClick={() => {
+                                        <img src={memes[0].imageUrl} style={{cursor:"pointer",border:"solid white 5px"}} className={"leaderboard best-meme-image"} onClick={() => {
                                             setEnlargedMeme(memes[0])
                                             setShowMeme(true)}}>
                                         </img>
@@ -219,9 +289,9 @@ const Leaderboard = ({ roundMemes, roundRatings, gameRatings}) => {
                                 <Col md={"auto"} style={{marginBottom:"0.5em",marginTop:"0.5em"}}>
                                 </Col>
                                 <Col >
-                                    <div className={"leaderboard card"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+                                    <div className={"leaderboard card"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}>
                                         <h2 style={{textAlign:"center"}}> Worst Meme </h2>
-                                        <img src={memes[memes.length-1].imageUrl} style={{cursor:"pointer"}} className={"leaderboard best-meme-image"} onClick={() => {
+                                        <img src={memes[memes.length-1].imageUrl} style={{cursor:"pointer",border:"solid white 5px"}} className={"leaderboard best-meme-image"} onClick={() => {
                                             setEnlargedMeme(memes[memes.length-1])
                                             setShowMeme(true)}}>
                                         </img>
