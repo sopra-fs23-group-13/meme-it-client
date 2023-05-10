@@ -4,7 +4,7 @@ import "styles/ui/LobbyCode.scss";
 import "styles/ui/Button.scss";
 import {Button} from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import ActivePlayersList from "../ui/ActivePlayersList";
 import LobbySettings from "../ui/LobbySettings";
 
@@ -15,17 +15,15 @@ import {lobby, game} from "../../helpers/endpoints";
 import {Notification} from "../ui/Notification";
 import Chat from "../ui/Chat";
 import {LoadingButton} from "../ui/LoadingButton";
-import {AppContext} from "../../context";
 import {LobbyCodeContainer} from "../ui/LobbyCodeContainer";
 
 const Lobby = () => {
   const cookies = new Cookies();
   const history = useHistory();
-  const {setLoadedGameData} = useContext(AppContext);
   const [currentLobby, setCurrentLobby] = useState({});
   const [showAlert, setShowAlert] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isSynchronizing, setIsSynchronizing] = useState(false);
+  const [isSynchronizing] = useState(false);
   const toggleShowAlert = () => setShowAlert(!showAlert);
 
 
