@@ -58,7 +58,6 @@ const GameRating = () => {
             let roundedTimeLeft = Math.round((endTime-currentTime) / 1000) * 1000;
             setNow((gameData?.votingDuration * 1000)-(roundedTimeLeft));
             if(new Date() > new Date(endTime.getTime() + 10 * 1000)){
-                console.log("here savage")
                 await pushToLeaderboard(true);
             }
         } else {
@@ -101,7 +100,8 @@ const GameRating = () => {
         const cgd = currentGameData.filter(meme => meme?.vote);
         await cgd.forEach(memeWithVote => api.post(`${gameEndpoint}/${id}/rating/${memeWithVote.id}`, {rating: memeWithVote.vote}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}}));
     }
-    const pushToLeaderboard = async () => {
+    const pushToLeaderboard = async (props) => {
+        props ? localStorage.setItem("alert", "There was an issue with your meme submission!") : localStorage.removeItem("alert");
         history.push("/leaderboard");
     }
 
