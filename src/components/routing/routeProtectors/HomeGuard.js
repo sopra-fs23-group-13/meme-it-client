@@ -1,5 +1,6 @@
 import {Redirect} from "react-router-dom";
 import PropTypes from "prop-types";
+import Cookies from "universal-cookie";
 
 /**
  * routeProtectors interfaces can tell the router whether or not it should allow navigation to a requested route.
@@ -11,14 +12,17 @@ import PropTypes from "prop-types";
  * @param props
  */
 export const HomeGuard = props => {
-    //If user has hash in local storage + if lobby with such hash exists atm (backend needs to be fixed first i think)
+    const cookies = new Cookies();
     if (!localStorage.getItem("code")){
         return props.children;
     }
     if(!localStorage.getItem("started")){
         return <Redirect to="/lobby"/>;
     }
-    return <Redirect to="/game/1"/>;
+    //removing all the tokens and everything if a user wants to get back to the lobby aka pushes his url to /
+    localStorage.clear();
+    cookies.remove("token");
+    return <Redirect to="/"/>;
 };
 
 HomeGuard.propTypes = {

@@ -4,7 +4,7 @@ import "styles/ui/LobbyCode.scss";
 import "styles/ui/Button.scss";
 import {Button} from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import ActivePlayersList from "../ui/ActivePlayersList";
 import LobbySettings from "../ui/LobbySettings";
 
@@ -15,17 +15,15 @@ import {lobby, game} from "../../helpers/endpoints";
 import {Notification} from "../ui/Notification";
 import Chat from "../ui/Chat";
 import {LoadingButton} from "../ui/LoadingButton";
-import {AppContext} from "../../context";
 import {LobbyCodeContainer} from "../ui/LobbyCodeContainer";
 
 const Lobby = () => {
   const cookies = new Cookies();
   const history = useHistory();
-  const {setLoadedGameData} = useContext(AppContext);
   const [currentLobby, setCurrentLobby] = useState({});
   const [showAlert, setShowAlert] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isSynchronizing, setIsSynchronizing] = useState(false);
+  const [isSynchronizing] = useState(false);
   const toggleShowAlert = () => setShowAlert(!showAlert);
 
 
@@ -47,19 +45,13 @@ const Lobby = () => {
         });
 
         if(response.data.gameStartedAt !== null){
-          if(!isSynchronizing) {
-            await executeForAllPlayersAtSameTime(new Date(response.data.gameStartedAt), () => {
-              startGameAtTheSameTime(response.data);
-            });
-            await preloadGame(response);
-            setIsSynchronizing(!isSynchronizing);
-          }
+          startGameAtTheSameTime(response.data)
         }
 
         if(!playerIsInLobby){
           await leaveLobby("Kicked from Lobby");
         }
-        }
+      }
       catch (error){
         await leaveLobby("Lobby Not Found")
         console.log(error);
@@ -88,40 +80,17 @@ const Lobby = () => {
   }
 
   const startGame = async () => {
-    const response = await api.post(`/${game}/${currentLobby.code}`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-    await preloadGame(response);
-  }
-
-  const preloadGame = async (response) => {
-    const preLoadedGameData = await api.get(`${game}/${response.data.gameId}`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-    const preLoadedMemeTemplate = await api.get(`${game}/${response.data.gameId}/template`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-    const memeData = {
-      ...preLoadedGameData.data,
-      meme: {...preLoadedMemeTemplate.data}
-    }
-    console.log(memeData);
-    setLoadedGameData(memeData);
+    await api.post(`/${game}/${currentLobby.code}`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
   }
 
   const startGameAtTheSameTime= (currentLobby) =>{
-    console.log(currentLobby);
     localStorage.setItem("started", "true")
+    localStorage.setItem("swap", currentLobby.lobbySetting.memeChangeLimit);
+    localStorage.setItem("superlike", currentLobby.lobbySetting.superLikeLimit);
+    localStorage.setItem("dislike", currentLobby.lobbySetting.superDislikeLimit);
     history.push(`/game/${currentLobby.gameId}`);
   }
 
-
-  const executeForAllPlayersAtSameTime = async (time, callback) => {
-    if(!isSynchronizing){
-      const delay = time - Date.now();
-      if (delay <= 0) {
-        callback();
-      } else {
-        setTimeout(callback, delay);
-      }
-      setIsSynchronizing(!isSynchronizing);
-      setShowAlert(true);
-    }
-  };
   return (
       <div className={"lobby content"}>
       <Container>

@@ -34,6 +34,8 @@ const GameRating = () => {
     const [now, setNow] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isSynchronizing, setIsSynchronizing] = useState(false)
+    const [superLikes, setSuperLikes] = useState(Number(localStorage.getItem("superlike")));
+    const [superDislikes, setSuperDislikes] = useState(Number(localStorage.getItem("superlike")));
 
     useEffect(async () => {
         let votingData;
@@ -54,15 +56,11 @@ const GameRating = () => {
             };
             votingData = votingRes.data;
             let currentTime = new Date();
-            let endTime = new Date(new Date(new Date(gameData.roundStartedAt).getTime() + gameData?.roundDuration * 1000).getTime() + 15000 + gameData?.votingDuration * 1000);
+            let endTime = new Date(new Date(new Date(gameData.roundStartedAt).getTime() + gameData?.roundDuration * 1000).getTime() + gameData?.votingDuration * 1000);
             let roundedTimeLeft = Math.round((endTime-currentTime) / 1000) * 1000;
             setNow((gameData?.votingDuration * 1000)-(roundedTimeLeft));
-            if(new Date() > new Date(endTime.getTime() + 10 * 1000)){
-                await pushToLeaderboard(true);
-            }
         } else {
             votingData = preLoadedMemesForVoting;
-            console.log(votingData)
             gameData = loadedGameData;
             setNow(0);
         }
@@ -71,49 +69,61 @@ const GameRating = () => {
         setIsPlaying(true);
         setCurrentRound(gameData?.currentRound);
         setMaxRound(gameData?.totalRounds);
-        console.log(votingData)
     }, [preLoadedMemesForVoting]);
 
     const handleNextRound = async () => {
+        const votingRes = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+
+        const mergedArray = currentGameData.map((gameDataItem) => {
+            const votingDataItem = votingRes.data.find((votingItem) => votingItem.id === gameDataItem.id);
+            if (votingDataItem) {
+                return {
+                    ...gameDataItem,
+                    voting: votingDataItem.voting
+                }
+            }
+            return gameDataItem;
+        }).concat(votingRes.data.filter((votingItem) => !currentGameData.some((gameDataItem) => gameDataItem.id === votingItem.id)));
+
+        setCurrentGameData(mergedArray);
+
         if (now < loadedGameData?.votingDuration * 1000) {
+            setIsSynchronizing(false);
             setNow(now + 1000);
-        } else if (!isSynchronizing) {
-            const ended = new Date(new Date(new Date(loadedGameData.roundStartedAt).getTime() + loadedGameData?.roundDuration * 1000).getTime() + 15000 + loadedGameData?.votingDuration * 1000);
-            const pushNextPage = new Date(ended.getTime() + 5 * 1000);
-            await executeForAllPlayersAtSameTime(ended, async () => {
-                await submitVotesAtSameTime();
-            });
-            await executeForAllPlayersAtSameTime(pushNextPage, async () => {
-                await pushToLeaderboard();
-            });
-            setIsSynchronizing(!isSynchronizing);
-        }
-        if (currentRound < 0 && isPlaying) {
-            setNow(null);
-            setCurrentRound(null);
-            setIsPlaying(false);
-            history.push("/game-rating/" + id);
         }
     };
 
-    console.log(id)
+    useEffect( () => {
+        const continueToNextRound = async () => {
+            const gameState = await api.get(`${gameEndpoint}/${id}`, {
+                headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+            });
+
+            if(gameState.data.gameState !== "RATING"){
+                setNow(null);
+                setCurrentRound(null);
+                setIsPlaying(false);
+                await submitVotesAtSameTime();
+                await pushToLeaderboard();
+            } else {
+                setIsSynchronizing(true);
+            }
+        };
+
+        const interval = setInterval(async () => {
+            await continueToNextRound();
+        }, 1000);
+        return () => clearInterval(interval);
+    });
+
     const submitVotesAtSameTime = async () => {
         const cgd = currentGameData.filter(meme => meme?.vote);
         await cgd.forEach(memeWithVote => api.post(`${gameEndpoint}/${id}/rating/${memeWithVote.id}`, {rating: memeWithVote.vote}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}}));
     }
     const pushToLeaderboard = async (props) => {
         props ? localStorage.setItem("alert", "There was an issue with your meme submission!") : localStorage.removeItem("alert");
-        history.push("/leaderboard/" + id);
+        history.push("/leaderboard");
     }
-
-    const executeForAllPlayersAtSameTime = async (time, callback) => {
-        const delay = time - Date.now();
-        if (delay <= 0) {
-            callback();
-        } else {
-            setTimeout(callback, delay);
-        }
-    };
 
     const leaveGame = async () => {
         //const leaveResponse = await api.delete('/' + localStorage.getItem("code") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
@@ -133,8 +143,19 @@ const GameRating = () => {
     const handleReaction = (userReaction) => {
         if(!isSynchronizing){
             const cgd = [...currentGameData];
-            cgd[index] = {...currentGameData[index], vote: userReaction};
-            setCurrentGameData(cgd);
+
+            if(cgd[index]?.vote !== userReaction){
+
+                //give user back his superlike / -dislike when changing his decision
+                if (cgd[index]?.vote === 3){setSuperLikes(superLikes+1);}
+                else if (userReaction === 3){setSuperLikes(superLikes-1);}
+
+                if (cgd[index]?.vote === 0){setSuperDislikes(superDislikes+1);}
+                else if (userReaction === 0){setSuperDislikes(superDislikes-1);}
+
+                cgd[index] = {...currentGameData[index], vote: userReaction};
+                setCurrentGameData(cgd);
+            }
         }
     }
 
@@ -228,7 +249,10 @@ const GameRating = () => {
                                         onClick={() => handleReaction(i)}
                                         className={`icon-container ${
                                             currentGameData[index]?.vote === i && "selected"
-                                        }`}
+                                        }
+                                        ${(superLikes === 0 && name === "heart") && "disableVoting"}
+                                        ${(superDislikes === 0 && name === "heart_break") && "disableVoting"}
+                                        `}
                                     >{icon}
                                     </span>
                                 ))}
