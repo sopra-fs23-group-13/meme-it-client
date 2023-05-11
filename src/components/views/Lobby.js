@@ -86,6 +86,9 @@ const Lobby = () => {
 
   const startGameAtTheSameTime= (currentLobby) =>{
     localStorage.setItem("started", "true")
+    localStorage.setItem("swap", currentLobby.lobbySetting.memeChangeLimit);
+    localStorage.setItem("superlike", currentLobby.lobbySetting.superLikeLimit);
+    localStorage.setItem("dislike", currentLobby.lobbySetting.superDislikeLimit);
     history.push(`/game/${currentLobby.gameId}`);
   }
 

@@ -108,24 +108,36 @@ const Game = () => {
         currentNodePositions.pop();
         setCurrentTextNodePositions(currentNodePositions);
     }
-    const handleNextRound = async () => {
-        const gameState = await api.get(`${gameEndpoint}/${id}`, {
-            headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
-        });
-        console.log(loadedGameData);
-        console.log(gameState);
+
+    useEffect( () => {
+        const handleNextRound = async () => {
+            const gameState = await api.get(`${gameEndpoint}/${id}`, {
+                headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+            });
+            console.log(gameState);
+            if(gameState.data.gameState !== "CREATION"){
+                setNow(null);
+                setCurrentRound(null);
+                await submitMemesAtSameTime();
+                await startVotingAtSameTime();
+            } else {
+                setIsSynchronizing(false);
+            }
+        };
+
+        const interval = setInterval(async () => {
+            await handleNextRound();
+        }, 1000);
+        return () => clearInterval(interval);
+    });
+
+    const handleTimer = () => {
         if (now < loadedGameData?.roundDuration * 1000) {
             setIsSynchronizing(false);
             setNow(now + 1000);
-        } else if(gameState.data.gameState !== "CREATION"){
-            setNow(null);
-            setCurrentRound(null);
-            await submitMemesAtSameTime();
-            await startVotingAtSameTime();
-        } else {
-            setIsSynchronizing(true);
         }
-    };
+    }
+
     const onTextNodeDrag = (e, data, i) => {
         let prevPositions = [...currentTextNodePositions];
         prevPositions[i] = {xRate: data.lastX, yRate: data.lastY};
@@ -139,7 +151,8 @@ const Game = () => {
     };
 
     const handleGetDifferentTemplate = async () => {
-        const response = await api.get(`${gameEndpoint}/${id}/template`,{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+        const response = await api.put(`${gameEndpoint}/${id}/template`,{}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+        localStorage.setItem("swap", localStorage.getItem("swap")-1);
         const copyObject = {...loadedGameData};
         copyObject.meme = response.data;
         setLoadedGameData(copyObject);
@@ -227,7 +240,7 @@ const Game = () => {
                             delay={delay}
                             now={now}
                             max={loadedGameData?.roundDuration * 1000}
-                            callbackFunc={() => handleNextRound()}
+                            callbackFunc={() => handleTimer()}
                             isPlaying={!isSynchronizing}
                         />
                     </Stack>
@@ -293,7 +306,7 @@ const Game = () => {
                                     <Button
                                         className="game game-options-btn"
                                         onClick={handleGetDifferentTemplate}
-                                        disabled={isSynchronizing}
+                                        disabled={isSynchronizing || localStorage.getItem("swap") <= 0}
                                     >
                                         Get different template
                                     </Button>
