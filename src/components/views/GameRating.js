@@ -16,6 +16,7 @@ import {api} from "../../helpers/api";
 import {game as gameEndpoint} from "../../helpers/endpoints";
 import Cookies from "universal-cookie";
 import Chat from "../ui/Chat";
+import AutoSizeTextArea from "../ui/AutoSizeTextArea";
 
 
 const GameRating = () => {
@@ -66,6 +67,7 @@ const GameRating = () => {
         }
         setLoadedGameData(gameData);
         setCurrentGameData(votingData);
+        console.log(votingData)
         setIsPlaying(true);
         setCurrentRound(gameData?.currentRound);
         setMaxRound(gameData?.totalRounds);
@@ -214,25 +216,24 @@ const GameRating = () => {
 
                                     <Carousel.Item key={currentMeme?.id}>
                                         <div className="meme-content">
+                                            <div className={"drag-content"}>
                                         <img src={currentMeme?.imageUrl} alt={"Meme"}/>
                                         {currentMeme?.textBoxes?.map((item, i) => (
-                                            <Draggable
+
+                                            <AutoSizeTextArea
                                                 key={i}
-                                                bounds="parent"
+                                                value={item.text}
+                                                style={{ color: currentMeme?.color, backgroundColor: currentMeme?.backgroundColor }}
+                                                maxDimension={400}
+                                                fontSize={currentMeme?.fontSize}
                                                 position={{
                                                     x: item?.xRate,
                                                     y: item?.yRate,
                                                 }}
-                                                disabled
-                                            >
-                                              <textarea
-                                                  placeholder="TEXT HERE"
-                                                  value={item.text}
-                                                  disabled
-                                                  style={{fontSize: `${currentMeme?.fontSize}px`, color: currentMeme?.color}}
-                                              />
-                                            </Draggable>
+                                                disabled={true}
+                                            />
                                         ))}
+                                            </div>
                                         </div>
                                     </Carousel.Item>
 

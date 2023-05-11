@@ -31,23 +31,32 @@
       justify-content: center;
       position: relative;
       width: 1320px;
-      img {
+      .drag-content {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
         width: 400px;
-        height: 400px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      textarea {
-        font-weight: 750;
-        position: absolute;
-        font-size: 16px;
-        color: #fff;
-        background: none;
-        width: 100px;
-        min-height: 40px;
-        border: none;
-        &::placeholder {
+        position: relative;
+        img {
+          width: 400px;
+          height: 400px;
+          margin-left: auto;
+          margin-right: auto;
+          position: relative;
+        }
+        textarea {
+          font-weight: 750;
+          position: absolute;
+          font-size: 16px;
           color: #fff;
+          background: none;
+          width: 100px;
+          min-height: 40px;
+          border: none;
+
+          &::placeholder {
+            color: #fff;
+          }
         }
       }
     }
@@ -63,7 +72,8 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1px;
-        align-items: baseline;
+        align-items: flex-end;
+        height: 45px;
       }
 
       &.options-row {

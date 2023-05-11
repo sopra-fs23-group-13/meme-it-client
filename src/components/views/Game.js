@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useMemo, useState} from "react";
-import Draggable from "react-draggable";
 import {Stack, Button, InputGroup} from "react-bootstrap";
 import {v4 as uuid} from "uuid";
 import {useParams, useHistory} from "react-router-dom";
@@ -13,6 +12,7 @@ import {game as gameEndpoint} from "../../helpers/endpoints"
 import Chat from "../ui/Chat";
 import Cookies from "universal-cookie";
 import Form from "react-bootstrap/Form";
+import AutoSizeTextArea from "../ui/AutoSizeTextArea";
 
 const Game = () => {
     const delay = 1000;
@@ -23,7 +23,9 @@ const Game = () => {
 
     const [isSynchronizing, setIsSynchronizing] = useState(false)
     const [fontSize, setFontSize] = useState(14);
-    const [color, setColor] = useState("#ffffff");
+    const [color, setColor] = useState("#000");
+    const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+    const [opacity, setOpacity] = useState(100);
     const [currentRound, setCurrentRound] = useState(null);
     const [maxRound, setMaxRound] = useState(null);
     const [currentMeme, setCurrentMeme] = useState(null);
@@ -174,6 +176,22 @@ const Game = () => {
         setColor(event.target.value);
     };
 
+    const handleBackgroundColorChange = (event) => {
+        opacity === 100 ? setBackgroundColor(event.target.value) : setBackgroundColor(event.target.value+opacity);
+    };
+
+    const handleOpacityChange = (event) => {
+        const newOpacity = parseFloat(event.target.value);
+        setOpacity(newOpacity);
+
+        let hashColor = backgroundColor.substring(0, 7); // Remove previous alpha value
+        if(newOpacity === 0){
+            hashColor += "00";
+        }else if(newOpacity !== 100){
+            hashColor += newOpacity;
+        }
+        setBackgroundColor(hashColor);
+    };
     const submitMemesAtSameTime = async () => {
         //setIsSynchronizing(!isSynchronizing);
         // freeze all elements, no edits possible
@@ -186,6 +204,7 @@ const Game = () => {
                 currentMeme,
                 currentRound,
                 color,
+                backgroundColor,
                 fontSize,
                 maxRound
             }
@@ -199,6 +218,7 @@ const Game = () => {
             textBoxes,
             currentMeme,
             color,
+            backgroundColor,
             fontSize,
         };
         const randomBuffer = new Uint32Array(1);
@@ -246,28 +266,26 @@ const Game = () => {
                     {currentMeme?.imageUrl ? (
                         <>
                             <div className="meme-content">
-                                <img src={currentMeme?.imageUrl} alt={"meme lmao"}/>
+                                <div className={"drag-content"}>
+                                    <img src={currentMeme?.imageUrl} alt={"meme lmao"}/>
+                                    {memeTextNodes?.map((item, i) => (
+                                        <AutoSizeTextArea
+                                            key={i}
+                                            value={currentTextNodeValues[i]}
+                                            onChange={(e) => onTextNodeChange(e, i)}
+                                            onDrag={(e, data) => onTextNodeDrag(e, data, i)}
+                                            style={{ color: color, backgroundColor: backgroundColor }}
+                                            maxDimension={400}
+                                            fontSize={fontSize}
+                                            position={{
+                                                x: currentTextNodePositions?.[i]?.xRate,
+                                                y: currentTextNodePositions?.[i]?.yRate,
+                                            }}
+                                            disabled={isSynchronizing}
+                                        />
+                                    ))}
+                                </div>
 
-                                {memeTextNodes?.map((item, i) => (
-                                    <Draggable
-                                        key={i}
-                                        bounds="parent"
-                                        position={{
-                                            x: currentTextNodePositions?.[i]?.xRate,
-                                            y: currentTextNodePositions?.[i]?.yRate,
-                                        }}
-                                        onDrag={(e, data) => onTextNodeDrag(e, data, i)}
-                                        disabled={isSynchronizing}
-                                    >
-                  <textarea
-                      placeholder="TEXT HERE"
-                      value={currentTextNodeValues[i]}
-                      onChange={(e) => onTextNodeChange(e, i)}
-                      style={{fontSize: `${fontSize}px`, color: color}}
-                      disabled={isSynchronizing}
-                  />
-                                    </Draggable>
-                                ))}
                             </div>
                             <div className={"game game-options"}>
                                 <div className={"game game-options options-multirow"}>
@@ -277,7 +295,7 @@ const Game = () => {
                                             type={"number"}
                                             value={fontSize}
                                             min="10"
-                                            max="48"
+                                            max="30"
                                             step="1"
                                             onChange={handleFontSizeChange}
                                             disabled={isSynchronizing}
@@ -300,6 +318,29 @@ const Game = () => {
                                     <Button onClick={removeMemeTextNode} disabled={isSynchronizing} className="game game-options-btn" >
                                         Remove a Text Node
                                     </Button>
+                                </div>
+                                <div className={"game game-options options-multirow"}>
+                                    <InputGroup>
+                                        <InputGroup.Text>Background color</InputGroup.Text>
+                                        <Form.Control
+                                            type="color"
+                                            value={backgroundColor}
+                                            onChange={handleBackgroundColorChange}
+                                            disabled={isSynchronizing}
+                                        />
+                                    </InputGroup>
+                                    <InputGroup>
+                                        <InputGroup.Text>Opacity</InputGroup.Text>
+                                        <Form.Control
+                                            type="range"
+                                            min="0"
+                                            max="100"
+                                            step="10"
+                                            value={opacity}
+                                            onChange={handleOpacityChange}
+                                            disabled={isSynchronizing}
+                                        />
+                                    </InputGroup>
                                 </div>
                                 <div className={"game game-options options-row"}>
                                     <Button
