@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {ListGroup, Images, Col, Row, Stack, Table, Button, Badge, Container} from "react-bootstrap";
 import "styles/views/Leaderboard.scss";
 import { FaMedal } from 'react-icons/fa';
@@ -15,6 +15,7 @@ import {useHistory, useParams} from "react-router-dom";
 import AnimatedBarChart from "../ui/AnimatedBarChart";
 import Confetti from "react-confetti";
 import {useWindowSize} from "react-use";
+import {AppContext} from "../../context";
 
 const Leaderboard = () => {
     const delay = 1000;
@@ -28,10 +29,9 @@ const Leaderboard = () => {
     const [enlargedMeme, setEnlargedMeme] = useState(null);
     const [bestMeme, setBestMeme] = useState(null);
     const [isFinalRound, setIsFinalRound] = useState(false);
-    const [gameData, setGameData] = useState(null);
-    const [now, setNow] = useState(null);
-    const [startTime, setStartTime] = useState(null);
-    const [isPlaying, setIsPlaying] = useState(false);
+    const {loadedGameData, setLoadedGameData, preLoadedMemesForVoting} = useContext(AppContext);
+    const [currentGameData, setCurrentGameData] = useState(loadedGameData);
+
 
     const leaveGame = async () => {
         //const leaveResponse = await api.delete('/' + localStorage.getItem("code") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
@@ -43,7 +43,6 @@ const Leaderboard = () => {
     }
 
     const handleNextRound = async () => {
-        setIsPlaying(false);
         history.push("/game/" + id);
     };
 
@@ -148,24 +147,12 @@ const Leaderboard = () => {
 
     useEffect(() => {
         const getLeaderboardData = async () => {
-            /*
-            if(!startTime){
-                setStartTime(Date.now())
-            }
-            setNow(Date.now() - startTime)
-
-             */
 
             let currentMemes = []
             let players = []
             try {
                 // Game Data to know if final results state
                 const gameDataResponse = await api.get(`${gameEndpoint}/${id}`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
-                setGameData(gameDataResponse.data);
-
-                if(gameData.gameState != "ROUND_RESULTS" && gameData.gameState != "GAME_RESULTS"){
-                    await handleNextRound();
-                }
 
                 // Memes of the round (get players)
                 const roundMemesResponse = await api.get(`${gameEndpoint}/${id}/meme`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
@@ -173,6 +160,15 @@ const Leaderboard = () => {
                 const roundRatingsResponse = await api.get(`${gameEndpoint}/${id}/rating`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
                 // All ratings of the game (get total score tc.)
                 const gameRatingsResponse = await api.get(`${gameEndpoint}/${id}/winner`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
+
+                //Fix since gamestate gets stuck on voting in last round
+                if(gameDataResponse.data.currentRound === 2 && gameDataResponse.data.gameState === "ROUND_RESULTS") {
+                    setIsFinalRound(true);
+                }
+                else if(!isFinalRound && gameDataResponse.data.gameState != "ROUND_RESULTS" && gameDataResponse.data.gameState  != "GAME_RESULTS"){
+                    await handleNextRound();
+                }
+
 
                 for (let meme of roundMemesResponse.data) {
                     let m = new Meme(meme);
@@ -199,6 +195,7 @@ const Leaderboard = () => {
                 if(gameDataResponse.data.gameState == "GAME_RESULTS"){
                     setIsFinalRound(true);
                 }
+                setCurrentGameData(gameDataResponse.data);
             }
             catch (error){
                 console.log(error)
@@ -211,23 +208,25 @@ const Leaderboard = () => {
             });
             setRoundPlayers(players);
             setMemes(currentMemes);
-            if(!bestMeme || bestMeme.rating < currentMemes[0].rating) {
+            if(bestMeme == null){
                 setBestMeme(currentMemes[0])
             }
-            setIsPlaying(true)
+            if(bestMeme != null &&currentMemes[0] !=null && bestMeme.rating < currentMemes[0].rating) {
+                setBestMeme(currentMemes[0])
+            }
         }
-        if (memes.length && roundPlayers.length && gameData) {
-            getLeaderboardData().then();
+        if (!memes || !roundPlayers || !currentGameData) {
+            console.log("reload")
+            getLeaderboardData();
         }
         const interval = setInterval(async () => {
             await getLeaderboardData();
-        }, 1000);
+        }, 5000);
         return () => clearInterval(interval);
     })
 
-
     //If final round and there is data for the players and memes
-    if (isFinalRound && memes.length && roundPlayers.length) {
+    if (isFinalRound && memes.length && roundPlayers.length && bestMeme ) {
         return (
             <div className={"leaderboard content"} style={{marginTop:"1em"}}>
                 <Container>
@@ -241,11 +240,15 @@ const Leaderboard = () => {
                         <h2 style={{textAlign:"center",marginTop:"1em"}}> The Game has ended </h2>
                         <h5 style={{textAlign:"center", marginTop:"-0.5em"}}> {roundPlayers[0].name} wins! </h5>
                         <Stack direction={"horizontal"} style={{alignItems:"center", justifyContent:"center"}}>
+                            {roundPlayers[1] ?
                                 <AnimatedBarChart player={roundPlayers[1]} highScore={roundPlayers[0].score} rank={2} meme={getPlayerMeme(roundPlayers[1])}/>
+                                : null }
+                            {roundPlayers[0] ?
                                 <AnimatedBarChart player={roundPlayers[0]} highScore={roundPlayers[0].score} rank={1} meme={getPlayerMeme(roundPlayers[0])}/>
-                                {roundPlayers[2] ?
-                                    <AnimatedBarChart player={roundPlayers[2]} highScore={roundPlayers[0].score} rank={3} meme={getPlayerMeme(roundPlayers[2])}/>
-                                    : null }
+                                : null }
+                            {roundPlayers[2] ?
+                                <AnimatedBarChart player={roundPlayers[2]} highScore={roundPlayers[0].score} rank={3} meme={getPlayerMeme(roundPlayers[2])}/>
+                                : null }
 
                         </Stack>
                     </div>
@@ -306,7 +309,7 @@ const Leaderboard = () => {
                         </Button>
                         <Stack gap={1}>
                             <h1 className="fw-bolder fs-3 text-start text-black">
-                                {`Round 1/3 `}
+                                {`Round ${currentGameData.currentRound}/${currentGameData.totalRounds}`}
                             </h1>
                             <Row style={{marginBottom:"1em"}}>
                                 <Col >
