@@ -36,10 +36,6 @@ const Home = () => {
         setGameCode(event.target.value);
     };
 
-    const createNewGame = (lobbyValues) => {
-        console.log(lobbyValues);
-    }
-
     const joinExistingGame = async () => {
         if (gameCode != null) {
             localStorage.setItem("code", gameCode);
@@ -86,8 +82,7 @@ const Home = () => {
                                             </Row>
                                             <Row>
                                                 <Col>
-                                                    <UsernameModal c_names={"home buttons join"} title={"Create Lobby"}
-                                                                   submit={createNewGame}/>
+                                                    <UsernameModal c_names={"home buttons join"} title={"Create Lobby"} />
                                                 </Col>
                                             </Row>
                                             <Row>

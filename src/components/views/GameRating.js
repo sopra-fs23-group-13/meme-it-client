@@ -59,16 +59,11 @@ const GameRating = () => {
             let endTime = new Date(new Date(new Date(gameData.roundStartedAt).getTime() + gameData?.roundDuration * 1000).getTime() + gameData?.votingDuration * 1000);
             let roundedTimeLeft = Math.round((endTime-currentTime) / 1000) * 1000;
             setNow((gameData?.votingDuration * 1000)-(roundedTimeLeft));
-            console.log(gameData)
-            console.log(currentTime);
-            console.log(endTime);
-            console.log(roundedTimeLeft);
         } else {
             votingData = preLoadedMemesForVoting;
             gameData = loadedGameData;
             setNow(0);
         }
-        console.log(gameData)
         setLoadedGameData(gameData);
         setCurrentGameData(votingData);
         setIsPlaying(true);
@@ -104,7 +99,6 @@ const GameRating = () => {
                 headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
             });
 
-            console.log(gameState);
             if(gameState.data.gameState !== "RATING"){
                 setNow(null);
                 setCurrentRound(null);

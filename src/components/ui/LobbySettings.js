@@ -27,7 +27,6 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
     }
     const updateSettings = async () => {
         try {
-            console.log(lobbyValues)
             await api.put(`${lobby}/${Lobby.code}`, JSON.stringify(lobbyValues), {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         }
         catch (error){

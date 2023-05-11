@@ -114,7 +114,6 @@ const Game = () => {
             const gameState = await api.get(`${gameEndpoint}/${id}`, {
                 headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
             });
-            console.log(gameState);
             if(gameState.data.gameState !== "CREATION"){
                 setNow(null);
                 setCurrentRound(null);
