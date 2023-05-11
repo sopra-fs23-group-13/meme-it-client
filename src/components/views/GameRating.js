@@ -34,6 +34,8 @@ const GameRating = () => {
     const [now, setNow] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isSynchronizing, setIsSynchronizing] = useState(false)
+    const [superLikes, setSuperLikes] = useState(Number(localStorage.getItem("superlike")));
+    const [superDislikes, setSuperDislikes] = useState(Number(localStorage.getItem("superlike")));
 
     useEffect(async () => {
         let votingData;
@@ -57,12 +59,16 @@ const GameRating = () => {
             let endTime = new Date(new Date(new Date(gameData.roundStartedAt).getTime() + gameData?.roundDuration * 1000).getTime() + gameData?.votingDuration * 1000);
             let roundedTimeLeft = Math.round((endTime-currentTime) / 1000) * 1000;
             setNow((gameData?.votingDuration * 1000)-(roundedTimeLeft));
-
+            console.log(gameData)
+            console.log(currentTime);
+            console.log(endTime);
+            console.log(roundedTimeLeft);
         } else {
             votingData = preLoadedMemesForVoting;
             gameData = loadedGameData;
             setNow(0);
         }
+        console.log(gameData)
         setLoadedGameData(gameData);
         setCurrentGameData(votingData);
         setIsPlaying(true);
@@ -71,9 +77,6 @@ const GameRating = () => {
     }, [preLoadedMemesForVoting]);
 
     const handleNextRound = async () => {
-        const gameState = await api.get(`${gameEndpoint}/${id}`, {
-            headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
-        });
         const votingRes = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
 
         const mergedArray = currentGameData.map((gameDataItem) => {
@@ -92,16 +95,32 @@ const GameRating = () => {
         if (now < loadedGameData?.votingDuration * 1000) {
             setIsSynchronizing(false);
             setNow(now + 1000);
-        }  else if(gameState.data.gameState !== "RATING"){
-            setNow(null);
-            setCurrentRound(null);
-            setIsPlaying(false);
-            await submitVotesAtSameTime();
-            await pushToLeaderboard();
-        } else {
-            setIsSynchronizing(true);
         }
     };
+
+    useEffect( () => {
+        const continueToNextRound = async () => {
+            const gameState = await api.get(`${gameEndpoint}/${id}`, {
+                headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+            });
+
+            console.log(gameState);
+            if(gameState.data.gameState !== "RATING"){
+                setNow(null);
+                setCurrentRound(null);
+                setIsPlaying(false);
+                await submitVotesAtSameTime();
+                await pushToLeaderboard();
+            } else {
+                setIsSynchronizing(true);
+            }
+        };
+
+        const interval = setInterval(async () => {
+            await continueToNextRound();
+        }, 1000);
+        return () => clearInterval(interval);
+    });
 
     const submitVotesAtSameTime = async () => {
         const cgd = currentGameData.filter(meme => meme?.vote);
@@ -130,8 +149,19 @@ const GameRating = () => {
     const handleReaction = (userReaction) => {
         if(!isSynchronizing){
             const cgd = [...currentGameData];
-            cgd[index] = {...currentGameData[index], vote: userReaction};
-            setCurrentGameData(cgd);
+
+            if(cgd[index]?.vote !== userReaction){
+
+                //give user back his superlike / -dislike when changing his decision
+                if (cgd[index]?.vote === 3){setSuperLikes(superLikes+1);}
+                else if (userReaction === 3){setSuperLikes(superLikes-1);}
+
+                if (cgd[index]?.vote === 0){setSuperDislikes(superDislikes+1);}
+                else if (userReaction === 0){setSuperDislikes(superDislikes-1);}
+
+                cgd[index] = {...currentGameData[index], vote: userReaction};
+                setCurrentGameData(cgd);
+            }
         }
     }
 
@@ -225,7 +255,10 @@ const GameRating = () => {
                                         onClick={() => handleReaction(i)}
                                         className={`icon-container ${
                                             currentGameData[index]?.vote === i && "selected"
-                                        }`}
+                                        }
+                                        ${(superLikes === 0 && name === "heart") && "disableVoting"}
+                                        ${(superDislikes === 0 && name === "heart_break") && "disableVoting"}
+                                        `}
                                     >{icon}
                                     </span>
                                 ))}

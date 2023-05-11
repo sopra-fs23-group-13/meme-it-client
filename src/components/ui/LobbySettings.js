@@ -122,7 +122,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
             </Row>
             <Row>
                 <Col style={{marginBottom:"0.5em"}} xs={6} className={"lobbySettings label"}>
-                    <FaExchangeAlt/> Meme Changes
+                    <FaExchangeAlt/> Meme Changes per Game
                 </Col>
                 <Col>
                     <Form.Select style={{marginBottom:'0.25em'}} value={lobbyValues.memeChangeLimit} onClick={handleChange} name="memeChangeLimit" onChange={handleChange} disabled={isEditable || !isAdmin}>
@@ -159,7 +159,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
                 <Col>
                     <Row>
                         <Col xs={5} className={"lobbySettings label"}>
-                            Super Likes
+                            Super Likes per Round
                         </Col>
                         <Col>
                             <Form.Select style={{marginBottom:'0.25em'}} value={lobbyValues.superLikeLimit} onClick={handleChange} name="superLikeLimit" onChange={handleChange} disabled={isEditable || !isAdmin}>
@@ -172,7 +172,7 @@ const LobbySettings = ({Lobby, isAdmin, isEditable}) => {
                     </Row>
                     <Row>
                         <Col xs={5} className={"lobbySettings label"}>
-                            Super Dislikes
+                            Super Dislikes per Round
                         </Col>
                         <Col>
                             <Form.Select style={{marginTop:'0.25em'}} value={lobbyValues.superDislikeLimit} onClick={handleChange} name="superDislikeLimit" onChange={handleChange} disabled={isEditable || !isAdmin}>
