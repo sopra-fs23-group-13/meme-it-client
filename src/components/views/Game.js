@@ -204,6 +204,7 @@ const Game = () => {
                 currentMeme,
                 currentRound,
                 color,
+                backgroundColor,
                 fontSize,
                 maxRound
             }
@@ -217,6 +218,7 @@ const Game = () => {
             textBoxes,
             currentMeme,
             color,
+            backgroundColor,
             fontSize,
         };
         const randomBuffer = new Uint32Array(1);
@@ -232,9 +234,6 @@ const Game = () => {
         props ? localStorage.setItem("alert", "There was an issue with your meme submission!") : localStorage.removeItem("alert");
         history.push("/game-rating/" + id);
     }
-
-    //TODO: adjustments in the text area:
-    // - make it a little more beautiful (add focus, make round edges, most important: resizing according to content => width and height)
 
     return (
         <div className={"game content"}>
