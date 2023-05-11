@@ -29,8 +29,9 @@ const AppRouter = () => {
     return (
       <BrowserRouter>
         <Switch>
-          <Route path="/leaderboard">
-            <Leaderboard roundMemes={roundMemesMock} roundRatings={roundRatingsMock} gameRatings={gameRatingsMock} isFinal={true}/>
+          <Route path="/leaderboard/:id">
+            {/* <Leaderboard roundMemes={roundMemesMock} roundRatings={roundRatingsMock} gameRatings={gameRatingsMock} isFinal={true}/>*/}
+            <Leaderboard/>
           </Route>
           <Route path="/lobby">
             <LobbyGuard>

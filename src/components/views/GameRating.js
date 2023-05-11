@@ -96,13 +96,14 @@ const GameRating = () => {
         }
     };
 
+    console.log(id)
     const submitVotesAtSameTime = async () => {
         const cgd = currentGameData.filter(meme => meme?.vote);
         await cgd.forEach(memeWithVote => api.post(`${gameEndpoint}/${id}/rating/${memeWithVote.id}`, {rating: memeWithVote.vote}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}}));
     }
     const pushToLeaderboard = async (props) => {
         props ? localStorage.setItem("alert", "There was an issue with your meme submission!") : localStorage.removeItem("alert");
-        history.push("/leaderboard");
+        history.push("/leaderboard/" + id);
     }
 
     const executeForAllPlayersAtSameTime = async (time, callback) => {

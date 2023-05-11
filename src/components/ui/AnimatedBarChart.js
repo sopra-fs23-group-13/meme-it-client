@@ -46,7 +46,6 @@ const AnimatedBarChart = ({highScore, player, rank, meme}) => {
     const triggerTrophyShake = () => {
         setTrophyIsHovered(true);
     };
-    console.log(4 - player.name.length/20 + "vh")
 
     //            <img  style={{width:100, cursor:"pointer"}} src={meme.imageUrl}/>
     return (
