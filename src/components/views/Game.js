@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useMemo, useState} from "react";
-import Draggable from "react-draggable";
 import {Stack, Button, InputGroup} from "react-bootstrap";
 import {v4 as uuid} from "uuid";
 import {useParams, useHistory} from "react-router-dom";
@@ -13,6 +12,7 @@ import {game as gameEndpoint} from "../../helpers/endpoints"
 import Chat from "../ui/Chat";
 import Cookies from "universal-cookie";
 import Form from "react-bootstrap/Form";
+import AutoSizeTextArea from "../ui/AutoSizeTextArea";
 
 const Game = () => {
     const delay = 1000;
@@ -23,9 +23,9 @@ const Game = () => {
 
     const [isSynchronizing, setIsSynchronizing] = useState(false)
     const [fontSize, setFontSize] = useState(14);
-    const [color, setColor] = useState("#ffffff");
-    const [backgroundColor, setBackgroundColor] = useState("#ffffff00");
-    const [opacity, setOpacity] = useState(0);
+    const [color, setColor] = useState("#000");
+    const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+    const [opacity, setOpacity] = useState(100);
     const [currentRound, setCurrentRound] = useState(null);
     const [maxRound, setMaxRound] = useState(null);
     const [currentMeme, setCurrentMeme] = useState(null);
@@ -270,24 +270,20 @@ const Game = () => {
                                 <div className={"drag-content"}>
                                     <img src={currentMeme?.imageUrl} alt={"meme lmao"}/>
                                     {memeTextNodes?.map((item, i) => (
-                                            <Draggable
-                                                key={i}
-                                                bounds="parent"
-                                                position={{
-                                                    x: currentTextNodePositions?.[i]?.xRate,
-                                                    y: currentTextNodePositions?.[i]?.yRate,
-                                                }}
-                                                onDrag={(e, data) => onTextNodeDrag(e, data, i)}
-                                                disabled={isSynchronizing}
-                                            >
-                                          <textarea
-                                              placeholder="TEXT HERE"
-                                              value={currentTextNodeValues[i]}
-                                              onChange={(e) => onTextNodeChange(e, i)}
-                                              style={{fontSize: `${fontSize}px`, color: color, backgroundColor:backgroundColor}}
-                                              disabled={isSynchronizing}
-                                          />
-                                        </Draggable>
+                                        <AutoSizeTextArea
+                                            key={i}
+                                            value={currentTextNodeValues[i]}
+                                            onChange={(e) => onTextNodeChange(e, i)}
+                                            onDrag={(e, data) => onTextNodeDrag(e, data, i)}
+                                            style={{ color: color, backgroundColor: backgroundColor }}
+                                            maxDimension={400}
+                                            fontSize={fontSize}
+                                            position={{
+                                                x: currentTextNodePositions?.[i]?.xRate,
+                                                y: currentTextNodePositions?.[i]?.yRate,
+                                            }}
+                                            disabled={isSynchronizing}
+                                        />
                                     ))}
                                 </div>
 
@@ -300,7 +296,7 @@ const Game = () => {
                                             type={"number"}
                                             value={fontSize}
                                             min="10"
-                                            max="48"
+                                            max="30"
                                             step="1"
                                             onChange={handleFontSizeChange}
                                             disabled={isSynchronizing}
