@@ -24,6 +24,8 @@ const Game = () => {
     const [isSynchronizing, setIsSynchronizing] = useState(false)
     const [fontSize, setFontSize] = useState(14);
     const [color, setColor] = useState("#ffffff");
+    const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+    const [opacity, setOpacity] = useState(1);
     const [currentRound, setCurrentRound] = useState(null);
     const [maxRound, setMaxRound] = useState(null);
     const [currentMeme, setCurrentMeme] = useState(null);
@@ -174,6 +176,22 @@ const Game = () => {
         setColor(event.target.value);
     };
 
+    const handleBackgroundColorChange = (event) => {
+        opacity === 100 ? setBackgroundColor(event.target.value) : setBackgroundColor(event.target.value+opacity);
+    };
+
+    const handleOpacityChange = (event) => {
+        const newOpacity = parseFloat(event.target.value);
+        setOpacity(newOpacity);
+
+        let hashColor = backgroundColor.substring(0, 7); // Remove previous alpha value
+        if(newOpacity === 0){
+            hashColor += "00";
+        }else if(newOpacity !== 100){
+            hashColor += newOpacity;
+        }
+        setBackgroundColor(hashColor);
+    };
     const submitMemesAtSameTime = async () => {
         //setIsSynchronizing(!isSynchronizing);
         // freeze all elements, no edits possible
@@ -246,28 +264,30 @@ const Game = () => {
                     {currentMeme?.imageUrl ? (
                         <>
                             <div className="meme-content">
-                                <img src={currentMeme?.imageUrl} alt={"meme lmao"}/>
+                                <div className={"drag-content"}>
+                                    <img src={currentMeme?.imageUrl} alt={"meme lmao"}/>
+                                    {memeTextNodes?.map((item, i) => (
+                                            <Draggable
+                                                key={i}
+                                                bounds="parent"
+                                                position={{
+                                                    x: currentTextNodePositions?.[i]?.xRate,
+                                                    y: currentTextNodePositions?.[i]?.yRate,
+                                                }}
+                                                onDrag={(e, data) => onTextNodeDrag(e, data, i)}
+                                                disabled={isSynchronizing}
+                                            >
+                                          <textarea
+                                              placeholder="TEXT HERE"
+                                              value={currentTextNodeValues[i]}
+                                              onChange={(e) => onTextNodeChange(e, i)}
+                                              style={{fontSize: `${fontSize}px`, color: color, backgroundColor:backgroundColor}}
+                                              disabled={isSynchronizing}
+                                          />
+                                        </Draggable>
+                                    ))}
+                                </div>
 
-                                {memeTextNodes?.map((item, i) => (
-                                    <Draggable
-                                        key={i}
-                                        bounds="parent"
-                                        position={{
-                                            x: currentTextNodePositions?.[i]?.xRate,
-                                            y: currentTextNodePositions?.[i]?.yRate,
-                                        }}
-                                        onDrag={(e, data) => onTextNodeDrag(e, data, i)}
-                                        disabled={isSynchronizing}
-                                    >
-                  <textarea
-                      placeholder="TEXT HERE"
-                      value={currentTextNodeValues[i]}
-                      onChange={(e) => onTextNodeChange(e, i)}
-                      style={{fontSize: `${fontSize}px`, color: color}}
-                      disabled={isSynchronizing}
-                  />
-                                    </Draggable>
-                                ))}
                             </div>
                             <div className={"game game-options"}>
                                 <div className={"game game-options options-multirow"}>
@@ -300,6 +320,29 @@ const Game = () => {
                                     <Button onClick={removeMemeTextNode} disabled={isSynchronizing} className="game game-options-btn" >
                                         Remove a Text Node
                                     </Button>
+                                </div>
+                                <div>
+                                    <InputGroup>
+                                        <InputGroup.Text>Background color</InputGroup.Text>
+                                        <Form.Control
+                                            type="color"
+                                            value={backgroundColor}
+                                            onChange={handleBackgroundColorChange}
+                                            disabled={isSynchronizing}
+                                        />
+                                    </InputGroup>
+                                    <InputGroup className={"game game-options options-row"}>
+                                        <InputGroup.Text>Opacity</InputGroup.Text>
+                                        <Form.Control
+                                            type="range"
+                                            min="0"
+                                            max="100"
+                                            step="10"
+                                            value={opacity}
+                                            onChange={handleOpacityChange}
+                                            disabled={isSynchronizing}
+                                        />
+                                    </InputGroup>
                                 </div>
                                 <div className={"game game-options options-row"}>
                                     <Button

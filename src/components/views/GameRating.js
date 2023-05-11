@@ -214,6 +214,7 @@ const GameRating = () => {
 
                                     <Carousel.Item key={currentMeme?.id}>
                                         <div className="meme-content">
+                                            <div className={"drag-content"}>
                                         <img src={currentMeme?.imageUrl} alt={"Meme"}/>
                                         {currentMeme?.textBoxes?.map((item, i) => (
                                             <Draggable
@@ -233,6 +234,7 @@ const GameRating = () => {
                                               />
                                             </Draggable>
                                         ))}
+                                            </div>
                                         </div>
                                     </Carousel.Item>
 
