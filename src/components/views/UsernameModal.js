@@ -30,7 +30,6 @@ const UsernameModal = props => {
         localStorage.setItem("username", username)
         cookies.set("token", response.data.id)
         localStorage.setItem("code", props.code);
-        console.log(localStorage.getItem("code"))
         try {
             await api.post(`${lobby}/${props.code}/players`, {name: response.data.name}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         }
@@ -45,7 +44,6 @@ const UsernameModal = props => {
             }
             else if (error.response !== undefined && error.response.status === 409 ){
                 localStorage.setItem("alert", "Lobby is full")
-                console.log("here")
             }
             else {
                 localStorage.setItem("alert", "Something went wrong")
