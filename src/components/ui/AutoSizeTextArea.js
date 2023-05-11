@@ -44,10 +44,6 @@ function AutoSizeTextArea({ value, onChange, onDrag, style, maxDimension, fontSi
         }
     }, [value]);
 
-    function getLengthOfLongestElement(arr) {
-
-    }
-
     const onKeyPress = (e) => {
         if (textAreaRef.current.scrollHeight >= maxDimension && e.key === 'Enter') {
             e.preventDefault();
