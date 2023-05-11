@@ -13,7 +13,6 @@ import Cookies from "universal-cookie";
  */
 export const HomeGuard = props => {
     const cookies = new Cookies();
-    //If user has hash in local storage + if lobby with such hash exists atm (backend needs to be fixed first i think)
     if (!localStorage.getItem("code")){
         return props.children;
     }
