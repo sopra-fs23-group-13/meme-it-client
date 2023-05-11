@@ -80,7 +80,6 @@ const Lobby = () => {
   }
 
   const startGame = async () => {
-
     await api.post(`/${game}/${currentLobby.code}`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
   }
 
