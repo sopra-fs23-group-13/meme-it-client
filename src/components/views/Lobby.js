@@ -51,7 +51,7 @@ const Lobby = () => {
         if(!playerIsInLobby){
           await leaveLobby("Kicked from Lobby");
         }
-        }
+      }
       catch (error){
         await leaveLobby("Lobby Not Found")
         console.log(error);
