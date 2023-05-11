@@ -319,7 +319,7 @@ const Game = () => {
                                         Remove a Text Node
                                     </Button>
                                 </div>
-                                <div>
+                                <div className={"game game-options options-multirow"}>
                                     <InputGroup>
                                         <InputGroup.Text>Background color</InputGroup.Text>
                                         <Form.Control
@@ -329,7 +329,7 @@ const Game = () => {
                                             disabled={isSynchronizing}
                                         />
                                     </InputGroup>
-                                    <InputGroup className={"game game-options options-row"}>
+                                    <InputGroup>
                                         <InputGroup.Text>Opacity</InputGroup.Text>
                                         <Form.Control
                                             type="range"

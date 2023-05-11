@@ -72,7 +72,8 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1px;
-        align-items: baseline;
+        align-items: flex-end;
+        height: 45px;
       }
 
       &.options-row {
