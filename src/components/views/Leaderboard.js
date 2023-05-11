@@ -148,10 +148,13 @@ const Leaderboard = () => {
 
     useEffect(() => {
         const getLeaderboardData = async () => {
+            /*
             if(!startTime){
                 setStartTime(Date.now())
             }
             setNow(Date.now() - startTime)
+
+             */
 
             let currentMemes = []
             let players = []
@@ -160,14 +163,14 @@ const Leaderboard = () => {
                 const gameDataResponse = await api.get(`${gameEndpoint}/${id}`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
                 setGameData(gameDataResponse.data);
 
-                if(now > 30000 || gameData.state != "ROUND_RESULTS" || gameData.state != "GAME_RESULTS"){
-                    handleNextRound();
+                if(gameData.gameState != "ROUND_RESULTS" && gameData.gameState != "GAME_RESULTS"){
+                    await handleNextRound();
                 }
 
                 // Memes of the round (get players)
                 const roundMemesResponse = await api.get(`${gameEndpoint}/${id}/meme`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
                 // Ratings of the round (get current memes and ratings)
-                const roundRatingsResponse = await api.get(`${gameEndpoint}/${id}/ratings`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
+                const roundRatingsResponse = await api.get(`${gameEndpoint}/${id}/rating`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
                 // All ratings of the game (get total score tc.)
                 const gameRatingsResponse = await api.get(`${gameEndpoint}/${id}/winner`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
 
@@ -193,7 +196,7 @@ const Leaderboard = () => {
                     }
                     p.score += rating.rating;
                 }
-                if(gameDataResponse.data.state == "GAME_RESULTS"){
+                if(gameDataResponse.data.gameState == "GAME_RESULTS"){
                     setIsFinalRound(true);
                 }
             }
@@ -221,9 +224,6 @@ const Leaderboard = () => {
         }, 1000);
         return () => clearInterval(interval);
     })
-    console.log("now:" + now)
-    console.log("starttime:" + startTime)
-    console.log(gameData)
 
 
     //If final round and there is data for the players and memes
@@ -308,13 +308,6 @@ const Leaderboard = () => {
                             <h1 className="fw-bolder fs-3 text-start text-black">
                                 {`Round 1/3 `}
                             </h1>
-                            <TimerProgressBar
-                                delay={delay}
-                                now={now}
-                                max={30000}
-                                callbackFunc={() => handleNextRound()}
-                                isPlaying={isPlaying}
-                            />
                             <Row style={{marginBottom:"1em"}}>
                                 <Col >
                                     <div className={"leaderboard card"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}>

@@ -122,7 +122,7 @@ const GameRating = () => {
     }
     const pushToLeaderboard = async (props) => {
         props ? localStorage.setItem("alert", "There was an issue with your meme submission!") : localStorage.removeItem("alert");
-        history.push("/leaderboard");
+        history.push("/leaderboard/" + id);
     }
 
     const leaveGame = async () => {
