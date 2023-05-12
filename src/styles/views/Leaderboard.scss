@@ -1,6 +1,36 @@
 @import 'styles/theme';
-
+body {
+  overflow-x: hidden;
+}
 .leaderboard {
+  .container {
+    align-items: center;
+    justify-content: center;
+    .meme-content {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      position: relative;
+      width: 50%;
+      img {
+        width: 400px;
+        height: 400px;
+      }
+      textarea {
+        font-weight: 750;
+        position: absolute;
+        font-size: 16px;
+        color: #fff;
+        background: none;
+        width: 100px;
+        min-height: 40px;
+        border: none;
+        &::placeholder {
+          color: #fff;
+        }
+      }
+    }
+  }
   &.content {
     display: flex;
     flex-direction: column;
@@ -37,8 +67,6 @@
     &:hover{
       box-shadow: 0 4px 6px rgba(255, 255, 255, 0.7);
     }
-    width: 60%;
-    height: 60%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
     margin-bottom:0.5em;
     transition: all 0.3s ease;
