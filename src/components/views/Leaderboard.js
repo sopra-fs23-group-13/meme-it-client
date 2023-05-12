@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
-import {ListGroup, Images, Col, Row, Stack, Table, Button, Badge, Container} from "react-bootstrap";
+import {Col, Row, Stack, Table, Button, Badge, Container} from "react-bootstrap";
 import "styles/views/Leaderboard.scss";
 import "styles/views/Game.scss";
 import { FaMedal } from 'react-icons/fa';
@@ -18,7 +18,6 @@ import Confetti from "react-confetti";
 import {useWindowSize} from "react-use";
 import {AppContext} from "../../context";
 import Draggable from "react-draggable";
-import BaseContainer from "../ui/BaseContainer";
 import Chat from "../ui/Chat";
 const MemeImage = props => {
     MemeImage.propTypes = {
