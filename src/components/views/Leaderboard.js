@@ -254,7 +254,7 @@ const Leaderboard = () => {
             }
         }
         if(memes.length < 1 || roundPlayers.length < 1 || !bestMeme){
-            getLeaderboardData().then();
+            getLeaderboardData().catch(e => console.log(e))
         }
         const interval = setInterval(async () => {
             await getLeaderboardData();
