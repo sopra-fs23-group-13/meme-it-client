@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useMemo, useState} from "react";
-import Draggable from "react-draggable";
 import {Button, Carousel, Stack} from "react-bootstrap";
 import {MdHeartBroken} from "react-icons/md";
 import {TbHeartFilled} from "react-icons/tb";
@@ -75,6 +74,9 @@ const GameRating = () => {
 
     const handleNextRound = async () => {
         const votingRes = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+        const gameState = await api.get(`${gameEndpoint}/${id}`, {
+            headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+        });
 
         const mergedArray = currentGameData.map((gameDataItem) => {
             const votingDataItem = votingRes.data.find((votingItem) => votingItem.id === gameDataItem.id);
@@ -92,6 +94,15 @@ const GameRating = () => {
         if (now < loadedGameData?.votingDuration * 1000) {
             setIsSynchronizing(false);
             setNow(now + 1000);
+        }
+        if(gameState.data.gameState !== "RATING"){
+            setNow(null);
+            setCurrentRound(null);
+            setIsPlaying(false);
+            await submitVotesAtSameTime();
+            await pushToLeaderboard();
+        } else {
+            setIsSynchronizing(true);
         }
     };
 
