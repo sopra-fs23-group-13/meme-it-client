@@ -23,8 +23,16 @@ const UsernameModal = props => {
     }
     const handleShow = () => setShow(true);
     const handleChange = (event) => {
-        setUsername(event.target.value);
+            setUsername(event.target.value);
     };
+
+    const handleKeyDown = async (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            props.title === LOBBY_CREATION ? await createLobby() : await submitAndJoin();
+        }
+    }
+
     const submitAndJoin = async () => {
         const response = await api.post(users, {name: username});
         localStorage.setItem("username", username)
@@ -90,6 +98,7 @@ const UsernameModal = props => {
                             name="username"
                             value={username}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                         />
                     </Form>
                 </Modal.Body>

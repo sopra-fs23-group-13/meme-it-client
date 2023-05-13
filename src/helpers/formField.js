@@ -8,6 +8,7 @@ export const FormField = props => {
         label: PropTypes.string,
         value: PropTypes.string,
         onChange: PropTypes.func,
+        onKeyDown: PropTypes.func,
         action: PropTypes.func,
         c_names: PropTypes.string,
         disabled: PropTypes.bool
@@ -24,6 +25,7 @@ export const FormField = props => {
                 value={props.value}
                 name={props.name}
                 onChange={e => props.onChange(e)}
+                onKeyDown={e => props.onKeyDown(e)}
                 c_names = {props.c_names}
                 disabled={props.disabled}
             />
