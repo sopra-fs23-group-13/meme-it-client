@@ -99,10 +99,9 @@ const GameRating = () => {
             setNow(null);
             setCurrentRound(null);
             setIsPlaying(false);
+            setIsSynchronizing(true);
             await submitVotesAtSameTime();
             await pushToLeaderboard();
-        } else {
-            setIsSynchronizing(true);
         }
     };
 
@@ -116,10 +115,9 @@ const GameRating = () => {
                 setNow(null);
                 setCurrentRound(null);
                 setIsPlaying(false);
+                setIsSynchronizing(true);
                 await submitVotesAtSameTime();
                 await pushToLeaderboard();
-            } else {
-                setIsSynchronizing(true);
             }
         };
 
@@ -154,6 +152,7 @@ const GameRating = () => {
     };
 
     const handleReaction = (userReaction) => {
+        console.log(isSynchronizing)
         if(!isSynchronizing){
             const cgd = [...currentGameData];
 
