@@ -7,7 +7,6 @@ import Game from "components/views/Game";
 import GameRating from "components/views/GameRating";
 import {HomeGuard} from "../routeProtectors/HomeGuard";
 import Leaderboard from "components/views/Leaderboard";
-import FinalLeaderboard from "components/views/FinalLeaderboard";
 import roundRatingsMock from "mockData/Leaderboard/roundRatingsMockData.json"
 import roundMemesMock from "mockData/Leaderboard/roundMemesMockData.json"
 import gameRatingsMock from "mockData/Leaderboard/gameRatingsMockData.json"
