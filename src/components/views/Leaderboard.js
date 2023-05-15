@@ -179,18 +179,15 @@ const Leaderboard = () => {
         const getLeaderboardData = async () => {
             let currentMemes = []
             let players = []
-            console.log(memes)
-            console.log(roundPlayers)
-            console.log(showMeme)
 
             if((memes.length === 0 || roundPlayers.length === 0) && !showMeme){
                 try {
                     // Memes of the round (get players)
                     const roundMemesResponse = await api.get(`${gameEndpoint}/${id}/meme`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
                     // Ratings of the round (get current memes and ratings)
-                    const roundRatingsResponse = await api.get(`${gameEndpoint}/${id}/rating`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
+                    const roundRatingsResponse = await api.get(`${gameEndpoint}/${id}/results/round`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
                     // All ratings of the game (get total score tc.)
-                    const gameRatingsResponse = await api.get(`${gameEndpoint}/${id}/winner`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
+                    const gameRatingsResponse = await api.get(`${gameEndpoint}/${id}/results/game`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
 
                     for (let meme of roundMemesResponse.data) {
                         let m = new Meme(meme);
