@@ -8,7 +8,11 @@ import GameRating from "components/views/GameRating";
 import {HomeGuard} from "../routeProtectors/HomeGuard";
 import Leaderboard from "components/views/Leaderboard";
 import FinalLeaderboard from "components/views/FinalLeaderboard";
-import MockData from "mockData/leaderboardScreenDataMock.json"
+import roundRatingsMock from "mockData/Leaderboard/roundRatingsMockData.json"
+import roundMemesMock from "mockData/Leaderboard/roundMemesMockData.json"
+import gameRatingsMock from "mockData/Leaderboard/gameRatingsMockData.json"
+
+
 
 
 
@@ -25,11 +29,9 @@ const AppRouter = () => {
     return (
       <BrowserRouter>
         <Switch>
-          <Route path="/final-leaderboard">
-            <FinalLeaderboard leaderboardData={MockData}/>
-          </Route>
-          <Route path="/leaderboard">
-            <Leaderboard leaderboardData={MockData}/>
+          <Route path="/leaderboard/:id">
+            {/* <Leaderboard roundMemes={roundMemesMock} roundRatings={roundRatingsMock} gameRatings={gameRatingsMock} isFinal={true}/>*/}
+            <Leaderboard/>
           </Route>
           <Route path="/lobby">
             <LobbyGuard>

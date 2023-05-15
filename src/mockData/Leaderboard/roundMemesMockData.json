@@ -1,0 +1,48 @@
+[
+  {
+    "user": {
+      "name": "Linda",
+      "id": "1"
+    },
+    "id": "LINDAS_MEME_ID",
+    "imageUrl": "https://i.imgflip.com/1bij.jpg",
+    "textBoxes": [
+      {"xRate": -44, "yRate": 165, "text": "linda's meme"}
+    ]
+  },
+  {
+    "user" : {
+      "name": "Marc",
+      "id": "2"
+    },
+    "id": "MARCS_MEME_ID",
+    "imageUrl": "https://i.imgflip.com/3po4m7.jpg",
+    "textBoxes": [
+      {"xRate": 0, "yRate": 50, "text": "how's it going"},
+      {"xRate": -44, "yRate": 165, "text": "general kenobi"},
+      {"xRate": 110, "yRate": 199, "text": "peep poop"}]
+  },
+  {
+    "user": {
+      "name": "Pablo",
+      "id": "3"
+    },
+    "id": "PABLOS_MEME_ID",
+    "imageUrl": "https://i.imgflip.com/3lmzyx.jpg",
+    "textBoxes": [
+      {"xRate": -44, "yRate": 165, "text": "pablo's meme"}
+    ]
+  },
+  {
+    "user": {
+      "name": "OtherUser",
+      "id": "4"
+    },
+    "id": "OTHERUSER_MEME_ID",
+    "imageUrl": "https://i.imgflip.com/5o32tt.png",
+    "textBoxes": [
+      {"xRate": -44, "yRate": 165, "text": "OTHERUSER's meme"}
+    ]
+  }
+]
+  
