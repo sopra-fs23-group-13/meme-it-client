@@ -19,6 +19,7 @@ import {useWindowSize} from "react-use";
 import {AppContext} from "../../context";
 import Draggable from "react-draggable";
 import Chat from "../ui/Chat";
+import ClickableMeme from "../ui/ClickableMeme";
 const MemeImage = props => {
     MemeImage.propTypes = {
         meme: PropTypes.object,
@@ -90,33 +91,6 @@ const Leaderboard = () => {
         })
     }
 
-    const handleClose = () => setShowMeme(false);
-    const EnlargedMeme = () => {
-        return (
-            <Modal
-                style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}
-                show={showMeme}
-                onHide={handleClose}
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                {enlargedMeme ? (<img src={enlargedMeme.imageUrl}/>)  : <div><Spinner/></div>}
-            </Modal>
-        );
-    }
-
-    const clickableMeme = (meme) => {
-        return (
-            <div>
-                <img  style={{width:100, cursor:"pointer"}} src={meme.imageUrl} onClick={()=> {
-                    setEnlargedMeme(meme)
-                    setShowMeme(true)
-                }}/>
-            </div>
-        )
-    }
-
-
     const getRankSymbol = (index) => {
         if(index === 0) {
             return <FaMedal size={24} color="#d7b912" />
@@ -167,7 +141,7 @@ const Leaderboard = () => {
                             <td>{getRankSymbol(index)}</td>
                             <td>{player.name}</td>
                             <td>{player.score} Points {pointDifference(player)} </td>
-                            <td>{clickableMeme(getPlayerMeme(player))}</td>
+                            <td><ClickableMeme meme={getPlayerMeme(player)} size={"small"} disableModal={false}/></td>
                         </tr>
                     )
                 })
@@ -284,10 +258,7 @@ const Leaderboard = () => {
                                 <Col >
                                     <div className={"leaderboard card"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}>
                                         <h2 style={{textAlign:"center"}}> Best Meme</h2>
-                                        <MemeImage meme={memes[0]} type={"big"} action={() => {
-                                            setShowMeme(true);
-                                            setEnlargedMeme(memes[0]);}}
-                                        />
+                                        <ClickableMeme meme={memes[0]} size={"large"} disableModal={false}/>
                                         <h5 style={{textAlign:"center"}}>
                                             by {memes[0].user.name} with {memes[0].rating} points
                                         </h5>
@@ -298,10 +269,8 @@ const Leaderboard = () => {
                                 <Col >
                                     <div className={"leaderboard card"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}>
                                         <h2 style={{textAlign:"center"}}> Worst Meme </h2>
-                                        <MemeImage meme={memes[memes.length-1]} type={"big"} action={() => {
-                                            setShowMeme(true);
-                                            setEnlargedMeme(memes[0]);}}
-                                        />                                        <h5 style={{textAlign:"center"}}>
+                                        <ClickableMeme meme={memes[memes.length-1]} size={"large"} disableModal={false}/>
+                                        <h5 style={{textAlign:"center"}}>
                                             by {memes[memes.length-1].user.name} with {memes[memes.length-1].rating} points
                                         </h5>
                                     </div>
@@ -311,7 +280,6 @@ const Leaderboard = () => {
                                 <h2 style={{textAlign:"center"}}> Leaderboard </h2>
                                 <Leaderboard/>
                             </div>
-                            {enlargedMeme && showMeme && <EnlargedMeme/>}
                         </Stack>
                     </div>
                     <Chat currentLobby={currentGameData}/>
@@ -352,9 +320,7 @@ const Leaderboard = () => {
                             <Col>
                                 <div className={"leaderboard card meme"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}>
                                     <h2 style={{textAlign:"center"}}> Meme of the Game</h2>
-                                    <MemeImage meme={bestMeme} style={{cursor:"pointer",border:"solid white 5px"}} className={"leaderboard best-meme-image"} onClick={() => {
-                                        setEnlargedMeme(bestMeme)
-                                        setShowMeme(true)}}/>
+                                    <ClickableMeme meme={bestMeme} size={"large"} disableModal={false}/>
                                     <h5 style={{textAlign:"center"}}>
                                         by {bestMeme.user.name} with {bestMeme.rating} points
                                     </h5>
@@ -365,9 +331,8 @@ const Leaderboard = () => {
                             <Col >
                                 <div className={"leaderboard card meme"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}>
                                     <h2 style={{textAlign:"center"}}> Meme of the Round</h2>
-                                    <MemeImage meme={memes[0]} style={{cursor:"pointer",border:"solid white 5px"}} className={"leaderboard best-meme-image"} onClick={() => {
-                                        setEnlargedMeme(memes[0])
-                                        setShowMeme(true)}}/>
+                                    <ClickableMeme meme={memes[0]} size={"large"} disableModal={false}/>
+                                    setShowMeme(true)}}/>
                                     <h5 style={{textAlign:"center"}}>
                                         by {memes[0].user.name} with {memes[0].rating} points
                                     </h5>
@@ -383,7 +348,6 @@ const Leaderboard = () => {
                 </Container>
                 {/*To disable it for testing, change to false*/ }
                 {true ? <Confetti width={width} height={1.4*height} numberOfPieces={100}/> : null }
-                {enlargedMeme && showMeme && <EnlargedMeme/>}
             </div>
         )
     }
