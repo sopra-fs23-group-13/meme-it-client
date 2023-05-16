@@ -94,7 +94,7 @@ const Leaderboard = () => {
     const [roundPlayers, setRoundPlayers] = useState([]); //All players and their score throughout all rounds
     const [memes, setMemes] = useState([]); // All memes of this round and their rating
     const [bestMeme, setBestMeme] = useState(null);
-    const [isFinalRound, setIsFinalRound] = useState(false);
+    const [isFinalRound, setIsFinalRound] = useState(null);
     const {loadedGameData, setLoadedGameData, preLoadedMemesForVoting} = useContext(AppContext);
     const [currentGameData, setCurrentGameData] = useState(loadedGameData);
 
@@ -141,6 +141,9 @@ const Leaderboard = () => {
                 else if(gameDataResponse.data.gameState == "GAME_RESULTS"){
                     setIsFinalRound(true);
                 }
+                else{
+                    setIsFinalRound(false);
+                }
                 setCurrentGameData(gameDataResponse.data);
 
             }
@@ -160,7 +163,7 @@ const Leaderboard = () => {
             let currentRoundMemes = []
             let players = []
 
-            if(memes.length === 0 || roundPlayers.length === 0 || (isFinalRound && !bestMeme)){
+            if(memes.length === 0 || roundPlayers.length === 0 || (isFinalRound != null && !bestMeme)){
                 try {
                     // Memes of the round (get players)
                     const roundMemesResponse = await api.get(`${gameEndpoint}/${id}/meme`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
@@ -168,7 +171,6 @@ const Leaderboard = () => {
                     const roundRatingsResponse = await api.get(`${gameEndpoint}/${id}/results/round`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
                     // All ratings of the game (get total score tc.)
                     const gameRatingsResponse = await api.get(`${gameEndpoint}/${id}/results/game`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
-
                     for (let meme of roundMemesResponse.data) {
                         let m = new Meme(meme);
                         let p = new Player(meme.user);
@@ -179,7 +181,9 @@ const Leaderboard = () => {
                                 m.rating += rating.rating;
                             }
                         }
-                        players.push(p);
+                        if(findPlayerById(players, p.id) === undefined){
+                            players.push(p);
+                        }
                         currentRoundMemes.push(m);
                     }
                     for (let rating of gameRatingsResponse.data) {
@@ -201,11 +205,9 @@ const Leaderboard = () => {
                     if(isFinalRound){
                         let allMemes = []
                         for(let rating of gameRatingsResponse.data){
-                            console.log(rating)
                             let m = findMemeById(allMemes, rating.meme.id)
                             if(m === undefined){
                                 m = new Meme(rating.meme)
-                                m.imageUrl = rating.meme.imageUrl
                                 m.rating = rating.rating
                                 allMemes.push(m)
                             }
@@ -216,15 +218,13 @@ const Leaderboard = () => {
                         allMemes.sort((a, b) => {return b.rating - a.rating});
                         setBestMeme(allMemes[0])
                     }
-
-
                 }
                 catch(e){
                     console.log(e)
                 }
             }
         }
-        if(memes.length < 1 || roundPlayers.length < 1){
+        if(memes.length < 1 || roundPlayers.length < 1 || (isFinalRound && !bestMeme)){
             getLeaderboardData().catch(e => console.log(e))
         }
         const interval = setInterval(async () => {
@@ -233,7 +233,7 @@ const Leaderboard = () => {
         return () => clearInterval(interval);})
 
     //If not final round and there is data for the players and memes
-    if (!isFinalRound && memes.length > 0 && roundPlayers.length >0) {
+    if (isFinalRound !== null && !isFinalRound && memes.length > 0 && roundPlayers.length >0) {
         return (
             <div className="leaderboard content">
                 <Container>
@@ -284,7 +284,6 @@ const Leaderboard = () => {
             </div>
         )
     }
-
     //If final round and there is data for the players and memes
     else if (isFinalRound && memes.length > 0 && roundPlayers.length > 0 && bestMeme) {
         return (

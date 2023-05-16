@@ -4,10 +4,12 @@ import {Spinner} from "./Spinner";
 import Draggable from "react-draggable";
 import PropTypes from "prop-types";
 import "styles/views/Leaderboard.scss";
+import { useImageSize } from 'react-image-size';
 import {Container, ModalBody} from "react-bootstrap";
 
 const ClickableMeme = props => {
     const [showMeme, setShowMeme] = useState(false );
+    const [dimensions, { loading, error }] = useImageSize(props.meme.imageUrl);
 
     ClickableMeme.propTypes = {
         meme: PropTypes.object,
@@ -53,7 +55,7 @@ const ClickableMeme = props => {
                                     resize: "none",
                                     fontWeight: "750",
                                     minHeight:"40px",
-                                    width:"125px",
+                                    width:"50%",
                                     textAlign: "center",
                                 }}
                         />
@@ -83,44 +85,62 @@ const ClickableMeme = props => {
             </div>
         )
     }
+    if(dimensions !== null){
+        let x_multiplier = dimensions.height/dimensions.width;
+        let y_multiplier = dimensions.width/dimensions.height;
+        if(dimensions.width > dimensions.height){
+            x_multiplier *= 1.2
+            y_multiplier *= 0.5
+        }
+        else{
+            x_multiplier *= 0.7
+            y_multiplier *= 0.7
+        }
 
-    return (
-        <div className="meme-content">
-            <img
-                src={props.meme?.imageUrl}
-                alt={"Meme"}
-                className={classNames[props.size]}
-                onClick={() => { if (!props.disableModal) {setShowMeme(true)}}}
-            />
-            {props.meme?.textBoxes?.map((item, i) => (
-                <Draggable
-                    key={i}
-                    bounds="parent"
-                    position={{
-                        x: item?.xRate*0.7,
-                        y: item?.yRate/1.4,
-                    }}
-                    disabled
-                >
+        return (
+            <div className="meme-content">
+                <img
+                    src={props.meme?.imageUrl}
+                    alt={"Meme"}
+                    className={classNames[props.size]}
+                    onClick={() => { if (!props.disableModal) {setShowMeme(true)}}}
+                />
+                {props.meme?.textBoxes?.map((item, i) => (
+                    <Draggable
+                        key={i}
+                        bounds="parent"
+                        position={{
+                            x: item?.xRate * x_multiplier,
+                            y: item?.yRate * y_multiplier,
+                        }}
+                        disabled
+                    >
                         <textarea
                             placeholder="TEXT HERE"
                             value={item.text}
                             disabled
-                            style={{fontSize: `${props.meme?.fontSize*0.8}px`, color: props.meme?.color, width:"20%"}}
+                            style={{fontSize: `${props.meme?.fontSize*0.9}px`, color: props.meme?.color, width:"50%",resize:"none", textAlign:"center",pointerEvents:"none"}}
                         />
-                </Draggable>
-            ))}
-            <Modal
-                show={showMeme}
-                onHide={handleClose}
-                centered
-                size="sm"
+                    </Draggable>
+                ))}
+                <Modal
+                    show={showMeme}
+                    onHide={handleClose}
+                    centered
+                    size="sm"
                 >
-                <ModalMemeImage modalMeme={props.meme}/>
-            </Modal>
-        </div>
-
-    )
+                    <ModalMemeImage modalMeme={props.meme}/>
+                </Modal>
+            </div>
+        )
+    }
+    else {
+        return (
+            <div>
+                <Spinner/>
+            </div>
+        )
+    }
 
 
 
