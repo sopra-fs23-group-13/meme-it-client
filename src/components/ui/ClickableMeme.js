@@ -3,6 +3,8 @@ import Modal from "react-bootstrap/Modal";
 import {Spinner} from "./Spinner";
 import Draggable from "react-draggable";
 import PropTypes from "prop-types";
+import "styles/views/Leaderboard.scss";
+import {Container, ModalBody} from "react-bootstrap";
 
 const ClickableMeme = props => {
     const [showMeme, setShowMeme] = useState(false );
@@ -21,10 +23,11 @@ const ClickableMeme = props => {
 
     const ModalMemeImage = ({modalMeme}) => {
         return (
-                <div className="meme-content">
+                <div style={{display:"flex", alignItems:"flex-start", justifyContent:"center", position:"relative"}}>
                     <img
                         src={modalMeme?.imageUrl}
                         alt={"Meme"}
+                        style={{width:"400px", height:"400px"}}
                     />
                     {modalMeme?.textBoxes?.map((item, i) => (
                         <Draggable
@@ -40,7 +43,19 @@ const ClickableMeme = props => {
                             placeholder="TEXT HERE"
                             value={item.text}
                             disabled
-                            style={{fontSize: `${modalMeme?.fontSize}px`, color: modalMeme?.color}}
+                            style=
+                                {{
+                                    fontSize: `${modalMeme?.fontSize}px`,
+                                    color: modalMeme?.color,
+                                    position: "absolute",
+                                    background: "none",
+                                    border: "none",
+                                    resize: "none",
+                                    fontWeight: "750",
+                                    minHeight:"40px",
+                                    width:"125px",
+                                    textAlign: "center",
+                                }}
                         />
                         </Draggable>
                     ))}
@@ -48,6 +63,26 @@ const ClickableMeme = props => {
             )
     }
 
+    if(props.size === "small"){
+        return (
+            <div>
+                <img  style={{width:100, cursor:"pointer"}} src={props.meme.imageUrl} onClick={()=> {
+                    setShowMeme(true)
+                }}/>
+                <Modal
+                    show={showMeme}
+                    onHide={handleClose}
+                    centered
+                    size={"sm"}
+                    style={{overflowX:"visible"}}
+                >
+                    {props.meme ?
+                        <ModalMemeImage modalMeme={props.meme}/>
+                        : <div><Spinner/></div>}
+                </Modal>
+            </div>
+        )
+    }
 
     return (
         <div className="meme-content">
@@ -62,8 +97,8 @@ const ClickableMeme = props => {
                     key={i}
                     bounds="parent"
                     position={{
-                        x: item?.xRate,
-                        y: item?.yRate,
+                        x: item?.xRate*0.7,
+                        y: item?.yRate/1.4,
                     }}
                     disabled
                 >
@@ -71,18 +106,17 @@ const ClickableMeme = props => {
                             placeholder="TEXT HERE"
                             value={item.text}
                             disabled
-                            style={{fontSize: `${props.meme?.fontSize}px`, color: props.meme?.color}}
+                            style={{fontSize: `${props.meme?.fontSize*0.8}px`, color: props.meme?.color, width:"20%"}}
                         />
                 </Draggable>
             ))}
-            <Modal show={showMeme} onHide={handleClose}
-                style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}
+            <Modal
                 show={showMeme}
                 onHide={handleClose}
-                aria-labelledby="contained-modal-title-vcenter"
                 centered
+                size="sm"
                 >
-                {props.meme ? <ModalMemeImage modalMeme={props.meme}/>  : <div><Spinner/></div>}
+                <ModalMemeImage modalMeme={props.meme}/>
             </Modal>
         </div>
 

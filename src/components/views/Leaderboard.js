@@ -10,7 +10,6 @@ import {game as gameEndpoint, lobby} from "../../helpers/endpoints";
 import Player from "../../models/Player";
 import {Spinner} from "../ui/Spinner";
 import TimerProgressBar from "../ui/TimerProgressBar";
-import Modal from "react-bootstrap/Modal";
 import Cookies from "universal-cookie";
 import {useHistory, useParams} from "react-router-dom";
 import AnimatedBarChart from "../ui/AnimatedBarChart";
@@ -20,33 +19,70 @@ import {AppContext} from "../../context";
 import Draggable from "react-draggable";
 import Chat from "../ui/Chat";
 import ClickableMeme from "../ui/ClickableMeme";
-const MemeImage = props => {
-    MemeImage.propTypes = {
-        meme: PropTypes.object,
-        action: PropTypes.func
+
+const LeaderboardTable = ({players, memes}) => {
+    function getPlayerMeme(player) {
+        if(memes.length > 0){
+            return memes.find((meme) => {
+                return meme.user.id === player.id;
+            })
+        }
+
+    }
+
+    const getRankSymbol = (index) => {
+        if (index === 0) {
+            return <FaMedal size={24} color="#d7b912"/>
+        }
+        if (index === 1) {
+            return <FaMedal size={24} color="#a1a1a1"/>
+        }
+        if (index === 2) {
+            return <FaMedal size={24} color="#cd7f32"/>
+        }
+        return <p style={{marginLeft: "4px"}}>{"#" + (index + 1)}</p>
+    }
+
+    const pointDifference = (player) => {
+        const meme = getPlayerMeme(player);
+        if (meme.rating > 0) {
+            return <Badge pill bg={"success"} style={{fontSize: "14px"}}>
+                + {meme.rating}
+            </Badge>
+        } else if (meme.rating < 0) {
+            return <Badge pill bg={"danger"} style={{fontSize: "14px"}}>
+                - {-1 * meme.rating}
+            </Badge>
+        } else {
+            return <Badge pill bg={"secondary"} style={{fontSize: "14px"}}>
+                + 0
+            </Badge>
+        }
     }
     return (
-        <div className="meme-content">
-            <img src={props.meme?.imageUrl} alt={"Meme"} style={{cursor:"pointer",border:"solid white 5px"}} className={"leaderboard best-meme-image"} />
-            {props.meme?.textBoxes?.map((item, i) => (
-                <Draggable
-                    key={i}
-                    bounds="parent"
-                    position={{
-                        x: item?.xRate,
-                        y: item?.yRate,
-                    }}
-                    disabled
-                >
-                        <textarea
-                            placeholder="TEXT HERE"
-                            value={item.text}
-                            disabled
-                            style={{fontSize: `${props.meme?.fontSize}px`, color: props.meme?.color}}
-                        />
-                </Draggable>
-            ))}
-        </div>
+        <Table responsive className={"leaderboard table"}>
+            <thead>
+            <tr style={{fontSize: '16px'}}>
+                <th>Place</th>
+                <th>Name</th>
+                <th>Score</th>
+                <th width={1}>Meme</th>
+            </tr>
+            </thead>
+            <tbody>
+            {players.map((player, index) => {
+                return (
+                    <tr style={{fontSize: '18px'}} key={index}>
+                        <td>{getRankSymbol(index)}</td>
+                        <td>{player.name}</td>
+                        <td>{player.score} Points {pointDifference(player)} </td>
+                        <td><ClickableMeme meme={getPlayerMeme(player)} size={"small"} disableModal={false}/></td>
+                    </tr>
+                )
+            })
+            }
+            </tbody>
+        </Table>
     )
 
 }
@@ -57,13 +93,16 @@ const Leaderboard = () => {
     const cookies = new Cookies();
     const [roundPlayers, setRoundPlayers] = useState([]); //All players and their score throughout all rounds
     const [memes, setMemes] = useState([]); // All memes of this round and their rating
-    const [showMeme, setShowMeme] = useState(false );
-    const [enlargedMeme, setEnlargedMeme] = useState(null);
     const [bestMeme, setBestMeme] = useState(null);
     const [isFinalRound, setIsFinalRound] = useState(false);
     const {loadedGameData, setLoadedGameData, preLoadedMemesForVoting} = useContext(AppContext);
     const [currentGameData, setCurrentGameData] = useState(loadedGameData);
 
+    function getPlayerMeme(player) {
+        return memes.find((meme) => {
+            return meme.user.id === player.id;
+        })
+    }
 
     const leaveGame = async () => {
         //const leaveResponse = await api.delete('/' + localStorage.getItem("code") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
@@ -74,82 +113,23 @@ const Leaderboard = () => {
         history.push("/")
     }
 
-
-    const handleNextRound = async () => {
-        history.push("/game/" + id);
-    };
-
     function findPlayerById(playerList, id) {
         return playerList.find((player) => {
             return player.id === id;
         })
     }
 
-    function getPlayerMeme(player) {
-        return memes.find((meme) => {
-            return meme.user.id === player.id;
+    function findMemeById(memeList, memeId) {
+        return memeList.find((meme) => {
+            return meme.id === memeId;
         })
     }
 
-    const getRankSymbol = (index) => {
-        if(index === 0) {
-            return <FaMedal size={24} color="#d7b912" />
-        }
-        if(index === 1) {
-            return <FaMedal size={24} color="#a1a1a1" />
-        }
-        if(index === 2) {
-            return <FaMedal size={24} color="#cd7f32" />
-        }
-        return <p style={{marginLeft:"4px"}}>{"#" + (index + 1)}</p>
-    }
+    const handleNextRound = async () => {
+        history.push("/game/" + id);
+    };
 
-    const pointDifference = (player) => {
-        const meme = getPlayerMeme(player);
-        if(meme.rating>0) {
-            return <Badge pill bg={"success"} style={{fontSize:"14px"}}>
-                + {meme.rating}
-            </Badge>
-        }
-        else if (meme.rating<0) {
-            return <Badge pill bg={"danger"} style={{fontSize:"14px"}}>
-               - {-1*meme.rating}
-            </Badge>
-        }
-        else {
-            return <Badge pill bg={"secondary"} style={{fontSize:"14px"}}>
-                + 0
-            </Badge>
-        }
 
-    }
-    const Leaderboard = () => {
-        return (
-            <Table responsive className={"leaderboard table"}>
-                <thead>
-                <tr style={{fontSize:'16px'}}>
-                    <th>Place</th>
-                    <th>Name</th>
-                    <th>Score</th>
-                    <th width={1}>Meme</th>
-                </tr>
-                </thead>
-                <tbody>
-                {roundPlayers.map((player, index) => {
-                    return (
-                        <tr style={{fontSize:'18px'}} key={index}>
-                            <td>{getRankSymbol(index)}</td>
-                            <td>{player.name}</td>
-                            <td>{player.score} Points {pointDifference(player)} </td>
-                            <td><ClickableMeme meme={getPlayerMeme(player)} size={"small"} disableModal={false}/></td>
-                        </tr>
-                    )
-                })
-                }
-                </tbody>
-            </Table>
-        )
-    }
     useEffect( () =>{
         const updateGameData = async () => {
             try {
@@ -177,10 +157,10 @@ const Leaderboard = () => {
 
     useEffect(() => {
         const getLeaderboardData = async () => {
-            let currentMemes = []
+            let currentRoundMemes = []
             let players = []
 
-            if((memes.length === 0 || roundPlayers.length === 0) && !showMeme){
+            if(memes.length === 0 || roundPlayers.length === 0 || (isFinalRound && !bestMeme)){
                 try {
                     // Memes of the round (get players)
                     const roundMemesResponse = await api.get(`${gameEndpoint}/${id}/meme`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
@@ -200,7 +180,7 @@ const Leaderboard = () => {
                             }
                         }
                         players.push(p);
-                        currentMemes.push(m);
+                        currentRoundMemes.push(m);
                     }
                     for (let rating of gameRatingsResponse.data) {
                         let p = findPlayerById(players, rating.meme.user.id);
@@ -214,26 +194,46 @@ const Leaderboard = () => {
                     //Sort Player List so first index is highest score
                     players.sort((a, b) => {return b.score - a.score});
                     //Sort Round meme list so first index is highest rated meme
-                    currentMemes.sort((a, b) => {return b.rating - a.rating});
+                    currentRoundMemes.sort((a, b) => {return b.rating - a.rating});
                     setRoundPlayers(players);
-                    setMemes(currentMemes);
-                    setBestMeme(currentMemes[0]);
+                    setMemes(currentRoundMemes);
+
+                    if(isFinalRound){
+                        let allMemes = []
+                        for(let rating of gameRatingsResponse.data){
+                            console.log(rating)
+                            let m = findMemeById(allMemes, rating.meme.id)
+                            if(m === undefined){
+                                m = new Meme(rating.meme)
+                                m.imageUrl = rating.meme.imageUrl
+                                m.rating = rating.rating
+                                allMemes.push(m)
+                            }
+                            else {
+                                m.rating += rating.rating
+                            }
+                        }
+                        allMemes.sort((a, b) => {return b.rating - a.rating});
+                        setBestMeme(allMemes[0])
+                    }
+
+
                 }
                 catch(e){
                     console.log(e)
                 }
             }
         }
-        if(memes.length < 1 || roundPlayers.length < 1 || !bestMeme){
+        if(memes.length < 1 || roundPlayers.length < 1){
             getLeaderboardData().catch(e => console.log(e))
         }
         const interval = setInterval(async () => {
             await getLeaderboardData();
-        }, 5000);
+        }, 1000);
         return () => clearInterval(interval);})
 
     //If not final round and there is data for the players and memes
-    if (!isFinalRound && memes.length > 0 && roundPlayers.length >0 && bestMeme) {
+    if (!isFinalRound && memes.length > 0 && roundPlayers.length >0) {
         return (
             <div className="leaderboard content">
                 <Container>
@@ -275,7 +275,7 @@ const Leaderboard = () => {
                             </Row>
                             <div className={"leaderboard card"}>
                                 <h2 style={{textAlign:"center"}}> Leaderboard </h2>
-                                <Leaderboard/>
+                                <LeaderboardTable memes={memes} players={roundPlayers}/>
                             </div>
                         </Stack>
                     </div>
@@ -329,7 +329,6 @@ const Leaderboard = () => {
                                 <div className={"leaderboard card meme"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}>
                                     <h2 style={{textAlign:"center"}}> Meme of the Round</h2>
                                     <ClickableMeme meme={memes[0]} size={"large"} disableModal={false}/>
-                                    setShowMeme(true)}}/>
                                     <h5 style={{textAlign:"center"}}>
                                         by {memes[0].user.name} with {memes[0].rating} points
                                     </h5>
@@ -339,7 +338,7 @@ const Leaderboard = () => {
                     </div>
                     <div className={"leaderboard card"}>
                         <h2 style={{textAlign:"center"}}> Leaderboard </h2>
-                        <Leaderboard/>
+                        <LeaderboardTable memes={memes} players={roundPlayers}/>
                     </div>
                     <Chat currentLobby={loadedGameData}/>
                 </Container>
