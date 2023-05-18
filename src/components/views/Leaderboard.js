@@ -60,29 +60,32 @@ const LeaderboardTable = ({players, memes}) => {
         }
     }
     return (
-        <Table responsive className={"leaderboard table"}>
-            <thead>
-            <tr style={{fontSize: '16px'}}>
-                <th>Place</th>
-                <th>Name</th>
-                <th>Score</th>
-                <th width={1}>Meme</th>
-            </tr>
-            </thead>
-            <tbody>
-            {players.map((player, index) => {
-                return (
-                    <tr style={{fontSize: '18px'}} key={index}>
-                        <td>{getRankSymbol(index)}</td>
-                        <td>{player.name}</td>
-                        <td>{player.score} Points {pointDifference(player)} </td>
-                        <td><ClickableMeme meme={getPlayerMeme(player)} size={"small"} disableModal={false}/></td>
-                    </tr>
-                )
-            })
-            }
-            </tbody>
-        </Table>
+        <Container className={"leaderboard table-container"}>
+            <Table responsive className={"leaderboard table"}>
+                <thead>
+                <tr style={{fontSize: '16px'}}>
+                    <th>Place</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                    <th width={1}>Meme</th>
+                </tr>
+                </thead>
+                <tbody>
+                {players.map((player, index) => {
+                    return (
+                        <tr style={{fontSize: '18px'}} key={index}>
+                            <td>{getRankSymbol(index)}</td>
+                            <td>{player.name}</td>
+                            <td>{player.score} Points {pointDifference(player)} </td>
+                            <td><ClickableMeme meme={getPlayerMeme(player)} size={"small"} disableModal={false}/></td>
+                        </tr>
+                    )
+                })
+                }
+                </tbody>
+            </Table>
+        </Container>
+
     )
 
 }
@@ -130,7 +133,7 @@ const Leaderboard = () => {
     }
 
     const handleNextRound = async () => {
-        //history.push("/game/" + id);
+        history.push("/game/" + id);
     };
 
 
