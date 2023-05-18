@@ -34,6 +34,10 @@ const UsernameModal = props => {
     }
 
     const submitAndJoin = async () => {
+        //delete all data from localstorage before creating stuff
+        localStorage.clear();
+        //delete all data from cookies before creating new cookies
+        cookies.remove("token");
         const response = await api.post(users, {name: username});
         localStorage.setItem("username", username)
         cookies.set("token", response.data.id)
@@ -65,6 +69,10 @@ const UsernameModal = props => {
     }
 
     const createLobby = async () => {
+        //delete all data from localstorage before creating stuff
+        localStorage.clear();
+        //delete all data from cookies before creating new cookies
+        cookies.remove("token");
         const response = await api.post(users, {name: username});
         localStorage.setItem("username", username)
         cookies.set("token", response.data.id)
