@@ -47,10 +47,18 @@ const Game = () => {
                 headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
             }),
         ]);
-        memeData = {
-            ...gameRes.data,
-            meme: { ...templateRes.data }
-        };
+        if (localStorage.getItem("memeData") !== undefined && localStorage.getItem("memeData") !== null){
+            memeData = {
+                ...gameRes.data,
+                meme: { ...JSON.parse(localStorage.getItem("memeData")) }
+            };
+        } else {
+            memeData = {
+                ...gameRes.data,
+                meme: { ...templateRes.data }
+            };
+            localStorage.setItem("memeData", JSON.stringify(templateRes.data));
+        }
 
         let currentTime = new Date();
         let endTime = new Date(new Date(memeData.roundStartedAt).getTime() + memeData?.roundDuration * 1000);
@@ -163,7 +171,6 @@ const Game = () => {
     const leaveGame = async () => {
         //const leaveResponse = await api.delete('/' + localStorage.getItem("code") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
         localStorage.clear()
-        localStorage.clear()
         localStorage.setItem("alert", "Disconnected")
         cookies.remove("token")
         history.push("/")
@@ -232,6 +239,7 @@ const Game = () => {
     const startVotingAtSameTime= (props) =>{
         setNow(null);
         props ? localStorage.setItem("alert", "There was an issue with your meme submission!") : localStorage.removeItem("alert");
+        localStorage.removeItem("memeData");
         history.push("/game-rating/" + id);
     }
 
