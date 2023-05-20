@@ -71,7 +71,7 @@ const LobbyList = props => {
                 <tbody>
                     {(lobbyEntries !== undefined && lobbyEntries.length > 0) ? lobbyEntries :
                         <tr>
-                            <td colspan="3" style={{textAlign: "center"}}>
+                            <td colSpan="3" style={{textAlign: "center"}}>
                                 No lobbies available
                             </td>
                         </tr>

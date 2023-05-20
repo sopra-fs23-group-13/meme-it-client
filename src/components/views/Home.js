@@ -33,6 +33,9 @@ const Home = () => {
     }
 
     const handleChange = (event) => {
+        if (localStorage.getItem("code") !== null) {
+            history.push("/lobby");
+        }
         setGameCode(event.target.value);
     };
 
@@ -43,6 +46,16 @@ const Home = () => {
         }
         history.push("/lobby");
     }
+
+    const checkShowGames = () =>{
+        if(localStorage.getItem("code") !== null) {
+            localStorage.setItem("alert", "You were forwarded to your lobby");
+            history.push("/lobby");
+        } else {
+            setShow(!show);
+        }
+    }
+
     return (
         <div className={"animationContentProperties"}>
             <AnimatedBackground/>
@@ -88,7 +101,7 @@ const Home = () => {
                                             <Row>
                                                 <Col>
                                                     <Button className={"home buttons join"}
-                                                            onClick={() => setShow(!show)}>{show ? "Close List" : "Show Games"}</Button>
+                                                            onClick={checkShowGames}>{show ? "Close List" : "Show Games"}</Button>
                                                 </Col>
                                             </Row>
                                         </Stack>

@@ -24,7 +24,7 @@ const Lobby = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSynchronizing] = useState(false);
-  const toggleShowAlert = () => setShowAlert(!showAlert);
+  const toggleShowAlert = () => {setShowAlert(!showAlert); localStorage.removeItem("alert")};
 
 
   useEffect( () => {
@@ -72,7 +72,6 @@ const Lobby = () => {
     }
     finally {
       localStorage.clear()
-      localStorage.clear()
       localStorage.setItem("alert", reason)
       cookies.remove("token")
       history.push("/")
@@ -96,8 +95,8 @@ const Lobby = () => {
       <Container>
         <div className={"lobby alert"}>
           <Notification
-              reason="Game is synchronizing all players and will start soon..."
-              showAlert={(showAlert && isSynchronizing)}
+              reason={localStorage.getItem("alert") !== null ? localStorage.getItem("alert") : "Game is synchronizing all players and will start soon..."}
+              showAlert={(showAlert && isSynchronizing) || (localStorage.getItem("alert") !== null)}
               toggleShowAlert={toggleShowAlert}
           />
         </div>
