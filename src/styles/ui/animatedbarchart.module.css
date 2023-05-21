@@ -12,8 +12,8 @@
 @media (min-width: 768px) {
     .main {
         position: relative;
-        width: 15vw;
-        height: 35vh;
+        width: 12vw;
+        height: 30vh;
         cursor: pointer;
         overflow: hidden;
         margin: 1em;

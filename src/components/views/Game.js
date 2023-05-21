@@ -12,7 +12,7 @@ import {game as gameEndpoint} from "../../helpers/endpoints"
 import Chat from "../ui/Chat";
 import Cookies from "universal-cookie";
 import Form from "react-bootstrap/Form";
-import AutoSizeTextArea from "../ui/AutoSizeTextArea";
+import DraggableResizableInput from "../ui/DraggableInput";
 
 const Game = () => {
     const delay = 1000;
@@ -23,7 +23,7 @@ const Game = () => {
 
     const [isSynchronizing, setIsSynchronizing] = useState(false)
     const [fontSize, setFontSize] = useState(14);
-    const [color, setColor] = useState("#000");
+    const [color, setColor] = useState("#ffffff");
     const [backgroundColor, setBackgroundColor] = useState("#ffffff");
     const [opacity, setOpacity] = useState(100);
     const [currentRound, setCurrentRound] = useState(null);
@@ -32,8 +32,9 @@ const Game = () => {
     const [now, setNow] = useState(null);
     const [currentTextNodePositions, setCurrentTextNodePositions] = useState([
         {
-            xRate: 150,
-            yRate: 150,
+            xRate: 100,
+            yRate: 100,
+            dimension: {width: 200, height: 50}
         },
     ]);
     const [currentTextNodeValues, setCurrentTextNodeValues] = useState([]);
@@ -41,33 +42,33 @@ const Game = () => {
         let memeData;
         const [gameRes, templateRes] = await Promise.all([
             api.get(`${gameEndpoint}/${id}`, {
-                headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+                headers: {'Authorization': `Bearer ${cookies.get("token")}`},
             }),
             api.get(`${gameEndpoint}/${id}/template`, {
-                headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+                headers: {'Authorization': `Bearer ${cookies.get("token")}`},
             }),
         ]);
-        if (localStorage.getItem("memeData") !== undefined && localStorage.getItem("memeData") !== null){
+        if (localStorage.getItem("memeData") !== undefined && localStorage.getItem("memeData") !== null) {
             memeData = {
                 ...gameRes.data,
-                meme: { ...JSON.parse(localStorage.getItem("memeData")) }
+                meme: {...JSON.parse(localStorage.getItem("memeData"))}
             };
         } else {
             memeData = {
                 ...gameRes.data,
-                meme: { ...templateRes.data }
+                meme: {...templateRes.data}
             };
             localStorage.setItem("memeData", JSON.stringify(templateRes.data));
         }
 
         let currentTime = new Date();
         let endTime = new Date(new Date(memeData.roundStartedAt).getTime() + memeData?.roundDuration * 1000);
-        let roundedTimeLeft = Math.round((endTime-currentTime) / 1000) * 1000;
+        let roundedTimeLeft = Math.round((endTime - currentTime) / 1000) * 1000;
 
-        if((memeData?.roundDuration * 1000)-(roundedTimeLeft) >= 0){
+        if ((memeData?.roundDuration * 1000) - (roundedTimeLeft) >= 0) {
             setIsSynchronizing(false);
-            setNow((memeData?.roundDuration * 1000)-(roundedTimeLeft))
-        }else{
+            setNow((memeData?.roundDuration * 1000) - (roundedTimeLeft))
+        } else {
             setIsSynchronizing(true);
             setNow(memeData?.roundDuration * 1000)
         }
@@ -75,7 +76,7 @@ const Game = () => {
         setLoadedGameData(memeData);
         setGameData([]);
         setCurrentRound(memeData.currentRound);
-        setCurrentMeme(memeData.meme?.imageUrl);
+        setCurrentMeme(memeData.meme);
         setMaxRound(memeData.totalRounds);
     }, []);
 
@@ -83,8 +84,9 @@ const Game = () => {
         return [...Array(currentMeme?.number_of_text_nodes).keys()].map(
             (item, i) => {
                 return {
-                    xRate: 0,
+                    xRate: 100,
                     yRate: (i + 1) * 50,
+                    dimension: {width: 200, height: 50}
                 };
             }
         );
@@ -105,7 +107,7 @@ const Game = () => {
 
 
     const addMemeTextNode = () => {
-        const newNode = {xRate: 0, yRate: 100}
+        const newNode = {xRate: 100, yRate: 0, dimension: {width: 200, height: 50}}
         const currentNodePositions = [...currentTextNodePositions];
         memeTextNodes.push(newNode);
         currentNodePositions.push(newNode);
@@ -119,12 +121,12 @@ const Game = () => {
         setCurrentTextNodePositions(currentNodePositions);
     }
 
-    useEffect( () => {
+    useEffect(() => {
         const handleNextRound = async () => {
             const gameState = await api.get(`${gameEndpoint}/${id}`, {
-                headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+                headers: {'Authorization': `Bearer ${cookies.get("token")}`},
             });
-            if(gameState.data.gameState !== "CREATION"){
+            if (gameState.data.gameState !== "CREATION") {
                 setNow(null);
                 setCurrentRound(null);
                 await submitMemesAtSameTime();
@@ -159,9 +161,16 @@ const Game = () => {
         setCurrentTextNodeValues(prevValues);
     };
 
+    const onTextNodeDimensionChange = (e, i, data) => {
+        let prevPositions = [...currentTextNodePositions];
+        prevPositions[i.id].dimension = {width: data.width, height: data.height};
+        setCurrentTextNodePositions(prevPositions);
+    }
+
     const handleGetDifferentTemplate = async () => {
-        const response = await api.put(`${gameEndpoint}/${id}/template`,{}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
-        localStorage.setItem("swap", localStorage.getItem("swap")-1);
+        const response = await api.put(`${gameEndpoint}/${id}/template`, {}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
+        localStorage.setItem("swap", localStorage.getItem("swap") - 1);
+        localStorage.setItem("memeData", JSON.stringify(response.data));
         const copyObject = {...loadedGameData};
         copyObject.meme = response.data;
         setLoadedGameData(copyObject);
@@ -175,8 +184,8 @@ const Game = () => {
         cookies.remove("token")
         history.push("/")
     }
-    const handleFontSizeChange = (event) => {
-        setFontSize(event.target.value);
+    const handleFontSizeChange = (value) => {
+        setFontSize(value);
     };
 
     const handleColorChange = (event) => {
@@ -184,7 +193,7 @@ const Game = () => {
     };
 
     const handleBackgroundColorChange = (event) => {
-        opacity === 100 ? setBackgroundColor(event.target.value) : setBackgroundColor(event.target.value+opacity);
+        opacity === 100 ? setBackgroundColor(event.target.value) : setBackgroundColor(event.target.value + opacity);
     };
 
     const handleOpacityChange = (event) => {
@@ -192,9 +201,9 @@ const Game = () => {
         setOpacity(newOpacity);
 
         let hashColor = backgroundColor.substring(0, 7); // Remove previous alpha value
-        if(newOpacity === 0){
+        if (newOpacity === 0) {
             hashColor += "00";
-        }else if(newOpacity !== 100){
+        } else if (newOpacity !== 100) {
             hashColor += newOpacity;
         }
         setBackgroundColor(hashColor);
@@ -217,7 +226,10 @@ const Game = () => {
             }
         );
         const textBoxes = currentTextNodePositions.map((position, index) => ({
-            ...position,
+            height: position?.dimension?.height === undefined ? 50 : position?.dimension?.height,
+            width: position?.dimension?.width === undefined ? 200 : position?.dimension?.width,
+            xRate: position?.xRate,
+            yRate:position?.yRate,
             text: currentTextNodeValues[index]
         }));
         const meme = {
@@ -233,10 +245,11 @@ const Game = () => {
         let randomNumber = randomBuffer[0] / (0xffffffff + 1);
         //const loadDelay = new Date(ended.getTime() + (5 + randomNumber) * 1000);
         setTimeout(randomNumber * 100);
+        console.log(meme)
         await api.post(`${gameEndpoint}/${id}/meme/${loadedGameData?.meme?.id}`, meme, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
     }
 
-    const startVotingAtSameTime= (props) =>{
+    const startVotingAtSameTime = (props) => {
         setNow(null);
         props ? localStorage.setItem("alert", "There was an issue with your meme submission!") : localStorage.removeItem("alert");
         localStorage.removeItem("memeData");
@@ -245,129 +258,121 @@ const Game = () => {
 
     return (
         <div className={"game content"}>
-          <div className={"game card"}>
-              {(loadedGameData !== null && loadedGameData !== undefined && currentRound !== null) ? (
-            <BaseContainer className="game">
-                <Button
-                    width="200px"
-                    onClick={leaveGame}
-                    className="lobby leave-btn game"
-                >
-                    Leave Game
-                </Button>
-                <Stack gap={3} className="pt-5 container ">
-                    <Stack gap={3} className={`pt-5  `}>
-                        <h1 className="fw-bolder fs-3 text-start text-black">
-                            {`Round ${currentRound}/${maxRound} `}
-                        </h1>
-                        <p className="fs-6 text-start text-black">
-                            Drag the text nodes over the image
-                        </p>
-                        <TimerProgressBar
-                            delay={delay}
-                            now={now}
-                            max={loadedGameData?.roundDuration * 1000}
-                            callbackFunc={() => handleTimer()}
-                            isPlaying={!isSynchronizing}
-                        />
-                    </Stack>
-                    {currentMeme?.imageUrl ? (
-                        <>
-                            <div className="meme-content">
-                                <div className={"drag-content"}>
-                                    <img src={currentMeme?.imageUrl} alt={"meme lmao"}/>
-                                    {memeTextNodes?.map((item, i) => (
-                                        <AutoSizeTextArea
-                                            key={i}
-                                            value={currentTextNodeValues[i]}
-                                            onChange={(e) => onTextNodeChange(e, i)}
-                                            onDrag={(e, data) => onTextNodeDrag(e, data, i)}
-                                            style={{ color: color, backgroundColor: backgroundColor }}
-                                            maxDimension={400}
-                                            fontSize={fontSize}
-                                            position={{
-                                                x: currentTextNodePositions?.[i]?.xRate,
-                                                y: currentTextNodePositions?.[i]?.yRate,
-                                            }}
-                                            disabled={isSynchronizing}
-                                        />
-                                    ))}
-                                </div>
+            <div className={"game card"}>
+                {(loadedGameData !== null && loadedGameData !== undefined && currentRound !== null) ? (
+                    <BaseContainer className="game">
+                        <Button
+                            width="200px"
+                            onClick={leaveGame}
+                            className="lobby leave-btn game"
+                        >
+                            Leave Game
+                        </Button>
+                        <Stack gap={3} className="pt-5 container ">
+                            <Stack gap={3} className={`pt-5  `}>
+                                <h1 className="fw-bolder fs-3 text-start text-black">
+                                    {`Round ${currentRound}/${maxRound} `}
+                                </h1>
+                                <p className="fs-6 text-start text-black">
+                                    Drag the text nodes over the image
+                                </p>
+                                <TimerProgressBar
+                                    delay={delay}
+                                    now={now}
+                                    max={loadedGameData?.roundDuration * 1000}
+                                    callbackFunc={() => handleTimer()}
+                                    isPlaying={!isSynchronizing}
+                                />
+                            </Stack>
+                            {currentMeme?.imageUrl ? (
+                                <>
+                                    <div className="meme-content">
+                                        <div className={"drag-content"}>
+                                            <img src={currentMeme?.imageUrl} alt={"meme lmao"}/>
+                                            {memeTextNodes?.map((item, i) => (
+                                                <DraggableResizableInput
+                                                    key={i}
+                                                    index={i}
+                                                    inputValue={currentTextNodeValues[i]}
+                                                    handleFontSizeChange={handleFontSizeChange}
+                                                    onInputChange={(e) => onTextNodeChange(e, i)}
+                                                    onTextNodeDrag={(e, data) => onTextNodeDrag(e, data, i)}
+                                                    setPropDim={onTextNodeDimensionChange}
+                                                    color={color}
+                                                    backgroundColor={backgroundColor}
+                                                    maxDimension={400}
+                                                    fontSize={fontSize}
+                                                    position={{
+                                                        x: currentTextNodePositions?.[i]?.xRate,
+                                                        y: currentTextNodePositions?.[i]?.yRate,
+                                                    }}
+                                                    isSynchronizing={isSynchronizing}
+                                                />
+                                            ))}
+                                        </div>
 
-                            </div>
-                            <div className={"game game-options"}>
-                                <div className={"game game-options options-multirow"}>
-                                    <InputGroup>
-                                        <InputGroup.Text>Font size</InputGroup.Text>
-                                        <Form.Control
-                                            type={"number"}
-                                            value={fontSize}
-                                            min="10"
-                                            max="30"
-                                            step="1"
-                                            onChange={handleFontSizeChange}
-                                            disabled={isSynchronizing}
-                                        />
-                                    </InputGroup>
-                                    <Button onClick={addMemeTextNode} disabled={isSynchronizing} className="game game-options-btn">
-                                        Add new Text Node
-                                    </Button>
-                                </div>
-                                <div className={"game game-options options-multirow"}>
-                                    <InputGroup>
-                                        <InputGroup.Text>Font color</InputGroup.Text>
-                                        <Form.Control
-                                            type="color"
-                                            value={color}
-                                            onChange={handleColorChange}
-                                            disabled={isSynchronizing}
-                                        />
-                                    </InputGroup>
-                                    <Button onClick={removeMemeTextNode} disabled={isSynchronizing} className="game game-options-btn" >
-                                        Remove a Text Node
-                                    </Button>
-                                </div>
-                                <div className={"game game-options options-multirow"}>
-                                    <InputGroup>
-                                        <InputGroup.Text>Background color</InputGroup.Text>
-                                        <Form.Control
-                                            type="color"
-                                            value={backgroundColor}
-                                            onChange={handleBackgroundColorChange}
-                                            disabled={isSynchronizing}
-                                        />
-                                    </InputGroup>
-                                    <InputGroup>
-                                        <InputGroup.Text>Opacity</InputGroup.Text>
-                                        <Form.Control
-                                            type="range"
-                                            min="0"
-                                            max="100"
-                                            step="10"
-                                            value={opacity}
-                                            onChange={handleOpacityChange}
-                                            disabled={isSynchronizing}
-                                        />
-                                    </InputGroup>
-                                </div>
-                                <div className={"game game-options options-row"}>
-                                    <Button
-                                        className="game game-options-btn"
-                                        onClick={handleGetDifferentTemplate}
-                                        disabled={isSynchronizing || localStorage.getItem("swap") <= 0}
-                                    >
-                                        Get different template
-                                    </Button>
-                                </div>
-                            </div>
-                        </>
-                    ) : (
-                        <Spinner/>
-                    )}
-                </Stack>
-                <Chat currentLobby={loadedGameData} />
-            </BaseContainer> ) : (<Spinner />)}
-          </div>
+                                    </div>
+                                    <div className={"game game-options"}>
+                                        <div className={"game game-options options-multirow"}>
+                                            <Button onClick={addMemeTextNode} disabled={isSynchronizing}
+                                                    className="game game-options-btn">
+                                                Add new Text Node
+                                            </Button>
+                                            <Button onClick={removeMemeTextNode} disabled={isSynchronizing}
+                                                    className="game game-options-btn">
+                                                Remove a Text Node
+                                            </Button>
+                                        </div>
+                                        <div className={"game game-options options-multirow"}>
+                                            <InputGroup>
+                                                <InputGroup.Text>Font color</InputGroup.Text>
+                                                <Form.Control
+                                                    type="color"
+                                                    value={color}
+                                                    onChange={handleColorChange}
+                                                    disabled={isSynchronizing}
+                                                />
+                                            </InputGroup>
+                                            <InputGroup>
+                                                <InputGroup.Text>Background color</InputGroup.Text>
+                                                <Form.Control
+                                                    type="color"
+                                                    value={backgroundColor}
+                                                    onChange={handleBackgroundColorChange}
+                                                    disabled={isSynchronizing}
+                                                />
+                                            </InputGroup>
+                                        </div>
+                                        <div className={"game game-options options-multirow"}>
+                                            <InputGroup>
+                                                <InputGroup.Text>Opacity</InputGroup.Text>
+                                                <Form.Control
+                                                    type="range"
+                                                    min="0"
+                                                    max="100"
+                                                    step="10"
+                                                    value={opacity}
+                                                    onChange={handleOpacityChange}
+                                                    disabled={isSynchronizing}
+                                                />
+                                            </InputGroup>
+                                            <Button
+                                                className="game game-options-btn"
+                                                onClick={handleGetDifferentTemplate}
+                                                disabled={isSynchronizing || localStorage.getItem("swap") <= 0}
+                                            >
+                                                Get different template
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <Spinner/>
+                            )}
+                        </Stack>
+                        <Chat currentLobby={loadedGameData}/>
+                    </BaseContainer>) : (<Spinner/>)}
+            </div>
         </div>
     );
 };
