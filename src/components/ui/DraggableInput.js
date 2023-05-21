@@ -72,6 +72,7 @@ const DraggableResizableInput = ({
                     className={"draggable-resizable-input"}
                     ref={inputRef}
                     style={{
+                        fontWeight:'750',
                         width: '100%',
                         height: '100%',
                         fontSize: fontSize,

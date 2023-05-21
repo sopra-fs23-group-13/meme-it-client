@@ -144,7 +144,14 @@ const Lobby = () => {
                     ) : <div></div>
                     }
                   </div>
-                  : (<Row> <Col> <Spinner /> </Col> </Row>)
+                  : (<Row>
+                    <Button
+                        width="200px"
+                        onClick={() => leaveLobby("Disconnected")}
+                        className="lobby leave-btn game">
+                      Leave Game
+                    </Button>
+                    <Col> <Spinner /> </Col> </Row>)
               }
             </div>
           </Stack>

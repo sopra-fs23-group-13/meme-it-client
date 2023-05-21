@@ -3,27 +3,41 @@
   .container {
     align-items: center;
     justify-content: center;
+
     .meme-content {
       display: flex;
       align-items: flex-start;
       justify-content: center;
       position: relative;
-      width: 50%;
-      img {
-        width: 300px;
-        height: 300px;
-      }
-      textarea {
-        font-weight: 750;
-        position: absolute;
-        font-size: 16px;
-        color: #fff;
-        background: none;
-        width: 100px;
-        min-height: 40px;
-        border: none;
-        &::placeholder {
+      width: 400px;
+
+      .drag-content {
+        align-items: flex-start;
+        justify-content: center;
+        width: 400px;
+        height: 400px;
+        position: relative;
+
+        img {
+          width: 400px;
+          height: 400px;
+          margin-left: auto;
+          margin-right: auto;
+          position: absolute;
+        }
+
+        .draggable-resizable-input {
+          font-weight: 750;
+          font-size: 16px;
           color: #fff;
+          background: none;
+          width: 100px;
+          min-height: 20px;
+          border: none;
+
+          &::placeholder {
+            color: #fff;
+          }
         }
       }
     }
