@@ -226,12 +226,12 @@ const Game = () => {
             }
         );
         const textBoxes = currentTextNodePositions.map((position, index) => ({
-            height: position?.dimension?.height === undefined ? 50 : position?.dimension?.height,
-            width: position?.dimension?.width === undefined ? 200 : position?.dimension?.width,
-            xRate: position?.xRate,
-            yRate:position?.yRate,
+            ...position,
+            width: position.dimension ? position.dimension.width : 200,
+            height: position.dimension ? position.dimension.height : 50,
             text: currentTextNodeValues[index]
         }));
+        console.log(textBoxes)
         const meme = {
             id: uuid(),
             textBoxes,
