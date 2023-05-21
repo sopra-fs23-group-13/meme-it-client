@@ -293,7 +293,6 @@ const Leaderboard = () => {
     else if (isFinalRound && memes.length > 0 && roundPlayers.length > 0 && bestMeme) {
         return (
             <div className={"leaderboard content"}>
-                <input type={"text"} className={"my-input"}/>
                 <Container>
                     <div className={"leaderboard card"} >
                         <Button
