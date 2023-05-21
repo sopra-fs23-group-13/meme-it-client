@@ -15,7 +15,7 @@ import {api} from "../../helpers/api";
 import {game as gameEndpoint} from "../../helpers/endpoints";
 import Cookies from "universal-cookie";
 import Chat from "../ui/Chat";
-import AutoSizeTextArea from "../ui/AutoSizeTextArea";
+import DraggableResizableInput from "../ui/DraggableInput";
 
 
 const GameRating = () => {
@@ -44,21 +44,21 @@ const GameRating = () => {
             const votingRes = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
             const [gameRes, templateRes] = await Promise.all([
                 api.get(`${gameEndpoint}/${id}`, {
-                    headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+                    headers: {'Authorization': `Bearer ${cookies.get("token")}`},
                 }),
                 api.get(`${gameEndpoint}/${id}/template`, {
-                    headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+                    headers: {'Authorization': `Bearer ${cookies.get("token")}`},
                 }),
             ]);
             gameData = {
                 ...gameRes.data,
-                meme: { ...templateRes.data }
+                meme: {...templateRes.data}
             };
             votingData = votingRes.data;
             let currentTime = new Date();
             let endTime = new Date(new Date(new Date(gameData.roundStartedAt).getTime() + gameData?.roundDuration * 1000).getTime() + gameData?.votingDuration * 1000);
-            let roundedTimeLeft = Math.round((endTime-currentTime) / 1000) * 1000;
-            setNow((gameData?.votingDuration * 1000)-(roundedTimeLeft));
+            let roundedTimeLeft = Math.round((endTime - currentTime) / 1000) * 1000;
+            setNow((gameData?.votingDuration * 1000) - (roundedTimeLeft));
         } else {
             votingData = preLoadedMemesForVoting;
             gameData = loadedGameData;
@@ -75,7 +75,7 @@ const GameRating = () => {
     const handleNextRound = async () => {
         const votingRes = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         const gameState = await api.get(`${gameEndpoint}/${id}`, {
-            headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+            headers: {'Authorization': `Bearer ${cookies.get("token")}`},
         });
 
         const mergedArray = currentGameData.map((gameDataItem) => {
@@ -95,7 +95,7 @@ const GameRating = () => {
             setIsSynchronizing(false);
             setNow(now + 1000);
         }
-        if(gameState.data.gameState !== "RATING"){
+        if (gameState.data.gameState !== "RATING") {
             setNow(null);
             setCurrentRound(null);
             setIsPlaying(false);
@@ -105,13 +105,13 @@ const GameRating = () => {
         }
     };
 
-    useEffect( () => {
+    useEffect(() => {
         const continueToNextRound = async () => {
             const gameState = await api.get(`${gameEndpoint}/${id}`, {
-                headers: { 'Authorization': `Bearer ${cookies.get("token")}` },
+                headers: {'Authorization': `Bearer ${cookies.get("token")}`},
             });
 
-            if(gameState.data.gameState !== "RATING"){
+            if (gameState.data.gameState !== "RATING") {
                 setNow(null);
                 setCurrentRound(null);
                 setIsPlaying(false);
@@ -153,17 +153,23 @@ const GameRating = () => {
 
     const handleReaction = (userReaction) => {
         console.log(isSynchronizing)
-        if(!isSynchronizing){
+        if (!isSynchronizing) {
             const cgd = [...currentGameData];
 
-            if(cgd[index]?.vote !== userReaction){
+            if (cgd[index]?.vote !== userReaction) {
 
                 //give user back his superlike / -dislike when changing his decision
-                if (cgd[index]?.vote === 3){setSuperLikes(superLikes+1);}
-                else if (userReaction === 3){setSuperLikes(superLikes-1);}
+                if (cgd[index]?.vote === 3) {
+                    setSuperLikes(superLikes + 1);
+                } else if (userReaction === 3) {
+                    setSuperLikes(superLikes - 1);
+                }
 
-                if (cgd[index]?.vote === 0){setSuperDislikes(superDislikes+1);}
-                else if (userReaction === 0){setSuperDislikes(superDislikes-1);}
+                if (cgd[index]?.vote === 0) {
+                    setSuperDislikes(superDislikes + 1);
+                } else if (userReaction === 0) {
+                    setSuperDislikes(superDislikes - 1);
+                }
 
                 cgd[index] = {...currentGameData[index], vote: userReaction};
                 setCurrentGameData(cgd);
@@ -197,81 +203,85 @@ const GameRating = () => {
         <div className={"game content"}>
             <div className={"game card"}>
                 {(currentGameData !== null && currentGameData?.length > 0 && currentGameData !== undefined) ? (
-                <BaseContainer className="game">
-                    <Button
-                        width="200px"
-                        onClick={leaveGame}
-                        className="lobby leave-btn game"
-                    >
-                        Leave Game
-                    </Button>
-                    <Stack gap={3} className="pt-5 container ">
-                        <Stack gap={3} className={`pt-5  `}>
-                            <h1 className="fw-bolder fs-3 text-start text-black">
-                                {`Round ${currentRound}/${maxRound} `}
-                            </h1>
-                            <p className="fs-6 text-start text-black">Vote for memes</p>
-                            <TimerProgressBar
-                                delay={delay}
-                                now={now}
-                                max={loadedGameData?.votingDuration * 1000}
-                                callbackFunc={() => handleNextRound()}
-                                isPlaying={isPlaying}
-                            />
-                        </Stack>
-                        {(currentGameData !== null && currentGameData?.length > 0 && currentGameData !== undefined) ? (
-                        <Carousel activeIndex={index} onSelect={handleSelect}>
-                            {currentGameData?.map(currentMeme => {
-                                return (
+                    <BaseContainer className="game">
+                        <Button
+                            width="200px"
+                            onClick={leaveGame}
+                            className="lobby leave-btn game"
+                        >
+                            Leave Game
+                        </Button>
+                        <Stack gap={3} className="pt-5 container ">
+                            <Stack gap={3} className={`pt-5  `}>
+                                <h1 className="fw-bolder fs-3 text-start text-black">
+                                    {`Round ${currentRound}/${maxRound} `}
+                                </h1>
+                                <p className="fs-6 text-start text-black">Vote for memes</p>
+                                <TimerProgressBar
+                                    delay={delay}
+                                    now={now}
+                                    max={loadedGameData?.votingDuration * 1000}
+                                    callbackFunc={() => handleNextRound()}
+                                    isPlaying={isPlaying}
+                                />
+                            </Stack>
+                            {(currentGameData !== null && currentGameData?.length > 0 && currentGameData !== undefined) ? (
+                                <Carousel activeIndex={index} onSelect={handleSelect}>
+                                    {currentGameData?.map(currentMeme => {
+                                        return (
 
-                                    <Carousel.Item key={currentMeme?.id}>
-                                        <div className="meme-content">
-                                            <div className={"drag-content"}>
-                                        <img src={currentMeme?.imageUrl} alt={"Meme"}/>
-                                        {currentMeme?.textBoxes?.map((item, i) => (
+                                            <Carousel.Item key={currentMeme?.id}>
+                                                <div className="meme-content">
+                                                    <div className={"drag-content"}>
+                                                        <img src={currentMeme?.imageUrl} alt={"Meme"}/>
+                                                        {currentMeme?.textBoxes?.map((item, i) => (
+                                                            <DraggableResizableInput
+                                                                key={i}
+                                                                inputValue={item.text}
+                                                                color={currentMeme?.color}
+                                                                backgroundColor={currentMeme?.backgroundColor}
+                                                                initialDimension={{
+                                                                    width: item?.width,
+                                                                    height: item?.height,
+                                                                }}
+                                                                maxDimension={400}
+                                                                fontSize={currentMeme?.fontSize}
+                                                                position={{
+                                                                    x: item?.xRate,
+                                                                    y: item?.yRate,
+                                                                }}
+                                                                isSynchronizing={true}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </Carousel.Item>
 
-                                            <AutoSizeTextArea
-                                                key={i}
-                                                value={item.text}
-                                                style={{ color: currentMeme?.color, backgroundColor: currentMeme?.backgroundColor }}
-                                                maxDimension={400}
-                                                fontSize={currentMeme?.fontSize}
-                                                position={{
-                                                    x: item?.xRate,
-                                                    y: item?.yRate,
-                                                }}
-                                                disabled={true}
-                                            />
-                                        ))}
-                                            </div>
-                                        </div>
-                                    </Carousel.Item>
-
-                                )
-                            })}
-                        </Carousel>
-                        ) : (<Spinner />)
-                        }
-                        {(currentGameData !== null && currentGameData?.length > 0 && currentGameData !== undefined) ? (
-                            <div className="reactions-container">
-                                {reactions.map(({name, icon}, i) => (
-                                    <span
-                                        key={i}
-                                        onClick={() => handleReaction(i)}
-                                        className={`icon-container ${
-                                            currentGameData[index]?.vote === i && "selected"
-                                        }
+                                        )
+                                    })}
+                                </Carousel>
+                            ) : (<Spinner/>)
+                            }
+                            {(currentGameData !== null && currentGameData?.length > 0 && currentGameData !== undefined) ? (
+                                <div className="reactions-container">
+                                    {reactions.map(({name, icon}, i) => (
+                                        <span
+                                            key={i}
+                                            onClick={() => handleReaction(i)}
+                                            className={`icon-container ${
+                                                currentGameData[index]?.vote === i && "selected"
+                                            }
                                         ${(superLikes === 0 && name === "heart") && "disableVoting"}
                                         ${(superDislikes === 0 && name === "heart_break") && "disableVoting"}
                                         `}
-                                    >{icon}
+                                        >{icon}
                                     </span>
-                                ))}
-                            </div>
-                        ) : (<></>)}
-                    </Stack>
-                    <Chat currentLobby={loadedGameData}/>
-                </BaseContainer> ) : (<Spinner />)}
+                                    ))}
+                                </div>
+                            ) : (<></>)}
+                        </Stack>
+                        <Chat currentLobby={loadedGameData}/>
+                    </BaseContainer>) : (<Spinner/>)}
             </div>
         </div>
     );

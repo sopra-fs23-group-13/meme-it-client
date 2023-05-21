@@ -5,7 +5,6 @@ import Draggable from "react-draggable";
 import PropTypes from "prop-types";
 import "styles/views/Leaderboard.scss";
 import { useImageSize } from 'react-image-size';
-import {Container, ModalBody} from "react-bootstrap";
 
 const ClickableMeme = props => {
     const [showMeme, setShowMeme] = useState(false );
@@ -24,6 +23,7 @@ const ClickableMeme = props => {
     const handleClose = () => setShowMeme(false);
 
     const ModalMemeImage = ({modalMeme}) => {
+        console.log(modalMeme)
         return (
                 <div style={{display:"flex", alignItems:"flex-start", justifyContent:"center", position:"relative"}}>
                     <img
@@ -85,6 +85,7 @@ const ClickableMeme = props => {
             </div>
         )
     }
+    console.log(dimensions)
     if(dimensions !== null){
         let x_multiplier = dimensions.height/dimensions.width;
         let y_multiplier = dimensions.width/dimensions.height;

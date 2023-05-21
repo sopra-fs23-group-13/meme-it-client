@@ -94,3 +94,11 @@
     background-color: $buttonColorHover;
   }
 }
+.my-input {
+input {
+  font-family: Impact, sans-serif;
+  font-size: 24px;
+  color: white;
+  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+}
+}

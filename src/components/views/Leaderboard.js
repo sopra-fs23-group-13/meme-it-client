@@ -1,12 +1,11 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Col, Row, Stack, Table, Button, Badge, Container} from "react-bootstrap";
 import "styles/views/Leaderboard.scss";
 import "styles/views/Game.scss";
 import { FaMedal } from 'react-icons/fa';
-import PropTypes from "prop-types";
 import Meme from "../../models/Meme";
 import {api} from "../../helpers/api";
-import {game as gameEndpoint, lobby} from "../../helpers/endpoints";
+import {game as gameEndpoint} from "../../helpers/endpoints";
 import Player from "../../models/Player";
 import {Spinner} from "../ui/Spinner";
 import TimerProgressBar from "../ui/TimerProgressBar";
@@ -16,7 +15,6 @@ import AnimatedBarChart from "../ui/AnimatedBarChart";
 import Confetti from "react-confetti";
 import {useWindowSize} from "react-use";
 import {AppContext} from "../../context";
-import Draggable from "react-draggable";
 import Chat from "../ui/Chat";
 import ClickableMeme from "../ui/ClickableMeme";
 
@@ -102,7 +100,7 @@ const Leaderboard = () => {
     const [memes, setMemes] = useState([]); // All memes of this round and their rating
     const [bestMeme, setBestMeme] = useState(null);
     const [isFinalRound, setIsFinalRound] = useState(null);
-    const {loadedGameData, setLoadedGameData, preLoadedMemesForVoting} = useContext(AppContext);
+    const {loadedGameData} = useContext(AppContext);
     const [currentGameData, setCurrentGameData] = useState(loadedGameData);
 
     function getPlayerMeme(player) {
@@ -112,10 +110,8 @@ const Leaderboard = () => {
     }
 
     const leaveGame = async () => {
-        //const leaveResponse = await api.delete('/' + localStorage.getItem("code") + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
         localStorage.clear()
-        sessionStorage.clear()
-        sessionStorage.setItem("alert", "Disconnected")
+        localStorage.setItem("alert", "Disconnected")
         cookies.remove("token")
         history.push("/")
     }
@@ -296,7 +292,8 @@ const Leaderboard = () => {
     //If final round and there is data for the players and memes
     else if (isFinalRound && memes.length > 0 && roundPlayers.length > 0 && bestMeme) {
         return (
-            <div className={"leaderboard content"} style={{marginTop:"1em"}}>
+            <div className={"leaderboard content"}>
+                <input type={"text"} className={"my-input"}/>
                 <Container>
                     <div className={"leaderboard card"} >
                         <Button
