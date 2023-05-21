@@ -371,7 +371,16 @@ const Game = () => {
                             )}
                         </Stack>
                         <Chat currentLobby={loadedGameData}/>
-                    </BaseContainer>) : (<Spinner/>)}
+                    </BaseContainer>) : (
+                    <div>
+                        <Button
+                            width="200px"
+                            onClick={leaveGame}
+                            className="lobby leave-btn game">
+                            Leave Game
+                        </Button>
+                        <Spinner/>
+                    </div>)}
             </div>
         </div>
     );
