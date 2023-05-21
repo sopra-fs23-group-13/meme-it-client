@@ -79,7 +79,7 @@ const DraggableResizableInput = ({
                         boxSizing: 'border-box',
                         color: color,
                         background: backgroundColor,
-                        border: '1px solid black',
+                        border: !isSynchronizing ? '1px solid black' : 'none',
                         textShadow: '-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black'
                     }}
                     value={inputValue}

@@ -170,6 +170,7 @@ const Game = () => {
     const handleGetDifferentTemplate = async () => {
         const response = await api.put(`${gameEndpoint}/${id}/template`, {}, {headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
         localStorage.setItem("swap", localStorage.getItem("swap") - 1);
+        localStorage.setItem("memeData", JSON.stringify(response.data));
         const copyObject = {...loadedGameData};
         copyObject.meme = response.data;
         setLoadedGameData(copyObject);
@@ -313,21 +314,13 @@ const Game = () => {
                                     </div>
                                     <div className={"game game-options"}>
                                         <div className={"game game-options options-multirow"}>
-                                            <InputGroup>
-                                                <InputGroup.Text>Font size</InputGroup.Text>
-                                                <Form.Control
-                                                    type={"number"}
-                                                    value={fontSize}
-                                                    min="10"
-                                                    max="30"
-                                                    step="1"
-                                                    onChange={handleFontSizeChange}
-                                                    disabled={isSynchronizing}
-                                                />
-                                            </InputGroup>
                                             <Button onClick={addMemeTextNode} disabled={isSynchronizing}
                                                     className="game game-options-btn">
                                                 Add new Text Node
+                                            </Button>
+                                            <Button onClick={removeMemeTextNode} disabled={isSynchronizing}
+                                                    className="game game-options-btn">
+                                                Remove a Text Node
                                             </Button>
                                         </div>
                                         <div className={"game game-options options-multirow"}>
@@ -340,12 +333,6 @@ const Game = () => {
                                                     disabled={isSynchronizing}
                                                 />
                                             </InputGroup>
-                                            <Button onClick={removeMemeTextNode} disabled={isSynchronizing}
-                                                    className="game game-options-btn">
-                                                Remove a Text Node
-                                            </Button>
-                                        </div>
-                                        <div className={"game game-options options-multirow"}>
                                             <InputGroup>
                                                 <InputGroup.Text>Background color</InputGroup.Text>
                                                 <Form.Control
@@ -355,6 +342,8 @@ const Game = () => {
                                                     disabled={isSynchronizing}
                                                 />
                                             </InputGroup>
+                                        </div>
+                                        <div className={"game game-options options-multirow"}>
                                             <InputGroup>
                                                 <InputGroup.Text>Opacity</InputGroup.Text>
                                                 <Form.Control
@@ -367,8 +356,6 @@ const Game = () => {
                                                     disabled={isSynchronizing}
                                                 />
                                             </InputGroup>
-                                        </div>
-                                        <div className={"game game-options options-row"}>
                                             <Button
                                                 className="game game-options-btn"
                                                 onClick={handleGetDifferentTemplate}
