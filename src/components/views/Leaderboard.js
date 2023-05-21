@@ -43,11 +43,11 @@ const LeaderboardTable = ({players, memes}) => {
 
     const pointDifference = (player) => {
         const meme = getPlayerMeme(player);
-        if (meme.rating > 0) {
+        if (meme?.rating > 0) {
             return <Badge pill bg={"success"} style={{fontSize: "14px"}}>
                 + {meme.rating}
             </Badge>
-        } else if (meme.rating < 0) {
+        } else if (meme?.rating < 0) {
             return <Badge pill bg={"danger"} style={{fontSize: "14px"}}>
                 - {-1 * meme.rating}
             </Badge>

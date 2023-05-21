@@ -52,7 +52,7 @@ const ClickableMeme = props => {
     if(props.size === "small"){
         return (
             <div>
-                <img  style={{width:100, cursor:"pointer"}} src={props.meme.imageUrl} onClick={()=> {
+                <img  style={{width:100, cursor:"pointer"}} src={props.meme?.imageUrl} onClick={()=> {
                     setShowMeme(true)
                 }}/>
                 <Modal
