@@ -35,10 +35,12 @@ const DraggableResizableInput = ({
             const clientWidth = inputRef.current.clientWidth;
             if (!isSynchronizing && scrollWidth > clientWidth && scrollWidth <= 400) {
                 setDimensions({width: scrollWidth, height: dimensions.height});
+                console.log(scrollWidth)
+                setPropDim(undefined, inputRef.current, {width: scrollWidth, height: dimensions.height})
             }
             // check if the text box goes over the image
             const actualWidth = position.x + scrollWidth;
-            if(actualWidth >= 400 && actualWidth-400 < position.x){
+            if(actualWidth >= 400 && actualWidth-400 < position.x && !isSynchronizing){
                 //move object further left
                 setPropDim(undefined, inputRef.current, {width: scrollWidth, height: dimensions.height})
                 onTextNodeDrag(undefined, {lastX: position.x - (actualWidth-400), lastY: position.y});

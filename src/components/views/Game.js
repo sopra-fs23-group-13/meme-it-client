@@ -151,7 +151,8 @@ const Game = () => {
 
     const onTextNodeDrag = (e, data, i) => {
         let prevPositions = [...currentTextNodePositions];
-        prevPositions[i] = {xRate: data.lastX, yRate: data.lastY};
+        prevPositions[i].xRate = data.lastX
+        prevPositions[i].yRate = data.lastY;
         setCurrentTextNodePositions(prevPositions);
     };
 
@@ -165,6 +166,7 @@ const Game = () => {
         let prevPositions = [...currentTextNodePositions];
         prevPositions[i.id].dimension = {width: data.width, height: data.height};
         setCurrentTextNodePositions(prevPositions);
+        console.log(currentTextNodePositions)
     }
 
     const handleGetDifferentTemplate = async () => {
