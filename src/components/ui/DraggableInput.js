@@ -29,6 +29,24 @@ const DraggableResizableInput = ({
         }
     }, [dimensions]);
 
+    useEffect(() => {
+        if (inputRef.current) {
+            const scrollWidth = inputRef.current.scrollWidth;
+            const clientWidth = inputRef.current.clientWidth;
+            if (!isSynchronizing && scrollWidth > clientWidth && scrollWidth <= 400) {
+                setDimensions({width: scrollWidth, height: dimensions.height});
+            }
+            // check if the text box goes over the image
+            const actualWidth = position.x + scrollWidth;
+            if(actualWidth >= 400 && actualWidth-400 < position.x){
+                //move object further left
+                setPropDim(undefined, inputRef.current, {width: scrollWidth, height: dimensions.height})
+                onTextNodeDrag(undefined, {lastX: position.x - (actualWidth-400), lastY: position.y});
+                setPosition(prev => ({...prev, x: (prev.x - (actualWidth-400))}));
+            }
+        }
+    }, [inputValue, isSynchronizing]);
+
     const handleInputChange = (event) => {
         if (inputRef.current && inputRef.current.scrollWidth <= 400) {
             setInputValue(event.target.value);
@@ -82,6 +100,7 @@ const DraggableResizableInput = ({
                         border: !isSynchronizing ? '1px solid black' : 'none',
                         textShadow: '-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black'
                     }}
+                    id={index}
                     value={inputValue}
                     onChange={handleInputChange}
                     disabled={isSynchronizing}
