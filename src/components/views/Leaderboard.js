@@ -175,6 +175,7 @@ const Leaderboard = () => {
                     // Ratings of the round (get current memes and ratings)
                     const roundRatingsResponse = await api.get(`${gameEndpoint}/${id}/results/round`, {headers: {'Authorization': `Bearer ${cookies.get("token")}`}});
                     setRoundRatingsData(roundRatingsResponse.data)
+                    console.log(roundRatingsResponse.data)
                     // All ratings of the game (get total score tc.)
                     const gameRatingsResponse = await api.get(`${gameEndpoint}/${id}/results/game`, {headers: {'Authorization': `Bearer ${cookies.get("token")}`}});
                     setGameRatingsData(gameRatingsResponse.data)
@@ -348,7 +349,7 @@ const Leaderboard = () => {
                         <h2 style={{textAlign:"center"}}> Leaderboard </h2>
                         <LeaderboardTable memes={memes} players={roundPlayers}/>
                     </div>
-                    <Chat currentLobby={loadedGameData}/>
+                    <Chat currentLobby={currentGameData}/>
                 </Container>
                 {/*To disable it for testing, change to false*/ }
                 {true ? <Confetti width={width} height={1.4*height} numberOfPieces={100}/> : null }
