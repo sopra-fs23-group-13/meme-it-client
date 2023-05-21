@@ -136,7 +136,6 @@ const Leaderboard = () => {
         history.push("/game/" + id);
     };
 
-
     useEffect( () =>{
         const updateGameData = async () => {
             try {
@@ -167,40 +166,40 @@ const Leaderboard = () => {
 
     useEffect(() => {
         const getLeaderboardData = async () => {
-            if(memes.length === 0 || roundPlayers.length === 0 || (isFinalRound != null && !bestMeme)) {
-                try {
-                    // Memes of the round (get players)
-                    const roundMemesResponse = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': `Bearer ${cookies.get("token")}`}});
-                    setRoundMemesData(roundMemesResponse.data);
-                    // Ratings of the round (get current memes and ratings)
-                    const roundRatingsResponse = await api.get(`${gameEndpoint}/${id}/results/round`, {headers: {'Authorization': `Bearer ${cookies.get("token")}`}});
-                    setRoundRatingsData(roundRatingsResponse.data)
-                    console.log(roundRatingsResponse.data)
-                    // All ratings of the game (get total score tc.)
-                    const gameRatingsResponse = await api.get(`${gameEndpoint}/${id}/results/game`, {headers: {'Authorization': `Bearer ${cookies.get("token")}`}});
-                    setGameRatingsData(gameRatingsResponse.data)
+            // Wait so data is fully prepared on backend (otherwise some ratings might be missing)
+            await new Promise(resolve => setTimeout(resolve, 500));
+            try {
+                // Memes of the round (get players)
+                const roundMemesResponse = await api.get(`${gameEndpoint}/${id}/meme`, {headers: {'Authorization': `Bearer ${cookies.get("token")}`}});
+                setRoundMemesData(roundMemesResponse.data);
+                // Ratings of the round (get current memes and ratings)
+                const roundRatingsResponse = await api.get(`${gameEndpoint}/${id}/results/round`, {headers: {'Authorization': `Bearer ${cookies.get("token")}`}});
+                setRoundRatingsData(roundRatingsResponse.data)
+                // All ratings of the game (get total score tc.)
+                const gameRatingsResponse = await api.get(`${gameEndpoint}/${id}/results/game`, {headers: {'Authorization': `Bearer ${cookies.get("token")}`}});
+                setGameRatingsData(gameRatingsResponse.data)
 
-                    if (isFinalRound) {
-                        let allMemes = []
-                        for (let rating of gameRatingsResponse.data) {
-                            let m = findMemeById(allMemes, rating.meme.id)
-                            if (m === undefined) {
-                                m = new Meme(rating.meme)
-                                m.rating = rating.rating
-                                allMemes.push(m)
-                            } else {
-                                m.rating += rating.rating
-                            }
+                if (isFinalRound) {
+                    let allMemes = []
+                    for (let rating of gameRatingsResponse.data) {
+                        let m = findMemeById(allMemes, rating.meme.id)
+                        if (m === undefined) {
+                            m = new Meme(rating.meme)
+                            m.rating = rating.rating
+                            allMemes.push(m)
+                        } else {
+                            m.rating += rating.rating
                         }
-                        allMemes.sort((a, b) => {
-                            return b.rating - a.rating
-                        });
-                        setBestMeme(allMemes[0])
                     }
-                } catch (e) {
-                    console.log(e)
+                    allMemes.sort((a, b) => {
+                        return b.rating - a.rating
+                    });
+                    setBestMeme(allMemes[0])
                 }
+            } catch (e) {
+                console.log(e)
             }
+
             let currentRoundMemes = []
             let players = []
             for (let meme of roundMemesData) {
@@ -234,16 +233,13 @@ const Leaderboard = () => {
             setRoundPlayers(players);
             setMemes(currentRoundMemes);
         }
-        if(memes.length < 1 || roundPlayers.length < 1 || (isFinalRound && !bestMeme)){
-            getLeaderboardData().catch(e => console.log(e))
-        }
         const interval = setInterval(async () => {
             await getLeaderboardData();
-        }, 5000);
+        }, 1000);
         return () => clearInterval(interval);})
 
     //If not final round and there is data for the players and memes
-    if (isFinalRound !== null && !isFinalRound && memes.length > 0 && roundPlayers.length >0) {
+    if (isFinalRound == false && memes.length && roundPlayers.length) {
         return (
             <div className="leaderboard content">
                 <Container>
@@ -295,7 +291,7 @@ const Leaderboard = () => {
         )
     }
     //If final round and there is data for the players and memes
-    else if (isFinalRound && memes.length > 0 && roundPlayers.length > 0 && bestMeme) {
+    else if (isFinalRound && memes.length && roundPlayers.length && bestMeme) {
         return (
             <div className={"leaderboard content"} style={{marginTop:"1em"}}>
                 <Container>
