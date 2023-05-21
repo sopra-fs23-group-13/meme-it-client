@@ -162,8 +162,6 @@ const Game = () => {
     };
 
     const onTextNodeDimensionChange = (e, i, data) => {
-        console.log("handle dims")
-        console.log(i)
         let prevPositions = [...currentTextNodePositions];
         prevPositions[i.id].dimension = {width: data.width, height: data.height};
         setCurrentTextNodePositions(prevPositions);
