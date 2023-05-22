@@ -24,30 +24,26 @@ const Home = () => {
 
   const slides = [
     {
-      url: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/225363/fashion.jpg",
-      title: "beach",
+      url: require("../../styles/images/JoinGame.png"),
+      title: "CreateLobby",
     },
     {
-      url: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/225363/forest.jpg",
-      title: "boat",
+      url: require("../../styles/images/EditMeme.png"),
+      title: "EditMeme",
     },
     {
-      url: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/225363/fashion.jpg",
-      title: "forest",
+      url: require("../../styles/images/VoteMeme.png"),
+      title: "VoteMeme",
     },
     {
-      url: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/225363/fashion.jpg",
+      url: require("../../styles/images/FinalResults.png"),
       title: "city",
-    },
-    {
-      url: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/225363/forest.jpg",
-      title: "italy",
     },
   ];
 
   const SliderStyle = {
-    width: "560px",
-    height: "320px",
+    width: "600px",
+    height: "385px",
     margin: "0 auto",
   };
 
