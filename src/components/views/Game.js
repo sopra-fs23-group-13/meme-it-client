@@ -22,7 +22,6 @@ const Game = () => {
     const cookies = new Cookies();
 
     const [isSynchronizing, setIsSynchronizing] = useState(false)
-    const [fontSize, setFontSize] = useState(14);
     const [color, setColor] = useState("#ffffff");
     const [backgroundColor, setBackgroundColor] = useState("#ffffff");
     const [opacity, setOpacity] = useState(100);
@@ -166,7 +165,6 @@ const Game = () => {
         let prevPositions = [...currentTextNodePositions];
         prevPositions[i.id].dimension = {width: data.width, height: data.height};
         setCurrentTextNodePositions(prevPositions);
-        console.log(currentTextNodePositions)
     }
 
     const handleGetDifferentTemplate = async () => {
@@ -186,8 +184,10 @@ const Game = () => {
         cookies.remove("token")
         history.push("/")
     }
-    const handleFontSizeChange = (value) => {
-        setFontSize(value);
+    const handleFontSizeChange = (e, i, data) => {
+        let prevPositions = [...currentTextNodePositions];
+        prevPositions[i.id].fontSize = data;
+        setCurrentTextNodePositions(prevPositions);
     };
 
     const handleColorChange = (event) => {
@@ -223,7 +223,6 @@ const Game = () => {
                 currentRound,
                 color,
                 backgroundColor,
-                fontSize,
                 maxRound
             }
         );
@@ -231,16 +230,15 @@ const Game = () => {
             ...position,
             width: position.dimension ? position.dimension.width : 200,
             height: position.dimension ? position.dimension.height : 50,
+            fontSize: position.fontSize ? position.fontSize : 16,
             text: currentTextNodeValues[index]
         }));
-        console.log(textBoxes)
         const meme = {
             id: uuid(),
             textBoxes,
             currentMeme,
             color,
             backgroundColor,
-            fontSize,
         };
         const randomBuffer = new Uint32Array(1);
         window.crypto.getRandomValues(randomBuffer);
@@ -303,7 +301,6 @@ const Game = () => {
                                                     color={color}
                                                     backgroundColor={backgroundColor}
                                                     maxDimension={400}
-                                                    fontSize={fontSize}
                                                     position={{
                                                         x: currentTextNodePositions?.[i]?.xRate,
                                                         y: currentTextNodePositions?.[i]?.yRate,

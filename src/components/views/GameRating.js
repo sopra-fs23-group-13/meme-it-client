@@ -228,6 +228,7 @@ const GameRating = () => {
                             {(currentGameData !== null && currentGameData?.length > 0 && currentGameData !== undefined) ? (
                                 <Carousel activeIndex={index} onSelect={handleSelect}>
                                     {currentGameData?.map(currentMeme => {
+
                                         return (
 
                                             <Carousel.Item key={currentMeme?.id}>
@@ -245,7 +246,7 @@ const GameRating = () => {
                                                                     height: item?.height,
                                                                 }}
                                                                 maxDimension={400}
-                                                                fontSize={currentMeme?.fontSize}
+                                                                fontSize={item.fontSize}
                                                                 position={{
                                                                     x: item?.xRate,
                                                                     y: item?.yRate,

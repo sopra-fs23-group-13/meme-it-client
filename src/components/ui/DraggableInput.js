@@ -24,7 +24,7 @@ const DraggableResizableInput = ({
 
     useEffect(() => {
         if (inputRef.current) {
-            if (!isSynchronizing) handleFontSizeChange(Math.floor(inputRef.current.offsetHeight * 0.8));
+            if (!isSynchronizing) handleFontSizeChange(undefined, inputRef.current, Math.floor(inputRef.current.offsetHeight * 0.8));
             setFontSize(`${Math.floor(inputRef.current.offsetHeight * 0.8)}px`);
         }
     }, [dimensions]);
@@ -35,7 +35,6 @@ const DraggableResizableInput = ({
             const clientWidth = inputRef.current.clientWidth;
             if (!isSynchronizing && scrollWidth > clientWidth && scrollWidth <= 400) {
                 setDimensions({width: scrollWidth, height: dimensions.height});
-                console.log(scrollWidth)
                 setPropDim(undefined, inputRef.current, {width: scrollWidth, height: dimensions.height})
             }
             // check if the text box goes over the image
@@ -95,7 +94,7 @@ const DraggableResizableInput = ({
                         fontWeight:'750',
                         width: '100%',
                         height: '100%',
-                        fontSize: fontSize,
+                        fontSize: !isSynchronizing ? fontSize : initialFontSize,
                         padding: '10px',
                         boxSizing: 'border-box',
                         color: color,
