@@ -1,56 +1,101 @@
 @import 'styles/theme';
+.leaderboard {
+  .container {
+    align-items: center;
+    justify-content: center;
 
-.leaderboard-container {
-  width: 700px; /* set the width of the container element */
-  margin: 0 auto; /* center the container element */
-  margin-top: 200px;
+    .meme-content {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      position: relative;
+      width: 400px;
 
-  .leaderboard-header {
-    display: flex;
-    justify-content: space-between;
-    background-color: $themeColor;
-    color: #80b9ee;
-    font-weight: bold;
-    padding: 0.5rem;
-    border-radius: 10px 10px 0 0;
+      .drag-content {
+        align-items: flex-start;
+        justify-content: center;
+        width: 400px;
+        height: 400px;
+        position: relative;
 
-    .leaderboard-header-column {
-      width: 33.33%;
-      text-align: center;
+        img {
+          width: 400px;
+          height: 400px;
+          margin-left: auto;
+          margin-right: auto;
+          position: absolute;
+        }
+
+        .draggable-resizable-input {
+          font-weight: 750;
+          font-size: 16px;
+          color: #fff;
+          background: none;
+          width: 100px;
+          min-height: 20px;
+          border: none;
+
+          &::placeholder {
+            color: #fff;
+          }
+        }
+      }
     }
   }
-}
-
-.leaderboard {
-  &.item {
-    background-color: $buttonColorHover;
-    color: $textColor;
-    padding: 1rem;
-    margin-bottom: 0.5rem;
-    border-radius: 10px;
+  &.content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
+    min-height: 100vh;
   }
-  &-gold {
-    color: #d7b912;
-  }
-  &-silver {
-    color: #a1a1a1;
-  }
-  &-bronze {
-    color: #cd7f32;
-  }
-  &-rank-number {
-    color: $themeColor;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  &-score-badge {
-    background-color: $themeColor;
-    color: #ffffff;
+
+  &.card {
+    background-color: rgba(255, 255, 255, 0.4);
     border-radius: 10px;
-    font-size: 1.2rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 1em;
+    &.meme {
+      background: transparent;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
   }
+  &.table-container {
+    padding-top:1em;
+    max-height: 400px;
+    overflow-y: auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+  }
+
+
+  &.table {
+    table-layout:auto;
+    overflow: auto;
+  }
+
+  &.best-meme-container {
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2em;
+  }
+
+  &.list-meme {
+    cursor: pointer;
+  }
+
+  &.special-meme {
+    &:hover{
+      box-shadow: 0 4px 6px rgba(255, 255, 255, 0.7);
+    }
+    border: solid white 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    margin-bottom:0.5em;
+    transition: all 0.3s ease;
+  }
+
 }

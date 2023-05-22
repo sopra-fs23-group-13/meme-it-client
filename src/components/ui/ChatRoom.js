@@ -54,7 +54,7 @@ const ChatRoom = (props) => {
             <ul className="message-list">
                 {messages.map((message, index) => (
 
-                    <div className={"message-content-block"}>
+                    <div className={"message-content-block"} key={message.time + message.id + message.message + index}>
                     <li key={index} className={`message-item ${(message.id === props?.author?.id || message.id === props?.author?.user?.id) ? "author-message" : ""}`}>
                         {
                             message.time === undefined ? <span className="message-item-time">Now - </span> :

@@ -15,6 +15,7 @@
     align-items: center;
     min-height: 100vh;
   }
+
   &.card {
     background-color: rgba(255, 255, 255, 0.4);
     border-radius: 10px;
@@ -22,35 +23,49 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     color: black;
   }
+
   .container {
     align-items: center;
     justify-content: center;
+
     .meme-content {
       display: flex;
       align-items: flex-start;
       justify-content: center;
       position: relative;
       width: 1320px;
-      img {
+
+      .drag-content {
+        align-items: flex-start;
+        justify-content: center;
         width: 400px;
         height: 400px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      textarea {
-        font-weight: 750;
-        position: absolute;
-        font-size: 16px;
-        color: #fff;
-        background: none;
-        width: 100px;
-        min-height: 40px;
-        border: none;
-        &::placeholder {
+        position: relative;
+
+        img {
+          width: 400px;
+          height: 400px;
+          margin-left: auto;
+          margin-right: auto;
+          position: absolute;
+        }
+
+        .draggable-resizable-input {
+          font-weight: 750;
+          font-size: 16px;
           color: #fff;
+          background: none;
+          width: 100px;
+          min-height: 20px;
+          border: none;
+
+          &::placeholder {
+            color: #fff;
+          }
         }
       }
     }
+
 
     .join-btn {
       width: fit-content;
@@ -63,7 +78,8 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1px;
-        align-items: baseline;
+        align-items: flex-end;
+        height: 45px;
       }
 
       &.options-row {
@@ -72,16 +88,21 @@
       }
     }
 
-    .game-options-btn{
+    .game-options-btn {
       background: $buttonColor;
       transition: all 0.3s ease;
       margin-top: 0.5rem;
       width: 100%;
       border: none;
+
       &:hover {
         background-color: $buttonColorHover;
       }
 
+    }
+
+    .disableVoting {
+      pointer-events: none;
     }
 
     .reactions-container {
@@ -90,27 +111,33 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
+
       svg {
         transition: opacity 0.3s ease;
         color: #4a5d6c;
         cursor: pointer;
+
         &:hover {
           opacity: 0.8;
         }
       }
+
       .selected svg {
         color: rgb(255, 48, 64);
       }
     }
+
     .icon-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 5px;
+
       p {
         font-size: 10px;
       }
     }
   }
+
 }

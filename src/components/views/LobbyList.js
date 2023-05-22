@@ -1,17 +1,17 @@
-import React, {useEffect, useState} from "react";
-import {ListGroup, Button, Badge} from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Badge, Table, Container } from "react-bootstrap";
 import "styles/views/LobbyList.scss";
 import { TfiReload } from 'react-icons/tfi';
 import UsernameModal from "./UsernameModal";
-import {api} from "../../helpers/api";
-import {lobby} from "../../helpers/endpoints";
+import { api } from "../../helpers/api";
+import { lobby } from "../../helpers/endpoints";
 
 const LobbyList = props => {
     const [lobbies, setLobbies] = useState([]);
     useEffect(async () => {
         // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
         async function fetchData() {
-            try{
+            try {
                 const response = await api.get(lobby);
                 setLobbies(response.data);
             } catch {
@@ -30,61 +30,54 @@ const LobbyList = props => {
         }
     }
 
-    let lobbyItems;
-    if(lobbies) {
-        lobbyItems = (
-            <div>
-            {lobbies.map(lobby => {
-                if(lobby.lobbySetting.isPublic && lobby.gameStartedAt === null){
-                    return(
-                        <div key={lobby.code}>
-                            <ListGroup.Item
-                                as="li"
-                                className="d-flex justify-content-between align-items-start"
-                            >
-                                <div className="ms-2 me-auto">
-                                    <div className="fw-bold">{lobby.name}</div>
-                                    Admin: {lobby.owner.name}
-                                </div>
-                                <div>
-                                    <Badge className={"align-self-center lobbyList playerSize"} bg={lobby.lobbySetting.maxPlayers === lobby.players.length ? "danger" : "primary"} pill>
-                                        {lobby.players.length} / {lobby.lobbySetting.maxPlayers}
-                                    </Badge>
-                                </div>
-                                <UsernameModal c_names="home join-btn" joiningAllowed={lobby.players.length === lobby.lobbySetting.maxPlayers} title={"Join Game"} submit={props.action} code={lobby.code} />
-                            </ListGroup.Item>
-                        </div>
-                    )
-                }
-
-                })}
-            </div>
-        )
+    let lobbyEntries = <tr> <td>There are no public lobbies currently.</td> <td></td> <td></td> </tr>;
+    if (lobbies) {
+        lobbyEntries = lobbies.map(lobby => {
+            if (lobby.lobbySetting.isPublic && lobby.gameStartedAt === null) {
+                return (
+                    <tr key={lobby.code}>
+                        <td>
+                            <div className="fw-bold">{lobby.name}</div>
+                            Admin: {lobby.owner.name}
+                        </td>
+                        <td style={{ textAlign: "right" }}>
+                            <Badge bg={lobby.lobbySetting.maxPlayers === lobby.players.length ? "danger" : "primary"} pill>
+                                {lobby.players.length} / {lobby.lobbySetting.maxPlayers}
+                            </Badge>
+                        </td>
+                        <td style={{ textAlign: "right" }}>
+                            <UsernameModal c_names="home join-btn" joiningAllowed={lobby.players.length === lobby.lobbySetting.maxPlayers} title={"Join Game"} submit={props.action} code={lobby.code} />
+                        </td>
+                    </tr>
+                )
+            }
+        })
     }
 
     return (
-        <div className={"lobbyList content"}>
-            <ListGroup as="ol" >
-            <ListGroup.Item
-                as="li"
-                className="d-flex justify-content-between align-items-start lobbyList header-item"
-
-            >
-                <div className="ms-2 me-auto">
-                    <div className="fw-bold">Lobby Name</div>
-
-                </div>
-                <div>
-                    <div className="lobbyList playerCount">Players</div>
-                </div>
-                <Button variant={"warning"} style={{marginRight:"1em"}} onClick={()=>refreshLobbies()}>
-                    <TfiReload/>
-                </Button>
-            </ListGroup.Item>
-            </ListGroup>
-            <ListGroup as="ol">
-                {lobbyItems}
-            </ListGroup>
-        </div>
+        <Container className={"lobbyList container"}>
+            <Table responsive>
+                <thead>
+                    <tr>
+                        <th>Lobby Name</th>
+                        <th style={{ textAlign: "right" }}>Players</th>
+                        <th style={{ textAlign: "right", width: "20%" }}>
+                            <Button variant={"warning"} onClick={() => refreshLobbies()}>
+                                <TfiReload />
+                            </Button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {(lobbyEntries !== undefined && lobbyEntries.length > 0) ? lobbyEntries :
+                        <tr>
+                            <td colSpan="3" style={{textAlign: "center"}}>
+                                No lobbies available
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </Table>
+        </Container>
     )
 }; export default LobbyList;

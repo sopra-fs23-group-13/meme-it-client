@@ -24,7 +24,7 @@ const Lobby = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSynchronizing] = useState(false);
-  const toggleShowAlert = () => setShowAlert(!showAlert);
+  const toggleShowAlert = () => {setShowAlert(!showAlert); localStorage.removeItem("alert")};
 
 
   useEffect( () => {
@@ -51,7 +51,7 @@ const Lobby = () => {
         if(!playerIsInLobby){
           await leaveLobby("Kicked from Lobby");
         }
-        }
+      }
       catch (error){
         await leaveLobby("Lobby Not Found")
         console.log(error);
@@ -72,7 +72,6 @@ const Lobby = () => {
     }
     finally {
       localStorage.clear()
-      localStorage.clear()
       localStorage.setItem("alert", reason)
       cookies.remove("token")
       history.push("/")
@@ -80,12 +79,14 @@ const Lobby = () => {
   }
 
   const startGame = async () => {
-
     await api.post(`/${game}/${currentLobby.code}`,{},{headers: {'Authorization': 'Bearer ' + cookies.get("token")}});
   }
 
   const startGameAtTheSameTime= (currentLobby) =>{
     localStorage.setItem("started", "true")
+    localStorage.setItem("swap", currentLobby.lobbySetting.memeChangeLimit);
+    localStorage.setItem("superlike", currentLobby.lobbySetting.superLikeLimit);
+    localStorage.setItem("dislike", currentLobby.lobbySetting.superDislikeLimit);
     history.push(`/game/${currentLobby.gameId}`);
   }
 
@@ -94,8 +95,8 @@ const Lobby = () => {
       <Container>
         <div className={"lobby alert"}>
           <Notification
-              reason="Game is synchronizing all players and will start soon..."
-              showAlert={(showAlert && isSynchronizing)}
+              reason={localStorage.getItem("alert") !== null ? localStorage.getItem("alert") : "Game is synchronizing all players and will start soon..."}
+              showAlert={(showAlert && isSynchronizing) || (localStorage.getItem("alert") !== null)}
               toggleShowAlert={toggleShowAlert}
           />
         </div>
@@ -143,7 +144,14 @@ const Lobby = () => {
                     ) : <div></div>
                     }
                   </div>
-                  : (<Row> <Col> <Spinner /> </Col> </Row>)
+                  : (<Row>
+                    <Button
+                        width="200px"
+                        onClick={() => leaveLobby("Disconnected")}
+                        className="lobby leave-btn game">
+                      Leave Game
+                    </Button>
+                    <Col> <Spinner /> </Col> </Row>)
               }
             </div>
           </Stack>
