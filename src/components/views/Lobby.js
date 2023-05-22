@@ -74,7 +74,7 @@ const Lobby = () => {
       localStorage.clear()
       localStorage.setItem("alert", reason)
       cookies.remove("token")
-      history.push("/")
+      history.replace("/")
     }
   }
 
@@ -87,7 +87,7 @@ const Lobby = () => {
     localStorage.setItem("swap", currentLobby.lobbySetting.memeChangeLimit);
     localStorage.setItem("superlike", currentLobby.lobbySetting.superLikeLimit);
     localStorage.setItem("dislike", currentLobby.lobbySetting.superDislikeLimit);
-    history.push(`/game/${currentLobby.gameId}`);
+    history.replace(`/game/${currentLobby.gameId}`);
   }
 
   return (

@@ -113,7 +113,7 @@ const Leaderboard = () => {
         localStorage.clear()
         localStorage.setItem("alert", "Disconnected")
         cookies.remove("token")
-        history.push("/")
+        history.replace("/")
     }
 
     function findPlayerById(playerList, id) {
@@ -129,7 +129,7 @@ const Leaderboard = () => {
     }
 
     const handleNextRound = async () => {
-        history.push("/game/" + id);
+        history.replace("/game/" + id);
     };
 
     useEffect( () =>{

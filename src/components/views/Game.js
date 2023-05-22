@@ -182,7 +182,7 @@ const Game = () => {
         localStorage.clear()
         localStorage.setItem("alert", "Disconnected")
         cookies.remove("token")
-        history.push("/")
+        history.replace("/")
     }
     const handleFontSizeChange = (e, i, data) => {
         let prevPositions = [...currentTextNodePositions];
@@ -253,7 +253,7 @@ const Game = () => {
         setNow(null);
         props ? localStorage.setItem("alert", "There was an issue with your meme submission!") : localStorage.removeItem("alert");
         localStorage.removeItem("memeData");
-        history.push("/game-rating/" + id);
+        history.replace("/game-rating/" + id);
     }
 
     return (
