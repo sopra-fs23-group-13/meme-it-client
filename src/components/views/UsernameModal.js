@@ -59,14 +59,14 @@ const UsernameModal = props => {
                 } else {
                     localStorage.setItem("alert", "Something went wrong")
                 }
-                history.push("/lobby");
+                history.replace("/lobby");
                 handleClose();
                 return;
             }
         } else {
             localStorage.setItem("alert", "You were already in a lobby, this is the lobby. If you want to play in the other game leave this one first.")
         }
-        history.push("/lobby");
+        history.replace("/lobby");
         handleClose();
     }
 
@@ -122,7 +122,7 @@ const UsernameModal = props => {
         } else {
             localStorage.setItem("alert", "You were already in a lobby, this is the lobby. If you want to play in the other game leave this one first.")
         }
-        history.push("/lobby");
+        history.replace("/lobby");
     }
 
     return (

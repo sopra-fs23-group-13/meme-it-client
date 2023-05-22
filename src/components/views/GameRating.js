@@ -133,7 +133,7 @@ const GameRating = () => {
     }
     const pushToLeaderboard = async (props) => {
         props ? localStorage.setItem("alert", "There was an issue with your meme submission!") : localStorage.removeItem("alert");
-        history.push("/leaderboard/" + id);
+        history.replace("/leaderboard/" + id);
     }
 
     const leaveGame = async () => {
@@ -142,7 +142,7 @@ const GameRating = () => {
         localStorage.clear();
         localStorage.setItem("alert", "Disconnected");
         cookies.remove("token");
-        history.push("/");
+        history.replace("/");
     }
 
     const [index, setIndex] = useState(0);

@@ -34,7 +34,7 @@ const Home = () => {
 
     const handleChange = (event) => {
         if (localStorage.getItem("code") !== null) {
-            history.push("/lobby");
+            history.replace("/lobby");
         }
         setGameCode(event.target.value);
     };
@@ -44,13 +44,13 @@ const Home = () => {
             localStorage.setItem("code", gameCode);
             //const joinResponse = await api.post('/' + gameValues.code + '/players', {name: JSON.stringify(localStorage.getItem("username"))});
         }
-        history.push("/lobby");
+        history.replace("/lobby");
     }
 
     const checkShowGames = () =>{
         if(localStorage.getItem("code") !== null) {
             localStorage.setItem("alert", "You were forwarded to your lobby");
-            history.push("/lobby");
+            history.replace("/lobby");
         } else {
             setShow(!show);
         }
