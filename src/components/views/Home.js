@@ -8,6 +8,7 @@ import {useHistory} from "react-router-dom";
 import {Notification} from "../ui/Notification";
 import {AnimatedBackground} from "styles/images/AnimatedBackground"
 import Cookies from "universal-cookie";
+import Tutorial from "../ui/Tutorial";
 
 
 const Home = () => {
@@ -104,6 +105,11 @@ const Home = () => {
                                                             onClick={checkShowGames}>{show ? "Close List" : "Show Games"}</Button>
                                                 </Col>
                                             </Row>
+                                            <Row>
+                                                <Col>
+                                                    <Tutorial />
+                                                </Col>
+                                            </Row>
                                         </Stack>
                                     </Col>
                                     <Col sm>{/*placeholder*/}</Col>
@@ -117,17 +123,6 @@ const Home = () => {
                         </Row>
                         <Row>
                             <Col>
-                                <p className="home tutorial-title">How To Play</p>
-                                <div className="home tutorial-text">
-                                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
-                                    tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero
-                                    eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-                                    takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
-                                    consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-                                    dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
-                                    dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-                                    ipsum dolor sit amet.
-                                </div>
                             </Col>
                         </Row>
                     </Stack>
