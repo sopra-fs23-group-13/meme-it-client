@@ -36,7 +36,7 @@ const ClickableMeme = props => {
                                 height: item?.height,
                             }}
                             maxDimension={400}
-                            fontSize={props.meme?.fontSize}
+                            fontSize={item.fontSize}
                             position={{
                                 x: item?.xRate,
                                 y: item?.yRate,
@@ -88,8 +88,8 @@ const ClickableMeme = props => {
                             width: item?.width,
                             height: item?.height,
                         }}
-                        maxDimension={300}
-                        fontSize={props.meme?.fontSize}
+                        maxDimension={400}
+                        fontSize={item?.fontSize}
                         position={{
                             x: item?.xRate,
                             y: item?.yRate,
