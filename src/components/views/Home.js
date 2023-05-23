@@ -9,6 +9,7 @@ import {Notification} from "../ui/Notification";
 import {AnimatedBackground} from "styles/images/AnimatedBackground"
 import Cookies from "universal-cookie";
 import Tutorial from "../ui/Tutorial";
+import Slider from "../ui/Slider";
 
 
 const Home = () => {
@@ -32,6 +33,39 @@ const Home = () => {
             </Container>
         )
     }
+
+    const slides = [
+        {
+          url: require("../../styles/images/JoinGame.png"),
+          title: "CreateLobby",
+        },
+        {
+          url: require("../../styles/images/EditMeme.png"),
+          title: "EditMeme",
+        },
+        {
+          url: require("../../styles/images/VoteMeme.png"),
+          title: "VoteMeme",
+        },
+        {
+          url: require("../../styles/images/FinalResults.png"),
+          title: "city",
+        },
+      ];
+    
+    const SliderStyle = {
+      width: "600px",
+      height: "385px",
+      margin: "0 auto",
+    };
+    
+    const settings = {
+      dots: true,
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+    };  
 
     const handleChange = (event) => {
         if (localStorage.getItem("code") !== null) {
@@ -117,12 +151,29 @@ const Home = () => {
                             </Container>
                         </Row>
                         <Row>
-                            <Col>
+                        <Col>
                                 {show && lobbyList()}
                             </Col>
                         </Row>
                         <Row>
                             <Col>
+                            <p className="home tutorial-title">How To Play</p>
+                <div className="home tutorial-text">
+                In this tutorial, you will learn how to play Meme-It and create hilarious memes with your friends. 
+                In Meme-it, players are given a random meme image and must come up with a 
+                funny caption or text for it within a set time. After everyone shares 
+                their memes, players vote for their favorite and the player with the 
+                most votes wins. The game rules require that captions must be appropriate 
+                and original, and voting should be fair. To be successful, players should keep
+                it funny and use current events or pop culture references to make their memes 
+                more relatable. Have fun and may the funniest player win!
+                </div>
+
+                    <div style={{ padding: '20px' }}>
+                      <div style={SliderStyle}>
+                        <Slider slides={slides} />
+                      </div>
+                                </div>
                             </Col>
                         </Row>
                     </Stack>
