@@ -101,13 +101,13 @@ const Home = () => {
                                             </Row>
                                             <Row>
                                                 <Col>
-                                                    <Button className={"home buttons join"}
-                                                            onClick={checkShowGames}>{show ? "Close List" : "Show Games"}</Button>
+                                                    <Tutorial />
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col>
-                                                    <Tutorial />
+                                                    <Button className={"home buttons join"}
+                                                            onClick={checkShowGames}>{show ? "Close List" : "Show Games"}</Button>
                                                 </Col>
                                             </Row>
                                         </Stack>
@@ -119,10 +119,6 @@ const Home = () => {
                         <Row>
                             <Col>
                                 {show && lobbyList()}
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
                             </Col>
                         </Row>
                     </Stack>

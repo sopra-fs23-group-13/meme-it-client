@@ -21,12 +21,12 @@ const Tutorial = () => {
     return (
         <>
             <Button variant="primary" className={"home buttons join"} onClick={handleShow}>
-                How to play
+                How To Play
             </Button>
 
             <Modal show={show} onHide={handleClose} size="xl">
                 <Modal.Header closeButton>
-                    <Modal.Title>How to play</Modal.Title>
+                    <Modal.Title>How To Play</Modal.Title>
                 </Modal.Header>
                 <Modal.Body style={{padding: "0px"}}>
 
