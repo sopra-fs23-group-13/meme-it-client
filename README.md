@@ -7,9 +7,8 @@ Meme-It is an engaging and entertaining online multiplayer game where players cr
 Meme-It is developed using the following main technologies:
 
 - [React.js](https://reactjs.org/docs/getting-started.html): Used for building the front-end of the application.
-- [Springboot](https://spring.io/): Used to develop the backend server.
+- [Springboot](https://spring.io/): Used to develop the backend server. A rest api is used for real-time data transfer between the client and the server.
 - [H2](https://www.h2database.com/html/main.html): Used to managed the database. 
-- Rest: Used for real-time data transfer between the client and the server.
 - [Bootstrap](https://react-bootstrap.github.io/): Used for designing responsive UI.
 - [Github Projects](https://github.com/explore) - Project Management
 - [Sonarcube](https://sonarcloud.io/): Used for code quality and test metrics.
