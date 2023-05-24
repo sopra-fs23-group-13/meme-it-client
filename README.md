@@ -118,6 +118,20 @@ If you are a new developer joining the Meme-It team, follow these steps to get s
 4. To start the development server, run ```npm run dev```.
 5. The application should now be running on [http://localhost:3000](http://localhost:3000) (or another port specified in the console).
 
+## Testing
+
+Testing is optional, and you can run the tests with ```npm run test```.
+This launches the test runner in an interactive watch mode. See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+> For macOS user running into a 'fsevents' error: https://github.com/jest-community/vscode-jest/issues/423
+
+## Build
+
+Finally, ```npm run build``` builds the app for production to the `build` folder.
+It correctly bundles React in production mode and optimizes the build for the best performance: the build is minified, and the filenames include hashes.
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
 ## Illustrations
 The following section will provide screenshots of the application from each view. In Meme-It, users join a game lobby and wait for other players. Once the game begins, players are given a meme template and they must create a meme using their creativity. Once created, memes are shared with all players who then vote on the best ones. At the end of each round, a leaderboard is displayed showing player scores and best/worst memes of the round.
 
