@@ -31,17 +31,17 @@ At the end of the game, the leaderboard is displayed showcasing player scores an
 ## Low-Level Components
 In a more low level overview the components and dependencies are structured in the following way. For every major component the individual component extensions are provided. On first mention of an individual component a brief explanation of it is given. 
 
-Helpers: During the project we have created few helper functions which we were able to reuse to have less redundant code:
+**Helpers**: During the project we have created few helper functions which we were able to reuse to have less redundant code:
 - formField: A selfmade text box component where different flags can be set. The logic is separated and the component is reusable.
 - endpoints: all our endpoints listed as constants. Like this if an endpoint changes it is only required to be changed in one file.
 - api: the helper function to call the rest endpoint
 - getDomain: differenciates the backend calls based on the testing environment
 - functions: a specific filter function used.
 
-Context: Used to pass data along the different components when using the react history:
+**Context**: Used to pass data along the different components when using the react history:
 - index: stores the game data so that we prevent reloading unneccessairy components, making unneccessary calls and preventing from filling the local storage. 
 
-Home component extends the following individual components:
+**Home component** extends the following individual components:
 - AnimatedBackground: Animated SVG from the background. 
 - Notification: Notification component used to display alert messages as popup to the user.
 - UsernameModal: The modal to enter the username before joining a game.
@@ -52,7 +52,7 @@ Home component extends the following individual components:
 ![Home Component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/c063436b-6758-4ca9-87c5-3cf809509593)
 
 
-Lobby component extends the following individual components: 
+**Lobby component** extends the following individual components: 
 - LobbyCodeContainer: The element to display the lobby code. 
 - LobbySettings: Adjustable settings for the game. 
 - ActivePlayerList: All the players which joined the current game.
@@ -64,7 +64,7 @@ Lobby component extends the following individual components:
 ![Lobby Component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/9fb1b75d-1911-4623-a2ad-2a9df43ebac1)
 
 
-Meme creation component extends the following components: 
+**Meme creation component** extends the following components: 
 - BaseContainer: A layout container to display the content
 - Spinner: The indicator that the page is still loading
 - DraggableInput: The specific text input to resize, drag around and color. The text where the meme text gets into. 
@@ -76,7 +76,7 @@ Meme creation component extends the following components:
 ![Meme Creation Component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/f27a7d6f-892e-4411-a8be-00a65361045d)
 
 
-Meme voting component extends the following components: 
+**Meme voting component** extends the following components: 
 - CarouselItemContent: A special component which layouts the carousel items in the voting phase so that the sizing is done correctly. 
 - BaseContainer
 - Spinner
@@ -88,7 +88,7 @@ Meme voting component extends the following components:
 
 ![Meme Rating Component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/6c93c50a-3b02-47c5-8be0-736ce8d213a9)
 
-Leaderboard component extends the following components:
+**Leaderboard component** extends the following components:
 - AnimatedBarChart: The final leaderboard shows an animated barchart where the winner is shown
 - ClickableMeme: A minimized meme, which can be enlargend. 
 - CarouselItemContent
