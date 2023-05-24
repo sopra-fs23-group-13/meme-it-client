@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useMemo, useState} from "react";
-import {Stack, Button, InputGroup} from "react-bootstrap";
+import {Stack, Button, InputGroup, Col, Row} from "react-bootstrap";
 import {v4 as uuid} from "uuid";
 import {useParams, useHistory} from "react-router-dom";
 import {Spinner} from "components/ui/Spinner";
@@ -371,15 +371,21 @@ const Game = () => {
                         </Stack>
                         <Chat currentLobby={loadedGameData}/>
                     </BaseContainer>) : (
-                    <div>
-                        <Button
-                            width="200px"
-                            onClick={leaveGame}
-                            className="lobby leave-btn game">
-                            Leave Game
-                        </Button>
-                        <Spinner/>
-                    </div>)}
+                    <BaseContainer style={{padding:"1em"}}>
+                        <p style={{color:"black", marginTop:"1em"}}>
+                            If you are seeing this screen for more than 10 seconds, please refresh the page.
+                        </p>
+                            <Button
+                                width="200px"
+                                onClick={leaveGame}
+                                className="lobby leave-btn game"
+                            >
+                                Leave Game
+                            </Button>
+                        <div style={{marginTop:"2em", marginBottom:"-1em", alignContent:"center", justifyContent:"center", textAlign:"center"}}>
+                            <Spinner/>
+                        </div>
+                    </BaseContainer>)}
             </div>
         </div>
     );
