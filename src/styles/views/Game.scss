@@ -38,16 +38,17 @@
       .drag-content {
         align-items: flex-start;
         justify-content: center;
-        width: 400px;
         height: 400px;
         position: relative;
 
         img {
-          width: 400px;
-          height: 400px;
+          // object-fit: cover; //* note: does nothing
+          display: block;
           margin-left: auto;
           margin-right: auto;
-          position: absolute;
+          height: 400px;
+          position: relative;
+          // position: absolute;
         }
 
         .draggable-resizable-input {

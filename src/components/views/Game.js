@@ -300,10 +300,11 @@ const Game = () => {
                                                     setPropDim={onTextNodeDimensionChange}
                                                     color={color}
                                                     backgroundColor={backgroundColor}
-                                                    maxDimension={400}
+                                                    imgWidth={currentMeme.width}
+                                                    imgHeight={currentMeme.height}
                                                     position={{
-                                                        x: currentTextNodePositions?.[i]?.xRate,
-                                                        y: currentTextNodePositions?.[i]?.yRate,
+                                                        x: currentTextNodePositions?.[i]?.xRate ,
+                                                        y:  currentTextNodePositions?.[i]?.yRate ,
                                                     }}
                                                     isSynchronizing={isSynchronizing}
                                                 />
