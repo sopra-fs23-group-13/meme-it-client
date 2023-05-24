@@ -10,7 +10,7 @@ Meme-It is developed using the following main technologies:
 - [Springboot](https://spring.io/): Used to develop the backend server.
 - [H2](https://www.h2database.com/html/main.html): Used to managed the database. 
 - Rest: Used for real-time data transfer between the client and the server.
-- [Bootstrap]: Used for designing responsive UI.
+- [Bootstrap](https://react-bootstrap.github.io/): Used for designing responsive UI.
 - [Github Projects](https://github.com/explore) - Project Management
 - [Sonarcube](https://sonarcloud.io/): Used for code quality and test metrics.
 - [Google Cloud](https://cloud.google.com/): Used for the online deployment.
@@ -47,6 +47,7 @@ Home component extends the following individual components:
 - UsernameModal: The modal to enter the username before joining a game.
 - Tutorial: The tutorial slides as a modal, showing how the game works.
 - formField
+- api
 
 ![Home Component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/c063436b-6758-4ca9-87c5-3cf809509593)
 
@@ -56,16 +57,47 @@ Lobby component extends the following individual components:
 - LobbySettings: Adjustable settings for the game. 
 - ActivePlayerList: All the players which joined the current game.
 - Chat: The chat component which allows the user to get in touch with other players.
-- LoadingButton: The loading button showing that the page has not yet loaded. 
+- LoadingButton: The loading button showing that the button is not ready to be clicked again. 
 - Notification
+- api
 
 ![Lobby Component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/9fb1b75d-1911-4623-a2ad-2a9df43ebac1)
 
 
+Meme creation component extends the following components: 
+- BaseContainer: A layout container to display the content
+- Spinner: The indicator that the page is still loading
+- DraggableInput: The specific text input to resize, drag around and color. The text where the meme text gets into. 
+- TimerProgressBar: The progressbar showing the remaining time until the next view appears.
+- Chat
+- index
+- api
 
 ![Meme Creation Component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/f27a7d6f-892e-4411-a8be-00a65361045d)
 
+
+Meme voting component extends the following components: 
+- CarouselItemContent: A special component which layouts the carousel items in the voting phase so that the sizing is done correctly. 
+- BaseContainer
+- Spinner
+- DraggableInput
+- TimerProgressBar
+- Chat
+- index
+- api
+
 ![Meme Rating Component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/6c93c50a-3b02-47c5-8be0-736ce8d213a9)
+
+Leaderboard component extends the following components:
+- AnimatedBarChart: The final leaderboard shows an animated barchart where the winner is shown
+- ClickableMeme: A minimized meme, which can be enlargend. 
+- CarouselItemContent
+- Spinner
+- DraggableInput
+- TimerProgressBar
+- Chat
+- index
+- api
 
 ![Leaderboard Component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/1ce56138-b5b5-4fc5-b57e-e67531f0b2c1)
 
