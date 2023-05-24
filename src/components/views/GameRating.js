@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useMemo, useState} from "react";
+import React, {useContext, useEffect, useMemo, useState, useRef} from "react";
 import {Button, Carousel, Stack} from "react-bootstrap";
 import {MdHeartBroken} from "react-icons/md";
 import {TbHeartFilled} from "react-icons/tb";
@@ -24,6 +24,8 @@ const GameRating = () => {
     const cookies = new Cookies();
     const history = useHistory();
     const {loadedGameData, setLoadedGameData, preLoadedMemesForVoting} = useContext(AppContext);
+    const [dimensions, setDimensions] = useState({ width: 'auto', height: 'auto' });
+    const imageRef = useRef();
 
     const [reaction] = useState("");
     const [currentGameData, setCurrentGameData] = useState(preLoadedMemesForVoting);
@@ -198,7 +200,12 @@ const GameRating = () => {
         ],
         [reaction]
     );
-
+    const handleImageLoad = () => {
+        setDimensions({
+            width: imageRef.current.offsetWidth,
+            height: imageRef.current.offsetHeight
+        });
+    };
     return (
         <div className={"game content"}>
             <div className={"game card"}>
@@ -233,8 +240,8 @@ const GameRating = () => {
 
                                             <Carousel.Item key={currentMeme?.id}>
                                                 <div className="meme-content">
-                                                    <div className={"drag-content"}>
-                                                        <img src={currentMeme?.imageUrl} alt={"Meme"}/>
+                                                    <div className={"drag-content"} style={dimensions}>
+                                                        <img src={currentMeme?.imageUrl} alt={"Meme"} ref={imageRef} onLoad={handleImageLoad}/>
                                                         {currentMeme?.textBoxes?.map((item, i) => (
                                                             <DraggableResizableInput
                                                                 key={i}
