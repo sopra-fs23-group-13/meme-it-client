@@ -24,8 +24,9 @@ const DraggableResizableInput = ({
 
     useEffect(() => {
         if (inputRef.current) {
-            if (!isSynchronizing) handleFontSizeChange(undefined, inputRef.current, Math.floor(inputRef.current.offsetHeight * 0.8));
-            setFontSize(`${Math.floor(inputRef.current.offsetHeight * 0.8)}px`);
+            const newFontSize = Math.floor(inputRef.current.offsetHeight * 0.6);
+            if (!isSynchronizing) handleFontSizeChange(undefined, inputRef.current, newFontSize);
+            setFontSize(`${newFontSize}px`);
         }
     }, [dimensions]);
 
