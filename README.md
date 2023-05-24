@@ -113,7 +113,7 @@ If you are a new developer joining the Meme-It team, follow these steps to get s
 5. The application should now be running on [http://localhost:3000](http://localhost:3000) (or another port specified in the console).
 
 ## Illustrations
-The following section will provide screenshots of the application from each view. 
+The following section will provide screenshots of the application from each view. In Meme-It, users join a game lobby and wait for other players. Once the game begins, players are given a meme template and they must create a meme using their creativity. Once created, memes are shared with all players who then vote on the best ones. At the end of each round, a leaderboard is displayed showing player scores and best/worst memes of the round.
 
 ### Landing page
 
@@ -126,7 +126,7 @@ The following section will provide screenshots of the application from each view
 ### Meme voting
 
 ### Leaderboard
-In Meme-It, users join a game lobby and wait for other players. Once the game begins, players are given a meme template and they must create a meme using their creativity. Once created, memes are shared with all players who then vote on the best ones. At the end of each round, a leaderboard is displayed showing player scores and best/worst memes of the round.
+
 
 
 ## Roadmap
