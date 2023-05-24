@@ -16,6 +16,7 @@ import {game as gameEndpoint} from "../../helpers/endpoints";
 import Cookies from "universal-cookie";
 import Chat from "../ui/Chat";
 import DraggableResizableInput from "../ui/DraggableInput";
+import CarouselItemContent from "../ui/CarouselItemContent";
 
 
 const GameRating = () => {
@@ -237,34 +238,9 @@ const GameRating = () => {
                                     {currentGameData?.map(currentMeme => {
 
                                         return (
-
                                             <Carousel.Item key={currentMeme?.id}>
-                                                <div className="meme-content">
-                                                    <div className={"drag-content"} style={dimensions}>
-                                                        <img src={currentMeme?.imageUrl} alt={"Meme"} ref={imageRef} onLoad={handleImageLoad}/>
-                                                        {currentMeme?.textBoxes?.map((item, i) => (
-                                                            <DraggableResizableInput
-                                                                key={i}
-                                                                inputValue={item.text}
-                                                                color={currentMeme?.color}
-                                                                backgroundColor={currentMeme?.backgroundColor}
-                                                                initialDimension={{
-                                                                    width: item?.width,
-                                                                    height: item?.height,
-                                                                }}
-                                                                maxDimension={400}
-                                                                fontSize={item.fontSize}
-                                                                position={{
-                                                                    x: item?.xRate,
-                                                                    y: item?.yRate,
-                                                                }}
-                                                                isSynchronizing={true}
-                                                            />
-                                                        ))}
-                                                    </div>
-                                                </div>
+                                                <CarouselItemContent currentMeme={currentMeme} />
                                             </Carousel.Item>
-
                                         )
                                     })}
                                 </Carousel>
