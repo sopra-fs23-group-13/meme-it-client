@@ -1,46 +1,50 @@
-# SoPra FS23 - Client Template with build pack
+# Meme-It Project
+## Introduction
+Meme-It is an engaging and entertaining online multiplayer game where players create, share, and vote on memes in real-time. The project's primary motivation is to build an interactive platform where users can showcase their creativity, humor, and quick thinking while enjoying a shared community experience.
 
-## Getting started
+## Technologies Used
+Meme-It is developed using the following main technologies:
 
-Read and go through these Tutorials. It will make your life easier:)
+- React.js: Used for building the front-end of the application.
+- Node.js: Used to develop the backend server.
+- Rest: Used for real-time data transfer between the client and the server.
+- Bootstrap: Used for designing responsive UI.
+## High-Level Components
+Meme-It comprises three main components:
 
-- Read the React [Docs](https://reactjs.org/docs/getting-started.html)
-- Do this React [Getting Started](https://reactjs.org/tutorial/tutorial.html) Tutorial (it doesn’t assume any existing React knowledge)
-- Get an Understanding of [CSS](https://www.w3schools.com/Css/), [SCSS](https://sass-lang.com/documentation/syntax), and [HTML](https://www.w3schools.com/html/html_intro.asp)!
+### Lobby: This is where users can join or create games. It also displays the list of available games.
 
-Next, there are two other technologies that you should look at:
+### Game: This component manages the game logic and flow. It handles the creation, display, and voting of memes. The main React components involved here are the Lobby component, Game component, and the Chat component.
 
-* [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start) offers declarative routing for React. It is a collection of navigational components that fit nicely with the application. 
-* [react-hooks](https://reactrouter.com/web/api/Hooks) let you access the router's state and perform navigation from inside your components.
+### Leaderboard: At the end of the game, the leaderboard is displayed showcasing player scores and the best and worst memes of the round.
 
-## Prerequisites and Installation
-For your local development environment, you will need Node.js. You can download it [here](https://nodejs.org). All other dependencies, including React, get installed with:
+## Launch & Deployment
+If you are a new developer joining the Meme-It team, follow these steps to get started:
 
-```npm install```
+1. Clone the project repository.
+2. Navigate into the project directory.
+3. Run ```npm install``` to install all the necessary dependencies.
+4. To start the development server, run ```npm run dev```.
+5. The application should now be running on [http://localhost:3000](http://localhost:3000) (or another port specified in the console).
 
-Run this command before you start your application for the first time. Next, you can start the app with:
+## Illustrations
+In Meme-It, users join a game lobby and wait for other players. Once the game begins, players are given a meme template and they must create a meme using their creativity. Once created, memes are shared with all players who then vote on the best ones. At the end of each round, a leaderboard is displayed showing player scores and best/worst memes of the round.
 
-```npm run dev```
+## Roadmap
+For developers wanting to contribute to Meme-It, here are a few potential features to consider:
 
-Now you can open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Implementing user accounts: So users can have a history of their games and scores.
+- Adding a feature for players to upload their own meme templates.
 
-Notice that the page will reload if you make any edits. You will also see any lint errors in the console (use Google Chrome).
+## Authors and Acknowledgment
+This project is maintained by
+- Daniel Lutziger
+- Pablo Tanner
+- Henrik Nordgren
+- Linda Weber
+- Marc Schurr
 
-### Testing
-Testing is optional, and you can run the tests with `npm run test`.
-This launches the test runner in an interactive watch mode. See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+We would like to thank Mete for their support and guidance during the development of this project.
 
-> For macOS user running into a 'fsevents' error: https://github.com/jest-community/vscode-jest/issues/423
-
-### Build
-Finally, `npm run build` builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance: the build is minified, and the filenames include hashes.<br>
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-## Learn More
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-
-> Thanks to Lucas Pelloni and Kyrill Hux for working on the template.
+## License
+Meme-It is licensed under the MIT License. You are free to use, modify, and distribute the code as per the terms of the license.
