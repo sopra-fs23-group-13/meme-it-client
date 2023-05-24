@@ -19,13 +19,20 @@ Meme-It is developed using the following main technologies:
 Meme-It comprises three main components:
 
 ### Lobby: 
-This is where users can join or create games. It also displays the list of available games.
+This is the entry point for users to join or create a game. The Lobby interacts with the Game component, setting up new games and adding players to existing ones. It provides an overview of ongoing games that users can join and the games they're currently part of. This is the component: [Lobby component](https://github.com/sopra-fs23-group-13/meme-it-client/blob/main/src/components/views/Lobby.js)
 
 ### Game: 
-This component manages the game logic and flow. It handles the creation, display, and voting of memes. The main React components involved here are the Lobby component, Game component, and the Chat component.
+This is the heart of Meme-It. This component is responsible for the main gameplay where users create memes based on provided templates. It includes the logic for meme creation, timing, and transitions between rounds. It controls the game flow and maintains the state of the current game, including the meme templates and user submissions. Here is a link to the component: [Game component](https://github.com/sopra-fs23-group-13/meme-it-client/blob/main/src/components/views/Game.js)
 
-### Leaderboard: 
-At the end of the game, the leaderboard is displayed showcasing player scores and the best and worst memes of the round.
+### Game Voting
+This component enables players to vote on the memes created during a round. It receives meme submissions from the Game component and displays them to the players for voting. The votes are then collected and sent back to the Game component to update scores and decide the winner for the round. Here is a link to the component: [Voting component](https://github.com/sopra-fs23-group-13/meme-it-client/blob/main/src/components/views/GameRating.js)
+
+### Leaderboard
+The Leaderboard component displays the scores of all players at the end of each round and at the end of the game. The component is also showcasing the best and worst memes of the round. It gets its data from the Game and the Voting component after each round and once the game ends. It plays a vital role in the competitive aspect of Meme-It, giving players insight into their standing in the game. The following is the link to the component: [Leaderboard component](https://github.com/sopra-fs23-group-13/meme-it-client/blob/main/src/components/views/Leaderboard.js).
+
+### Chat
+The Chat component facilitates real-time communication between players in a game. It enhances the multiplayer aspect of Meme-It, allowing players to comment, cheer, and react to the ongoing game. It works parallel to the Lobby, Game, Game Voting and the Leaderboard, so that all the players can always be in touch with each other. Here one can find the component: [Proximity Chat](https://github.com/sopra-fs23-group-13/meme-it-client/blob/main/src/components/ui/Chat.js)
+
 
 ## Low-Level Components
 In a more low level overview the components and dependencies are structured in the following way. For every major component the individual component extensions are provided. On first mention of an individual component a brief explanation of it is given. 
