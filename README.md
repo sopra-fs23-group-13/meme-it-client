@@ -10,7 +10,7 @@ Meme-It is developed using the following main technologies:
 - [Springboot](https://spring.io/): Used to develop the backend server. A rest api is used for real-time data transfer between the client and the server.
 - [H2](https://www.h2database.com/html/main.html): Used to managed the database. 
 - [Bootstrap](https://react-bootstrap.github.io/): Used for designing responsive UI.
-- [Github Projects](https://github.com/explore) - Project Management
+- [Github Projects](https://github.com/explore): Project Management
 - [Sonarcube](https://sonarcloud.io/): Used for code quality and test metrics.
 - [Google Cloud](https://cloud.google.com/): Used for the online deployment.
 
