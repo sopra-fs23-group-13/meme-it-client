@@ -155,6 +155,10 @@ For developers wanting to contribute to Meme-It, here are a few potential featur
 - Implementing user accounts: So users can have a history of their games and scores.
 - Adding a feature for players to upload their own meme templates.
 - Improving the mobile views for a better mobile experience. 
+- Switching the cloud provider.
+
+## Cloud Issues on cold starts
+One of the improvements is to switch the cloud provider. Google Cloud does not seem to function properly with the application. The loading time of the application is rather slow. This is due to cold starts. Once the Cloud VM shuts down, the start up is slow. Users can join a lobby, even though the instance is not yet properly started up. This leads to some crashes right once the game should start. We try to prevent this by having an always on instance, however, this does not properly fix the issue.  
 
 ## Authors and Acknowledgment
 This project is maintained by
