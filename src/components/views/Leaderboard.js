@@ -269,19 +269,21 @@ const Leaderboard = () => {
                             </h5>
                             <Row style={{marginBottom: "1em"}}>
                                 <Col>
-                                    <Carousel style={{height:'400px'}}>
-                                        {[memes[0],memes[memes.length-1]]?.map((currentMeme, i) => {
-                                            return (
-                                                <Carousel.Item key={currentMeme?.id + i}>
-                                                    <CarouselItemContent currentMeme={currentMeme} />
-                                                    <Carousel.Caption>
-                                                        <p style={style}>
-                                                            {i === 0 && <span>Best Meme of the Round: </span> ||
-                                                                i === 1 && <span>Worst Meme of the Round: </span> }by {currentMeme.user.name} with {currentMeme.rating} points</p>
-                                                    </Carousel.Caption>
-                                                </Carousel.Item>
-                                            )
-                                        })}
+                                    <Carousel style={{height:'400px',marginBottom:"3em"}}>
+                                        <Carousel.Item key={memes[0].id + "BestOfRound"}>
+                                            <div>
+                                                <h4 style={{textAlign:"center"}}>Best Meme of the Round</h4>
+                                                <CarouselItemContent currentMeme={memes[0]}/>
+                                                <h5 style={{textAlign:"center"}}>by {memes[0].user.name} with {memes[0].rating} points</h5>
+                                            </div>
+                                        </Carousel.Item>
+                                        <Carousel.Item key={memes[memes.length-1].id}>
+                                            <div >
+                                                <h4 style={{textAlign:"center"}}>Worst Meme of the Round</h4>
+                                                <CarouselItemContent currentMeme={memes[memes.length-1]}/>
+                                                <h5 style={{textAlign:"center"}}>by {memes[memes.length-1].user.name} with {memes[memes.length-1].rating} points</h5>
+                                            </div>
+                                        </Carousel.Item>
                                     </Carousel>
                                 </Col>
                             </Row>
@@ -328,26 +330,30 @@ const Leaderboard = () => {
                         </Stack>
                     </div>
                     <div className={"leaderboard card"}>
-                        <Row style={{marginBottom: "1em"}}>
+                        <Row style={{marginBottom: "4em"}}>
                             <Col>
-
                                 <Carousel style={{height:'400px'}}>
-                                    {[bestMeme, memes[0], memes[memes.length-1]]?.map((currentMeme, i) => {
-
-                                        return (
-                                            <Carousel.Item key={currentMeme?.id + i}>
-                                                <CarouselItemContent currentMeme={currentMeme} />
-
-                                                <Carousel.Caption>
-                                                    <p style={style}>
-                                                        {i ===0 && <span>Best Meme of the Game: </span> ||
-                                                        i === 1 && <span>Best Meme of the Round: </span> ||
-                                                        i === 2 && <span>Worst Meme of the Round: </span> }
-                                                        by {currentMeme.user.name} with {currentMeme.rating} points</p>
-                                                </Carousel.Caption>
-                                            </Carousel.Item>
-                                        )
-                                    })}
+                                    <Carousel.Item key={bestMeme.id + "BestOfGame"}>
+                                        <div>
+                                            <h4 style={{textAlign:"center"}}>Best Meme of the Game</h4>
+                                            <CarouselItemContent currentMeme={bestMeme}/>
+                                            <h5 style={{textAlign:"center"}}>by {bestMeme.user.name} with {bestMeme.rating} points</h5>
+                                        </div>
+                                    </Carousel.Item>
+                                    <Carousel.Item key={memes[0].id + "BestOfRound"}>
+                                        <div>
+                                            <h4 style={{textAlign:"center"}}>Best Meme of the Round</h4>
+                                            <CarouselItemContent currentMeme={memes[0]}/>
+                                            <h5 style={{textAlign:"center"}}>by {memes[0].user.name} with {memes[0].rating} points</h5>
+                                        </div>
+                                    </Carousel.Item>
+                                    <Carousel.Item key={memes[memes.length-1].id}>
+                                        <div >
+                                            <h4 style={{textAlign:"center"}}>Worst Meme of the Round</h4>
+                                            <CarouselItemContent currentMeme={memes[memes.length-1]}/>
+                                            <h5 style={{textAlign:"center"}}>by {memes[memes.length-1].user.name} with {memes[memes.length-1].rating} points</h5>
+                                        </div>
+                                    </Carousel.Item>
                                 </Carousel>
                             </Col>
                         </Row>
