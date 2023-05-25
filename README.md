@@ -158,8 +158,7 @@ During the voting phase users can judge the different memes and vote for their f
 
 ### Leaderboard
 The leaderboard shows the results at the end of each round and end of the game:
-![Final Leaderboard Component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/a2c22e0b-0854-4236-8d41-a3838c4f62c6)
-
+![Final Leaderboard Component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/3d53fe8f-9999-43f0-bd17-3826f491b156)
 
 
 ## Roadmap
