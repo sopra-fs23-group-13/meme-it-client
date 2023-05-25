@@ -16,7 +16,7 @@ const Tutorial = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const style = {color: "#000000", backgroundColor: "#F47A7799", borderRadius: "10px"}
+    const style = {color: "#000000", backgroundColor: "#F47A77", borderRadius: "10px"}
 
     return (
         <>

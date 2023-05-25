@@ -1,14 +1,13 @@
-import React, {useContext, useEffect, useState} from "react";
-import {Col, Row, Stack, Table, Button, Badge, Container} from "react-bootstrap";
+import React, {useContext, useEffect, useRef, useState} from "react";
+import {Col, Row, Stack, Table, Button, Badge, Container, Carousel} from "react-bootstrap";
 import "styles/views/Leaderboard.scss";
 import "styles/views/Game.scss";
-import { FaMedal } from 'react-icons/fa';
+import {FaMedal} from 'react-icons/fa';
 import Meme from "../../models/Meme";
 import {api} from "../../helpers/api";
 import {game as gameEndpoint} from "../../helpers/endpoints";
 import Player from "../../models/Player";
 import {Spinner} from "../ui/Spinner";
-import TimerProgressBar from "../ui/TimerProgressBar";
 import Cookies from "universal-cookie";
 import {useHistory, useParams} from "react-router-dom";
 import AnimatedBarChart from "../ui/AnimatedBarChart";
@@ -17,17 +16,17 @@ import {useWindowSize} from "react-use";
 import {AppContext} from "../../context";
 import Chat from "../ui/Chat";
 import ClickableMeme from "../ui/ClickableMeme";
+import CarouselItemContent from "../ui/CarouselItemContent";
 
 const LeaderboardTable = ({players, memes}) => {
     function getPlayerMeme(player) {
-        if(memes.length > 0){
+        if (memes.length > 0) {
             return memes.find((meme) => {
                 return meme.user.id === player.id;
             })
         }
 
     }
-
     const getRankSymbol = (index) => {
         if (index === 0) {
             return <FaMedal size={24} color="#d7b912"/>
@@ -88,7 +87,7 @@ const LeaderboardTable = ({players, memes}) => {
 
 }
 const Leaderboard = () => {
-    const { width, height } = useWindowSize()
+    const {width, height} = useWindowSize()
     const {id} = useParams();
     const history = useHistory();
     const cookies = new Cookies();
@@ -102,7 +101,7 @@ const Leaderboard = () => {
     const [isFinalRound, setIsFinalRound] = useState(null);
     const {loadedGameData} = useContext(AppContext);
     const [currentGameData, setCurrentGameData] = useState(loadedGameData);
-
+    const [memeCarousel, setMemeCarousel] = useState(null);
     function getPlayerMeme(player) {
         return memes.find((meme) => {
             return meme.user.id === player.id;
@@ -132,24 +131,21 @@ const Leaderboard = () => {
         history.replace("/game/" + id);
     };
 
-    useEffect( () =>{
+    useEffect(() => {
         const updateGameData = async () => {
             try {
-                const gameDataResponse = await api.get(`${gameEndpoint}/${id}`, { headers: { 'Authorization': `Bearer ${cookies.get("token")}` }});
+                const gameDataResponse = await api.get(`${gameEndpoint}/${id}`, {headers: {'Authorization': `Bearer ${cookies.get("token")}`}});
 
-                if(gameDataResponse.data.gameState != "ROUND_RESULTS" && gameDataResponse.data.gameState  != "GAME_RESULTS"){
+                if (gameDataResponse.data.gameState != "ROUND_RESULTS" && gameDataResponse.data.gameState != "GAME_RESULTS") {
                     await handleNextRound();
-                }
-                else if(gameDataResponse.data.gameState == "GAME_RESULTS"){
+                } else if (gameDataResponse.data.gameState == "GAME_RESULTS") {
                     setIsFinalRound(true);
-                }
-                else{
+                } else {
                     setIsFinalRound(false);
                 }
                 setCurrentGameData(gameDataResponse.data);
 
-            }
-            catch (e){
+            } catch (e) {
                 console.log(e)
             }
         }
@@ -159,6 +155,19 @@ const Leaderboard = () => {
         return () => clearInterval(interval);
     })
 
+    const [dimensions, setDimensions] = useState({ width: 'auto', height: 'auto' });
+    const style = {color: "#000000", backgroundColor: "#F47A7799", borderRadius: "10px", width: dimensions.width, margin: "auto"}
+
+    const imageRef = useRef();
+    const handleImageLoad = () => {
+        setDimensions({
+            width: imageRef?.current?.offsetWidth,
+            height: imageRef?.current?.offsetHeight
+        });
+    };
+    useEffect(() => {
+        handleImageLoad();
+    }, [memeCarousel])
 
     useEffect(() => {
         const getLeaderboardData = async () => {
@@ -208,7 +217,7 @@ const Leaderboard = () => {
                         m.rating += rating.rating;
                     }
                 }
-                if(findPlayerById(players, p.id) === undefined){
+                if (findPlayerById(players, p.id) === undefined) {
                     players.push(p);
                 }
                 currentRoundMemes.push(m);
@@ -223,16 +232,21 @@ const Leaderboard = () => {
                 p.score += rating.rating;
             }
             //Sort Player List so first index is highest score
-            players.sort((a, b) => {return b.score - a.score});
+            players.sort((a, b) => {
+                return b.score - a.score
+            });
             //Sort Round meme list so first index is highest rated meme
-            currentRoundMemes.sort((a, b) => {return b.rating - a.rating});
+            currentRoundMemes.sort((a, b) => {
+                return b.rating - a.rating
+            });
             setRoundPlayers(players);
             setMemes(currentRoundMemes);
         }
         const interval = setInterval(async () => {
             await getLeaderboardData();
         }, 1000);
-        return () => clearInterval(interval);})
+        return () => clearInterval(interval);
+    })
 
     //If not final round and there is data for the players and memes
     if (isFinalRound == false && memes.length && roundPlayers.length) {
@@ -253,30 +267,26 @@ const Leaderboard = () => {
                             <h5>
                                 Next round is starting soon...
                             </h5>
-                            <Row style={{marginBottom:"1em"}}>
-                                <Col >
-                                    <div className={"leaderboard card"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}>
-                                        <h2 style={{textAlign:"center"}}> Best Meme</h2>
-                                        <ClickableMeme meme={memes[0]} size={"large"} disableModal={false}/>
-                                        <h5 style={{textAlign:"center"}}>
-                                            by {memes[0].user.name} with {memes[0].rating} points
-                                        </h5>
-                                    </div>
-                                </Col>
-                                <Col md={"auto"} style={{marginBottom:"0.5em",marginTop:"0.5em"}}>
-                                </Col>
-                                <Col >
-                                    <div className={"leaderboard card"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}>
-                                        <h2 style={{textAlign:"center"}}> Worst Meme </h2>
-                                        <ClickableMeme meme={memes[memes.length-1]} size={"large"} disableModal={false}/>
-                                        <h5 style={{textAlign:"center"}}>
-                                            by {memes[memes.length-1].user.name} with {memes[memes.length-1].rating} points
-                                        </h5>
-                                    </div>
+                            <Row style={{marginBottom: "1em"}}>
+                                <Col>
+                                    <Carousel style={{height:'400px'}}>
+                                        {[memes[0],memes[memes.length-1]]?.map((currentMeme, i) => {
+                                            return (
+                                                <Carousel.Item key={currentMeme?.id + i}>
+                                                    <CarouselItemContent currentMeme={currentMeme} />
+                                                    <Carousel.Caption>
+                                                        <p style={style}>
+                                                            {i === 0 && <span>Best Meme of the Round: </span> ||
+                                                                i === 1 && <span>Worst Meme of the Round: </span> }by {currentMeme.user.name} with {currentMeme.rating} points</p>
+                                                    </Carousel.Caption>
+                                                </Carousel.Item>
+                                            )
+                                        })}
+                                    </Carousel>
                                 </Col>
                             </Row>
                             <div className={"leaderboard card"}>
-                                <h2 style={{textAlign:"center"}}> Leaderboard </h2>
+                                <h2 style={{textAlign: "center"}}> Leaderboard </h2>
                                 <LeaderboardTable memes={memes} players={roundPlayers}/>
                             </div>
                         </Stack>
@@ -288,67 +298,71 @@ const Leaderboard = () => {
     }
     //If final round and there is data for the players and memes
     else if (isFinalRound && memes.length && roundPlayers.length && bestMeme) {
+
         return (
             <div className={"leaderboard content"}>
                 <Container>
-                    <div className={"leaderboard card"} >
+                    <div className={"leaderboard card"}>
                         <Button
                             width="200px"
                             onClick={leaveGame}
                             className="lobby leave-btn game">
                             Leave
                         </Button>
-                        <h2 style={{textAlign:"center",marginTop:"1em"}}> The Game has ended </h2>
-                        <h5 style={{textAlign:"center", marginTop:"-0.5em"}}> {roundPlayers[0].name} wins! </h5>
-                        <Stack direction={"horizontal"} style={{alignItems:"center", justifyContent:"center"}}>
+                        <h2 style={{textAlign: "center", marginTop: "1em"}}> The Game has ended </h2>
+                        <h5 style={{textAlign: "center", marginTop: "-0.5em"}}> {roundPlayers[0].name} wins! </h5>
+                        <Stack direction={"horizontal"} style={{alignItems: "center", justifyContent: "center"}}>
                             {roundPlayers[1] ?
-                                <AnimatedBarChart player={roundPlayers[1]} highScore={roundPlayers[0].score} rank={2} meme={getPlayerMeme(roundPlayers[1])}/>
-                                : null }
+                                <AnimatedBarChart player={roundPlayers[1]} highScore={roundPlayers[0].score} rank={2}
+                                                  meme={getPlayerMeme(roundPlayers[1])}/>
+                                : null}
                             {roundPlayers[0] ?
-                                <AnimatedBarChart player={roundPlayers[0]} highScore={roundPlayers[0].score} rank={1} meme={getPlayerMeme(roundPlayers[0])}/>
-                                : null }
+                                <AnimatedBarChart player={roundPlayers[0]} highScore={roundPlayers[0].score} rank={1}
+                                                  meme={getPlayerMeme(roundPlayers[0])}/>
+                                : null}
                             {roundPlayers[2] ?
-                                <AnimatedBarChart player={roundPlayers[2]} highScore={roundPlayers[0].score} rank={3} meme={getPlayerMeme(roundPlayers[2])}/>
-                                : null }
+                                <AnimatedBarChart player={roundPlayers[2]} highScore={roundPlayers[0].score} rank={3}
+                                                  meme={getPlayerMeme(roundPlayers[2])}/>
+                                : null}
 
                         </Stack>
                     </div>
                     <div className={"leaderboard card"}>
-                        <Row style={{marginBottom:"1em"}}>
+                        <Row style={{marginBottom: "1em"}}>
                             <Col>
-                                <div className={"leaderboard card meme"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}>
-                                    <h2 style={{textAlign:"center"}}> Meme of the Game</h2>
-                                    <ClickableMeme meme={bestMeme} size={"large"} disableModal={false}/>
-                                    <h5 style={{textAlign:"center"}}>
-                                        by {bestMeme.user.name} with {bestMeme.rating} points
-                                    </h5>
-                                </div>
-                            </Col>
-                            <Col md={"auto"} style={{marginBottom:"0.5em",marginTop:"0.5em"}}>
-                            </Col>
-                            <Col >
-                                <div className={"leaderboard card meme"} style={{height:"100%", flexDirection:"column", justifyContent:"center", alignItems:"center", padding:"0"}}>
-                                    <h2 style={{textAlign:"center"}}> Meme of the Round</h2>
-                                    <ClickableMeme meme={memes[0]} size={"large"} disableModal={false}/>
-                                    <h5 style={{textAlign:"center"}}>
-                                        by {memes[0].user.name} with {memes[0].rating} points
-                                    </h5>
-                                </div>
+
+                                <Carousel style={{height:'400px'}}>
+                                    {[bestMeme, memes[0], memes[memes.length-1]]?.map((currentMeme, i) => {
+
+                                        return (
+                                            <Carousel.Item key={currentMeme?.id + i}>
+                                                <CarouselItemContent currentMeme={currentMeme} />
+
+                                                <Carousel.Caption>
+                                                    <p style={style}>
+                                                        {i ===0 && <span>Best Meme of the Game: </span> ||
+                                                        i === 1 && <span>Best Meme of the Round: </span> ||
+                                                        i === 2 && <span>Worst Meme of the Round: </span> }
+                                                        by {currentMeme.user.name} with {currentMeme.rating} points</p>
+                                                </Carousel.Caption>
+                                            </Carousel.Item>
+                                        )
+                                    })}
+                                </Carousel>
                             </Col>
                         </Row>
                     </div>
                     <div className={"leaderboard card"}>
-                        <h2 style={{textAlign:"center"}}> Leaderboard </h2>
+                        <h2 style={{textAlign: "center"}}> Leaderboard </h2>
                         <LeaderboardTable memes={memes} players={roundPlayers}/>
                     </div>
                     <Chat currentLobby={currentGameData}/>
                 </Container>
-                {/*To disable it for testing, change to false*/ }
-                {true ? <Confetti width={width} height={1.4*height} numberOfPieces={100}/> : null }
+                {/*To disable it for testing, change to false*/}
+                {true ? <Confetti width={width} height={1.4 * height} numberOfPieces={100}/> : null}
             </div>
         )
-    }
-    else {
+    } else {
         return (
             <div className="leaderboard content">
                 <Button

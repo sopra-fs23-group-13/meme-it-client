@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import "styles/views/Home.scss";
 import LobbyList from "./LobbyList";
 import {Col, Container, Row, Button, Stack} from "react-bootstrap";
@@ -9,6 +9,8 @@ import {Notification} from "../ui/Notification";
 import {AnimatedBackground} from "styles/images/AnimatedBackground"
 import Cookies from "universal-cookie";
 import Tutorial from "../ui/Tutorial";
+import {api} from "../../helpers/api";
+import {game as gameEndpoint, upAndRunning} from "../../helpers/endpoints";
 
 
 const Home = () => {
@@ -20,6 +22,12 @@ const Home = () => {
     cookies.remove("token");
 
     const toggleShowAlert = () => setShowAlert(!showAlert);
+
+    useEffect(async () => {
+        console.log("Check if there is a cold start")
+        const response = await api.get(`${upAndRunning}`);
+        console.log(response)
+    })
 
     const lobbyList = () => {
         return (

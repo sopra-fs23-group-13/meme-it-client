@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useMemo, useState} from "react";
-import {Stack, Button, InputGroup, Col, Row} from "react-bootstrap";
+import React, {useContext, useRef, useEffect, useMemo, useState} from "react";
+import {Stack, Button, InputGroup} from "react-bootstrap";
 import {v4 as uuid} from "uuid";
 import {useParams, useHistory} from "react-router-dom";
 import {Spinner} from "components/ui/Spinner";
@@ -29,14 +29,16 @@ const Game = () => {
     const [maxRound, setMaxRound] = useState(null);
     const [currentMeme, setCurrentMeme] = useState(null);
     const [now, setNow] = useState(null);
+    const [dimensions, setDimensions] = useState({ width: 'auto', height: 'auto' });
+    const imageRef = useRef();
     const [currentTextNodePositions, setCurrentTextNodePositions] = useState([
         {
-            xRate: 100,
+            xRate: 0,
             yRate: 100,
             dimension: {width: 200, height: 50}
         },
     ]);
-    const [currentTextNodeValues, setCurrentTextNodeValues] = useState([]);
+    const [currentTextNodeValues, setCurrentTextNodeValues] = useState([""]);
     useEffect(async () => {
         let memeData;
         const [gameRes, templateRes] = await Promise.all([
@@ -58,6 +60,8 @@ const Game = () => {
                 meme: {...templateRes.data}
             };
             localStorage.setItem("memeData", JSON.stringify(templateRes.data));
+            console.log(templateRes.data)
+            console.log(gameRes.data)
         }
 
         let currentTime = new Date();
@@ -79,44 +83,31 @@ const Game = () => {
         setMaxRound(memeData.totalRounds);
     }, []);
 
-    const memeTextNodes = useMemo(() => {
-        return [...Array(currentMeme?.number_of_text_nodes).keys()].map(
-            (item, i) => {
-                return {
-                    xRate: 100,
-                    yRate: (i + 1) * 50,
-                    dimension: {width: 200, height: 50}
-                };
-            }
-        );
-    }, [currentMeme]);
 
-    const memeTextNodesDefaultValues = useMemo(() => {
-        return memeTextNodes.map(() => "");
-    }, [memeTextNodes]);
 
     useEffect(() => {
         setCurrentMeme(loadedGameData?.meme);
     }, [currentRound]);
 
-    useEffect(() => {
-        setCurrentTextNodePositions(memeTextNodes);
-        setCurrentTextNodeValues(memeTextNodesDefaultValues);
-    }, [currentMeme]);
-
 
     const addMemeTextNode = () => {
-        const newNode = {xRate: 100, yRate: 0, dimension: {width: 200, height: 50}}
+        const newNode = {xRate: 0, yRate: 0, dimension: {width: 200, height: 50}}
+        const currentNodeValues = [...currentTextNodeValues]
         const currentNodePositions = [...currentTextNodePositions];
-        memeTextNodes.push(newNode);
+        currentNodeValues.push('');
         currentNodePositions.push(newNode);
         setCurrentTextNodePositions(currentNodePositions);
+        setCurrentTextNodeValues(currentNodeValues);
     }
 
     const removeMemeTextNode = () => {
-        memeTextNodes.pop();
+        const currentNodeValues = [...currentTextNodeValues];
         const currentNodePositions = [...currentTextNodePositions];
         currentNodePositions.pop();
+        currentNodeValues.pop();
+        console.log(currentNodeValues)
+        console.log(currentNodePositions)
+        setCurrentTextNodeValues(currentNodeValues)
         setCurrentTextNodePositions(currentNodePositions);
     }
 
@@ -175,6 +166,7 @@ const Game = () => {
         copyObject.meme = response.data;
         setLoadedGameData(copyObject);
         setCurrentMeme(response.data);
+        handleImageLoad();
     };
 
     const leaveGame = async () => {
@@ -255,6 +247,12 @@ const Game = () => {
         localStorage.removeItem("memeData");
         history.replace("/game-rating/" + id);
     }
+    const handleImageLoad = () => {
+        setDimensions({
+            width: imageRef.current.offsetWidth,
+            height: imageRef.current.offsetHeight
+        });
+    };
 
     return (
         <div className={"game content"}>
@@ -287,9 +285,9 @@ const Game = () => {
                             {currentMeme?.imageUrl ? (
                                 <>
                                     <div className="meme-content">
-                                        <div className={"drag-content"}>
-                                            <img src={currentMeme?.imageUrl} alt={"meme lmao"}/>
-                                            {memeTextNodes?.map((item, i) => (
+                                        <div className={"drag-content"}  style={dimensions}>
+                                            <img src={currentMeme?.imageUrl} alt={"meme lmao"} ref={imageRef} onLoad={handleImageLoad}/>
+                                            {currentTextNodeValues?.map((item, i) => (
                                                 <DraggableResizableInput
                                                     key={i}
                                                     index={i}
@@ -301,6 +299,7 @@ const Game = () => {
                                                     color={color}
                                                     backgroundColor={backgroundColor}
                                                     maxDimension={400}
+                                                    imageWidth={dimensions.width}
                                                     position={{
                                                         x: currentTextNodePositions?.[i]?.xRate,
                                                         y: currentTextNodePositions?.[i]?.yRate,
@@ -375,13 +374,13 @@ const Game = () => {
                         <p style={{color:"black", marginTop:"1em"}}>
                             If you are seeing this screen for more than 10 seconds, please refresh the page.
                         </p>
-                            <Button
-                                width="200px"
-                                onClick={leaveGame}
-                                className="lobby leave-btn game"
-                            >
-                                Leave Game
-                            </Button>
+                        <Button
+                            width="200px"
+                            onClick={leaveGame}
+                            className="lobby leave-btn game"
+                        >
+                            Leave Game
+                        </Button>
                         <div style={{marginTop:"2em", marginBottom:"-1em", alignContent:"center", justifyContent:"center", textAlign:"center"}}>
                             <Spinner/>
                         </div>

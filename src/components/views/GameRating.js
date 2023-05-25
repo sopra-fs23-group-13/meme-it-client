@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useMemo, useState} from "react";
+import React, {useContext, useEffect, useMemo, useState, useRef} from "react";
 import {Button, Carousel, Stack} from "react-bootstrap";
 import {MdHeartBroken} from "react-icons/md";
 import {TbHeartFilled} from "react-icons/tb";
@@ -16,6 +16,7 @@ import {game as gameEndpoint} from "../../helpers/endpoints";
 import Cookies from "universal-cookie";
 import Chat from "../ui/Chat";
 import DraggableResizableInput from "../ui/DraggableInput";
+import CarouselItemContent from "../ui/CarouselItemContent";
 
 
 const GameRating = () => {
@@ -24,6 +25,8 @@ const GameRating = () => {
     const cookies = new Cookies();
     const history = useHistory();
     const {loadedGameData, setLoadedGameData, preLoadedMemesForVoting} = useContext(AppContext);
+    const [dimensions, setDimensions] = useState({ width: 'auto', height: 'auto' });
+    const imageRef = useRef();
 
     const [reaction] = useState("");
     const [currentGameData, setCurrentGameData] = useState(preLoadedMemesForVoting);
@@ -198,7 +201,12 @@ const GameRating = () => {
         ],
         [reaction]
     );
-
+    const handleImageLoad = () => {
+        setDimensions({
+            width: imageRef.current.offsetWidth,
+            height: imageRef.current.offsetHeight
+        });
+    };
     return (
         <div className={"game content"}>
             <div className={"game card"}>
@@ -230,34 +238,9 @@ const GameRating = () => {
                                     {currentGameData?.map(currentMeme => {
 
                                         return (
-
                                             <Carousel.Item key={currentMeme?.id}>
-                                                <div className="meme-content">
-                                                    <div className={"drag-content"}>
-                                                        <img src={currentMeme?.imageUrl} alt={"Meme"}/>
-                                                        {currentMeme?.textBoxes?.map((item, i) => (
-                                                            <DraggableResizableInput
-                                                                key={i}
-                                                                inputValue={item.text}
-                                                                color={currentMeme?.color}
-                                                                backgroundColor={currentMeme?.backgroundColor}
-                                                                initialDimension={{
-                                                                    width: item?.width,
-                                                                    height: item?.height,
-                                                                }}
-                                                                maxDimension={400}
-                                                                fontSize={item.fontSize}
-                                                                position={{
-                                                                    x: item?.xRate,
-                                                                    y: item?.yRate,
-                                                                }}
-                                                                isSynchronizing={true}
-                                                            />
-                                                        ))}
-                                                    </div>
-                                                </div>
+                                                <CarouselItemContent currentMeme={currentMeme} />
                                             </Carousel.Item>
-
                                         )
                                     })}
                                 </Carousel>

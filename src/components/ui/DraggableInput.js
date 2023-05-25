@@ -10,6 +10,7 @@ const DraggableResizableInput = ({
                                      setPropDim: setPropDim,
                                      initialDimension: initialDimension,
                                      onInputChange: handleChange,
+                                     imageWidth: imageWidth,
                                      color,
                                      backgroundColor,
                                      fontSize: initialFontSize,
@@ -24,8 +25,9 @@ const DraggableResizableInput = ({
 
     useEffect(() => {
         if (inputRef.current) {
-            if (!isSynchronizing) handleFontSizeChange(undefined, inputRef.current, Math.floor(inputRef.current.offsetHeight * 0.8));
-            setFontSize(`${Math.floor(inputRef.current.offsetHeight * 0.8)}px`);
+            const newFontSize = Math.floor(inputRef.current.offsetHeight * 0.6);
+            if (!isSynchronizing) handleFontSizeChange(undefined, inputRef.current, newFontSize);
+            setFontSize(`${newFontSize}px`);
         }
     }, [dimensions]);
 
@@ -33,23 +35,23 @@ const DraggableResizableInput = ({
         if (inputRef.current) {
             const scrollWidth = inputRef.current.scrollWidth;
             const clientWidth = inputRef.current.clientWidth;
-            if (!isSynchronizing && scrollWidth > clientWidth && scrollWidth <= 400) {
+            if (!isSynchronizing && scrollWidth > clientWidth && scrollWidth <= imageWidth) {
                 setDimensions({width: scrollWidth, height: dimensions.height});
                 setPropDim(undefined, inputRef.current, {width: scrollWidth, height: dimensions.height})
             }
             // check if the text box goes over the image
             const actualWidth = position.x + scrollWidth;
-            if(actualWidth >= 400 && actualWidth-400 < position.x && !isSynchronizing){
+            if(actualWidth >= imageWidth && actualWidth-imageWidth < position.x && !isSynchronizing){
                 //move object further left
                 setPropDim(undefined, inputRef.current, {width: scrollWidth, height: dimensions.height})
-                onTextNodeDrag(undefined, {lastX: position.x - (actualWidth-400), lastY: position.y});
-                setPosition(prev => ({...prev, x: (prev.x - (actualWidth-400))}));
+                onTextNodeDrag(undefined, {lastX: position.x - (actualWidth-imageWidth), lastY: position.y});
+                setPosition(prev => ({...prev, x: (prev.x - (actualWidth-imageWidth))}));
             }
         }
     }, [inputValue, isSynchronizing]);
 
     const handleInputChange = (event) => {
-        if (inputRef.current && inputRef.current.scrollWidth <= 400) {
+        if (inputRef.current && inputRef.current.scrollWidth <= imageWidth) {
             setInputValue(event.target.value);
             if (handleChange) handleChange(event);
         }
@@ -65,7 +67,7 @@ const DraggableResizableInput = ({
             <Resizable
                 size={dimensions}
                 onResize={(event, direction, ref) => {
-                    if (ref.scrollWidth <= 400) {
+                    if (ref.scrollWidth <= imageWidth) {
                         if (!isSynchronizing) setPropDim(event, ref, {width: ref.offsetWidth, height: ref.offsetHeight});
                         setDimensions({width: ref.offsetWidth, height: ref.offsetHeight});
                     } else {
@@ -73,7 +75,7 @@ const DraggableResizableInput = ({
                         setDimensions(prev => ({...prev, height: ref.offsetHeight - 1}));
                     }
                 }}
-                maxWidth={400}
+                maxWidth={imageWidth}
                 maxHeight={50}
                 enable={{
                     top: !isSynchronizing,
