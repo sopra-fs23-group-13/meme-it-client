@@ -370,15 +370,21 @@ const Game = () => {
                         </Stack>
                         <Chat currentLobby={loadedGameData}/>
                     </BaseContainer>) : (
-                    <div>
+                    <BaseContainer style={{padding:"1em"}}>
+                        <p style={{color:"black", marginTop:"1em"}}>
+                            If you are seeing this screen for more than 10 seconds, please refresh the page.
+                        </p>
                         <Button
                             width="200px"
                             onClick={leaveGame}
-                            className="lobby leave-btn game">
+                            className="lobby leave-btn game"
+                        >
                             Leave Game
                         </Button>
-                        <Spinner/>
-                    </div>)}
+                        <div style={{marginTop:"2em", marginBottom:"-1em", alignContent:"center", justifyContent:"center", textAlign:"center"}}>
+                            <Spinner/>
+                        </div>
+                    </BaseContainer>)}
             </div>
         </div>
     );
