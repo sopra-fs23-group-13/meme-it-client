@@ -56,7 +56,10 @@ const UsernameModal = props => {
                     localStorage.setItem("alert", "Game has already started")
                 } else if (error.response !== undefined && error.response.status === 409) {
                     localStorage.setItem("alert", "Lobby is full")
-                } else {
+                } else if (!localStorage.getItem("code")) {
+                    localStorage.setItem("alert", "Game Code cannot be empty")
+                }
+                else {
                     localStorage.setItem("alert", "Something went wrong")
                 }
                 history.replace("/lobby");
