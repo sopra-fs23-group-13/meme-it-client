@@ -136,16 +136,29 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 The following section will provide screenshots of the application from each view. In Meme-It, users join a game lobby and wait for other players. Once the game begins, players are given a meme template and they must create a meme using their creativity. Once created, memes are shared with all players who then vote on the best ones. At the end of each round, a leaderboard is displayed showing player scores and best/worst memes of the round.
 
 ### Landing page
+The page which will be seen by every user when the application is openend: 
+![Landing page](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/6f769604-da96-4e88-ae3b-74ccfe86ef83)
 
 ### Tutorial
+If one is curious how the app works, one can either start playing the game or check out the tutorial:
+![Tutorial](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/e65489c3-6788-4bf6-b3f1-38dfd56b9cc1)
 
 ### Lobby creation
+During the lobby creation the admin will be able to change the lobby settings and other users can contact the admin via chat:
+![Lobby creation component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/6b8b77d1-66ac-4354-8c1b-bf4b61b9adba)
 
 ### Meme creation
+During the meme creation the user can adjust the memes to his/her preferences. This starts with dragging the textboxes around, changing the font color, changing the background color, changing the opacity of the background color. It is important to state that the border of the text box will be gone once the meme is submitted and is only there for readibility for the user:
+![Meme Creation component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/f88eebf3-eab5-40d8-9c30-927878502af3)
+
 
 ### Meme voting
+During the voting phase users can judge the different memes and vote for their favourite ones:
+![Meme Voting Component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/164940e0-523d-4d8f-bcda-849600c44784)
 
 ### Leaderboard
+The leaderboard shows the results at the end of each round and end of the game:
+![Final Leaderboard Component](https://github.com/sopra-fs23-group-13/meme-it-client/assets/10813124/a2c22e0b-0854-4236-8d41-a3838c4f62c6)
 
 
 
