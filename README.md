@@ -184,4 +184,4 @@ This project is maintained by
 We would like to thank Mete Polat for his support and guidance during the development of this project.
 
 ## License
-Meme-It is licensed under the MIT License. You are free to use, modify, and distribute the code as per the terms of the license.
+Meme-It is licensed under the [Apache 2.0 License](https://github.com/sopra-fs23-group-13/meme-it-client/blob/main/LICENSE). A permissive license whose main conditions require preservation of copyright and license notices. Contributors provide an express grant of patent rights. Licensed works, modifications, and larger works may be distributed under different terms and without source code
