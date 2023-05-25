@@ -13,6 +13,7 @@ import Chat from "../ui/Chat";
 import Cookies from "universal-cookie";
 import Form from "react-bootstrap/Form";
 import DraggableResizableInput from "../ui/DraggableInput";
+import LoadingScreen from "../ui/LoadingScreen";
 
 const Game = () => {
     const delay = 1000;
@@ -369,22 +370,7 @@ const Game = () => {
                             )}
                         </Stack>
                         <Chat currentLobby={loadedGameData}/>
-                    </BaseContainer>) : (
-                    <BaseContainer style={{padding:"1em"}}>
-                        <p style={{color:"black", marginTop:"1em"}}>
-                            If you are seeing this screen for more than 10 seconds, please refresh the page.
-                        </p>
-                        <Button
-                            width="200px"
-                            onClick={leaveGame}
-                            className="lobby leave-btn game"
-                        >
-                            Leave Game
-                        </Button>
-                        <div style={{marginTop:"2em", marginBottom:"-1em", alignContent:"center", justifyContent:"center", textAlign:"center"}}>
-                            <Spinner/>
-                        </div>
-                    </BaseContainer>)}
+                    </BaseContainer>) : (<LoadingScreen/>)}
             </div>
         </div>
     );
