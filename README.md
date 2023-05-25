@@ -174,12 +174,12 @@ For developers wanting to contribute to Meme-It, here are a few potential featur
 One of the improvements is to switch the cloud provider. Google Cloud does not seem to function properly with the application. The loading time of the application is rather slow. This is due to cold starts. Once the Cloud VM shuts down, the start up is slow. Users can join a lobby, even though the instance is not yet properly started up. This leads to some crashes right once the game should start. We try to prevent this by having an always on instance, however, this does not properly fix the issue.  
 
 ## Authors and Acknowledgment
-This project is maintained by
-- Daniel Lutziger
-- Pablo Tanner
-- Henrik Nordgren
-- Linda Weber
-- Marc Schurr
+This project is maintained by Sopra Group 13:
+- Daniel Lutziger [@danielLutziger](https://github.com/danielLutziger)
+- Pablo Tanner [@pabloTanner](https://github.com/pabloTanner)
+- Henrik Nordgren [@cNordg](https://github.com/cnordg)
+- Linda Weber [@weberlii](https://github.com/weberlii)
+- Marc Schurr [@M-Schurr](https://github.com/m-schurr)
 
 We would like to thank Mete Polat for his support and guidance during the development of this project.
 
