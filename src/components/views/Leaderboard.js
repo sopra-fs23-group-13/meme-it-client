@@ -8,7 +8,6 @@ import {api} from "../../helpers/api";
 import {game as gameEndpoint} from "../../helpers/endpoints";
 import Player from "../../models/Player";
 import {Spinner} from "../ui/Spinner";
-import TimerProgressBar from "../ui/TimerProgressBar";
 import Cookies from "universal-cookie";
 import {useHistory, useParams} from "react-router-dom";
 import AnimatedBarChart from "../ui/AnimatedBarChart";
@@ -17,8 +16,6 @@ import {useWindowSize} from "react-use";
 import {AppContext} from "../../context";
 import Chat from "../ui/Chat";
 import ClickableMeme from "../ui/ClickableMeme";
-import Home from "../../images/home.png";
-import DraggableResizableInput from "../ui/DraggableInput";
 import CarouselItemContent from "../ui/CarouselItemContent";
 
 const LeaderboardTable = ({players, memes}) => {
@@ -167,16 +164,8 @@ const Leaderboard = () => {
             width: imageRef?.current?.offsetWidth,
             height: imageRef?.current?.offsetHeight
         });
-        console.log({
-            width: imageRef?.current?.offsetWidth,
-            height: imageRef?.current?.offsetHeight
-        })
-        console.log(imageRef
-        )
-        console.log("here")
     };
     useEffect(() => {
-        console.log("entered")
         handleImageLoad();
     }, [memeCarousel])
 
@@ -252,7 +241,6 @@ const Leaderboard = () => {
             });
             setRoundPlayers(players);
             setMemes(currentRoundMemes);
-            isFinalRound ? setMemeCarousel([currentRoundMemes[0], currentRoundMemes[currentRoundMemes.length-1]]) : setMemeCarousel([currentRoundMemes[0], currentRoundMemes[currentRoundMemes.length-1]]);
         }
         const interval = setInterval(async () => {
             await getLeaderboardData();
@@ -262,7 +250,6 @@ const Leaderboard = () => {
 
     //If not final round and there is data for the players and memes
     if (isFinalRound == false && memes.length && roundPlayers.length) {
-        const memeCarousel = [memes[0], memes[memes.length-1]];
         return (
             <div className="leaderboard content">
                 <Container>
@@ -288,10 +275,9 @@ const Leaderboard = () => {
                                                 <Carousel.Item key={currentMeme?.id + i}>
                                                     <CarouselItemContent currentMeme={currentMeme} />
                                                     <Carousel.Caption>
-                                                        {i === 1 && <h3 style={style}>Best Meme of the Round</h3>}
-                                                        {i === 0 && <h3 style={style}>Best Meme of the Game</h3>}
-                                                        {i === 2 && <h3 style={style}>Worst Meme of the Round</h3>}
-                                                        <p style={style}>by {currentMeme.user.name} with {currentMeme.rating} points</p>
+                                                        <p style={style}>
+                                                            {i === 0 && <span>Best Meme of the Round: </span> ||
+                                                                i === 1 && <span>Worst Meme of the Round: </span> }by {currentMeme.user.name} with {currentMeme.rating} points</p>
                                                     </Carousel.Caption>
                                                 </Carousel.Item>
                                             )
@@ -353,10 +339,11 @@ const Leaderboard = () => {
                                                 <CarouselItemContent currentMeme={currentMeme} />
 
                                                 <Carousel.Caption>
-                                                    {i === 1 && <h3 style={style}>Best Meme of the Round</h3>}
-                                                    {i === 0 && <h3 style={style}>Best Meme of the Game</h3>}
-                                                    {i === 2 && <h3 style={style}>Worst Meme of the Round</h3>}
-                                                    <p style={style}>by {currentMeme.user.name} with {currentMeme.rating} points</p>
+                                                    <p style={style}>
+                                                        {i ===0 && <span>Best Meme of the Game: </span> ||
+                                                        i === 1 && <span>Best Meme of the Round: </span> ||
+                                                        i === 2 && <span>Worst Meme of the Round: </span> }
+                                                        by {currentMeme.user.name} with {currentMeme.rating} points</p>
                                                 </Carousel.Caption>
                                             </Carousel.Item>
                                         )
